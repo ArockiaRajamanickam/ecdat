@@ -3,7 +3,8 @@
 import os, json, re, tempfile, subprocess, shutil, io, zipfile
 from collections import Counter
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse, FileResponse, Response
+from fastapi.responses import JSONResponse, FileResponse, Response, StreamingResponse
+import urllib.request
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import sys
@@ -161,5 +162,35 @@ def download():
     buf.seek(0)
     return Response(buf.read(), media_type="application/zip",
                     headers={"Content-Disposition": "attachment; filename=ecdat.zip"})
+
+OS_ASSET = {"windows": "ECDAT-windows.exe", "macos": "ECDAT-macos", "linux": "ECDAT-linux"}
+RELEASE_BASE = "https://github.com/ArockiaRajamanickam/ecdat/releases/latest/download/"
+
+@app.get("/download/{os_name}")
+def download_binary(os_name: str):
+    """Stream the prebuilt one-click binary through this site (not a redirect to GitHub),
+    so the download comes from our own domain."""
+    asset = OS_ASSET.get(os_name)
+    if not asset:
+        raise HTTPException(404, "unknown platform")
+    req = urllib.request.Request(RELEASE_BASE + asset, headers={"User-Agent": "ECDAT"})
+    try:
+        upstream = urllib.request.urlopen(req, timeout=30)   # follows the redirect to the asset
+    except Exception:
+        raise HTTPException(502, "Could not fetch the build. Try again in a moment.")
+    headers = {"Content-Disposition": f'attachment; filename="{asset}"'}
+    clen = upstream.headers.get("Content-Length")
+    if clen:
+        headers["Content-Length"] = clen
+    def stream():
+        try:
+            while True:
+                chunk = upstream.read(65536)
+                if not chunk:
+                    break
+                yield chunk
+        finally:
+            upstream.close()
+    return StreamingResponse(stream(), media_type="application/octet-stream", headers=headers)
 
 app.mount("/", StaticFiles(directory=STATIC, html=True), name="static")
