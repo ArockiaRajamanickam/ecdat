@@ -16,6 +16,10 @@ STATIC = os.path.join(HERE, "static")
 
 app = FastAPI(title="ECDAT", version="0.1")
 
+# Local-folder scanning is enabled only when you run ECDAT on your own machine
+# (set ECDAT_LOCAL=1). The public hosted demo keeps it off for safety.
+LOCAL = os.environ.get("ECDAT_LOCAL") == "1"
+
 TIER_LABEL = {"BROKEN_Q":"Quantum-broken","WEAK":"Weak today","SAFE":"Safe","PQC":"Post-quantum"}
 DEMOS = {
     "aion": {"label":"AION (our own PQC product)","note":"Our shipped ML-KEM / ML-DSA system. Even it has classical crypto to migrate."},
@@ -45,6 +49,24 @@ def summarise(res):
             "urgent": bool(f.get("mosca_urgent")), "snippet": f.get("snippet","")[:140],
         } for f in top[:80]],
     }
+
+@app.get("/api/mode")
+def mode():
+    return {"local": LOCAL}
+
+class LocalReq(BaseModel):
+    path: str
+
+@app.post("/api/scan_local")
+def scan_local(req: LocalReq):
+    if not LOCAL:
+        raise HTTPException(403, "Scanning a folder on this computer is only available when you run ECDAT on your own machine. Download it from github.com/ArockiaRajamanickam/ecdat and run it locally.")
+    p = os.path.abspath(os.path.expanduser(req.path.strip()))
+    if not os.path.isdir(p):
+        raise HTTPException(400, f"No folder found at: {p}")
+    res = ecdat.analyze(p, os.path.basename(p.rstrip("/")) or p)
+    s = summarise(res); s["cbom"] = ecdat.cbom(res)
+    return JSONResponse(s)
 
 @app.get("/api/demos")
 def demos():

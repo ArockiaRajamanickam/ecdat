@@ -36,6 +36,14 @@
   .repo button{background:var(--p3);color:var(--white);padding:11px 18px}
   .repo button:hover{background:var(--gold);color:var(--bg)}
   .hint{color:var(--muted);font-size:12.5px;margin:2px 0 0}
+  .block{margin:16px 0}
+  .blabel{color:var(--white);font-weight:600;font-size:13.5px;margin:0 0 8px}
+  .samples{display:flex;gap:10px;flex-wrap:wrap}
+  #goLocal{background:var(--gold);color:var(--bg)} #goLocal:hover{filter:brightness(1.08)}
+  .modeTag{font-family:var(--mono);font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px;margin-left:8px;vertical-align:middle}
+  .modeTag.on{background:rgba(84,174,156,.18);color:var(--safe)}
+  .modeTag.off{background:rgba(147,160,196,.15);color:var(--muted)}
+  .block.disabled{opacity:.55}
   .status{margin:18px 0;color:var(--muted);font-size:14px;min-height:20px}
   .status .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gold);margin-right:8px;animation:pulse 1s infinite}
   @keyframes pulse{50%{opacity:.3}}
@@ -78,15 +86,33 @@
     <div class="sub">Point it at a codebase. It finds every use of cryptography, flags what a <b>quantum computer</b> will break, and names the exact post-quantum fix. Runs offline. <b>No code leaves the machine.</b></div>
   </header>
 
-  <div class="controls">
-    <button class="demo active" data-demo="aion">Scan AION (our own PQC system)</button>
-    <button class="demo" data-demo="pyca">Scan pyca/cryptography</button>
+  <!-- PRIMARY: scan your own code -->
+  <div class="block">
+    <div class="blabel">Scan your own code <span id="modeTag" class="modeTag"></span></div>
     <div class="repo">
-      <input id="repo" placeholder="https://github.com/owner/repo  — scan any public repo"/>
-      <button id="go">Scan</button>
+      <input id="localpath" placeholder="/path/to/your/project   — a folder on this computer"/>
+      <button id="goLocal">Scan folder</button>
+    </div>
+    <div class="hint" id="localHint">Runs on this machine. Your code never leaves your computer.</div>
+  </div>
+
+  <!-- SECONDARY: a public repo -->
+  <div class="block">
+    <div class="blabel">…or a public GitHub repo</div>
+    <div class="repo">
+      <input id="repo" placeholder="https://github.com/owner/repo"/>
+      <button id="go">Scan repo</button>
     </div>
   </div>
-  <div class="hint">Demos use real, pre-computed scans. The live box clones and scans a public GitHub repo on the spot.</div>
+
+  <!-- TERTIARY: samples -->
+  <div class="block">
+    <div class="blabel">New here? Try a sample scan</div>
+    <div class="samples">
+      <button class="demo" data-demo="aion">Sample: a PQC messaging app</button>
+      <button class="demo" data-demo="pyca">Sample: pyca/cryptography</button>
+    </div>
+  </div>
 
   <div class="status" id="status"></div>
 
@@ -162,12 +188,49 @@ function render(d){
 
 async function loadDemo(id){
   document.querySelectorAll(".demo").forEach(b=>b.classList.toggle("active",b.dataset.demo===id));
-  setStatus("Loading scan…",true);
+  setStatus("Loading sample…",true);
   const d=await (await fetch(`/api/scan/${id}`)).json();
   liveCbom=null; $("#cbom").setAttribute("href",`/api/cbom/${id}`); $("#cbom").removeAttribute("download");
-  render(d); setStatus(`Scan complete — ${d.files_scanned} files, ${d.total} findings.`);
+  render(d); setStatus(`Sample scan — ${d.files_scanned} files, ${d.total} findings.`);
 }
 document.querySelectorAll(".demo").forEach(b=>b.onclick=()=>loadDemo(b.dataset.demo));
+
+function attachLiveCbom(d){
+  const blob=new Blob([JSON.stringify(d.cbom||{},null,1)],{type:"application/json"});
+  $("#cbom").setAttribute("href",URL.createObjectURL(blob)); $("#cbom").setAttribute("download","ecdat-cbom.json");
+}
+
+// scan a folder on THIS computer (only works when run locally)
+$("#goLocal").onclick=async()=>{
+  const path=$("#localpath").value.trim(); if(!path)return;
+  setStatus(`Scanning ${path} …`,true);
+  try{
+    const r=await fetch("/api/scan_local",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({path})});
+    const d=await r.json();
+    if(!r.ok){setStatus("⚠ "+(d.detail||"Scan failed"));return;}
+    attachLiveCbom(d); render(d);
+    setStatus(`Scan complete — ${d.files_scanned} files, ${d.total} findings in ${d.target}.`);
+  }catch(e){setStatus("⚠ "+e.message);}
+};
+$("#localpath").addEventListener("keydown",e=>{if(e.key==="Enter")$("#goLocal").click();});
+
+// detect whether we're running locally or on the hosted demo
+async function initMode(){
+  let local=false;
+  try{ local=(await (await fetch("/api/mode")).json()).local; }catch(e){}
+  const tag=$("#modeTag");
+  if(local){
+    tag.textContent="on this machine"; tag.className="modeTag on";
+    $("#localpath").focus();
+    setStatus("Ready. Enter a folder path above to scan your own code.");
+  }else{
+    tag.textContent="demo server"; tag.className="modeTag off";
+    $("#localHint").innerHTML="To scan a folder on <b>your</b> computer, download ECDAT from GitHub and run it locally (see the README). On this demo server, use a public repo or a sample below.";
+    document.querySelector(".block").classList.add("disabled");
+    loadDemo("aion"); // show something on the public demo
+  }
+}
+initMode();
 
 $("#go").onclick=async()=>{
   const url=$("#repo").value.trim(); if(!url)return;
@@ -183,8 +246,6 @@ $("#go").onclick=async()=>{
   }catch(e){setStatus("⚠ "+e.message);}
 };
 $("#repo").addEventListener("keydown",e=>{if(e.key==="Enter")$("#go").click();});
-
-loadDemo("aion");
 </script>
 </body>
 </html>
