@@ -17,10 +17,10 @@ jobs:
             asset: ECDAT-windows.exe
             out: dist/ECDAT.exe
           - os: macos-latest
-            asset: ECDAT-macos
+            asset: ECDAT-macos.zip
             out: dist/ECDAT
           - os: ubuntu-latest
-            asset: ECDAT-linux
+            asset: ECDAT-linux.zip
             out: dist/ECDAT
     runs-on: ${{ matrix.os }}
     steps:
@@ -34,16 +34,24 @@ jobs:
           pip install -r requirements.txt pyinstaller
       - name: Build
         run: pyinstaller --noconfirm --clean ECDAT.spec
-      - name: Rename artifact
+      - name: Package
         shell: bash
-        run: cp "${{ matrix.out }}" "dist/${{ matrix.asset }}"
+        run: |
+          mkdir -p out
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            cp "${{ matrix.out }}" "out/${{ matrix.asset }}"
+          else
+            cp "${{ matrix.out }}" ECDAT
+            chmod +x ECDAT
+            zip -j "out/${{ matrix.asset }}" ECDAT
+          fi
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.asset }}
-          path: dist/${{ matrix.asset }}
+          path: out/${{ matrix.asset }}
       - name: Attach to release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/${{ matrix.asset }}
+          files: out/${{ matrix.asset }}

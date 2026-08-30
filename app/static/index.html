@@ -404,6 +404,13 @@
   .dl-os.rec{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
   .dl-os.rec .dl-name::after{content:"· detected";color:var(--gold);font-size:11px;font-weight:600;margin-left:6px}
   .dl-note{font-size:12px;color:var(--muted);margin-top:14px}
+  .dl-firstrun{margin-top:14px;padding:12px 14px;background:var(--p2);border:1px solid var(--line);border-radius:8px;font-size:12.5px;color:var(--muted)}
+  .dl-firstrun strong{color:var(--text);font-size:11px;text-transform:uppercase;letter-spacing:.07em;display:block;margin-bottom:7px}
+  .dl-firstrun ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+  .dl-firstrun code{font-family:var(--font-mono);color:var(--text);background:var(--p1);padding:1px 5px;border-radius:4px;font-size:11.5px}
+  .dl-firstrun em{color:var(--text);font-style:normal;font-weight:600}
+  .dl-firstrun li{opacity:.55}
+  .dl-firstrun li.rec{opacity:1;color:var(--text)}
   @media(max-width:640px){.dl-grid{grid-template-columns:1fr}}
   .tier-list{display:flex;flex-direction:column;gap:10px;margin-top:8px}
   .tier-item{display:flex;gap:12px;align-items:flex-start}
@@ -726,10 +733,18 @@
               <div class="dl-grid" id="dlGrid">
                 <a class="dl-os" data-os="windows" href="/download/windows" download="ECDAT-windows.exe">
                   <span class="dl-name">Windows</span><span class="dl-meta">ECDAT-windows.exe</span></a>
-                <a class="dl-os" data-os="macos" href="/download/macos" download="ECDAT-macos">
-                  <span class="dl-name">macOS</span><span class="dl-meta">Apple silicon / Intel</span></a>
-                <a class="dl-os" data-os="linux" href="/download/linux" download="ECDAT-linux">
-                  <span class="dl-name">Linux</span><span class="dl-meta">x86-64</span></a>
+                <a class="dl-os" data-os="macos" href="/download/macos" download="ECDAT-macos.zip">
+                  <span class="dl-name">macOS</span><span class="dl-meta">Apple silicon / Intel · .zip</span></a>
+                <a class="dl-os" data-os="linux" href="/download/linux" download="ECDAT-linux.zip">
+                  <span class="dl-name">Linux</span><span class="dl-meta">x86-64 · .zip</span></a>
+              </div>
+              <div class="dl-firstrun" id="dlFirstRun">
+                <strong>First run</strong>
+                <ul>
+                  <li data-os="windows">Windows: double-click <code>ECDAT-windows.exe</code>. If SmartScreen warns, click <em>More info → Run anyway</em> (the app is unsigned).</li>
+                  <li data-os="macos">macOS: unzip, then <em>right-click</em> the ECDAT app → <em>Open</em> → <em>Open</em>. (It's unsigned, so a plain double-click is blocked the first time.)</li>
+                  <li data-os="linux">Linux: unzip, then run <code>./ECDAT</code> in a terminal (or make it executable and double-click).</li>
+                </ul>
               </div>
               <p class="dl-note">Prefer to run from source? <a href="/api/download" download>Download the source</a> (needs Python 3.10+). All builds are on <a href="https://github.com/ArockiaRajamanickam/ecdat/releases" target="_blank" rel="noopener">GitHub Releases</a>.</p>
             </div>
@@ -845,6 +860,8 @@
     var os = /win/.test(plat) ? "windows" : (/mac|iphone|ipad/.test(plat) ? "macos" : (/linux|android|x11/.test(plat) ? "linux" : ""));
     var rec = document.querySelector('.dl-os[data-os="' + os + '"]');
     if (rec) { rec.classList.add("rec"); rec.parentNode.insertBefore(rec, rec.parentNode.firstChild); }
+    var fr = document.querySelector('.dl-firstrun li[data-os="' + os + '"]');
+    if (fr) fr.classList.add("rec");
   })();
   function goDownload(e){
     if (e) e.preventDefault();

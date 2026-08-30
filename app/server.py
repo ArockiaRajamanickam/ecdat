@@ -163,7 +163,7 @@ def download():
     return Response(buf.read(), media_type="application/zip",
                     headers={"Content-Disposition": "attachment; filename=ecdat.zip"})
 
-OS_ASSET = {"windows": "ECDAT-windows.exe", "macos": "ECDAT-macos", "linux": "ECDAT-linux"}
+OS_ASSET = {"windows": "ECDAT-windows.exe", "macos": "ECDAT-macos.zip", "linux": "ECDAT-linux.zip"}
 RELEASE_BASE = "https://github.com/ArockiaRajamanickam/ecdat/releases/latest/download/"
 
 @app.get("/download/{os_name}")
