@@ -1,0 +1,29 @@
+name: PQC Nightly Inventory
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+jobs:
+  nightly:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r requirements.txt
+
+      - name: Full scan (report only, never blocks)
+        run: |
+          python app/engine/cli.py report . --out ecdat-report.md
+          {
+            echo "## ECDAT nightly cryptographic inventory"
+            echo
+            head -40 ecdat-report.md
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ecdat-nightly
+          path: ecdat-report.md

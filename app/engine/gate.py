@@ -487,8 +487,11 @@ def evaluate(scan_result: Any, policy: Any = None, fail_on: Any = _UNSET) -> tup
 
         # gate.min_report_severity trims the noise floor of the *report*; it
         # never hides something that would otherwise block.
+        # _rank is 0-is-most-severe, so an artefact is BELOW the reporting floor
+        # when its rank is GREATER than the floor's. The comparison was inverted,
+        # which silently discarded every critical finding.
         if (min_report is not None and severity is not None
-                and _rank(severity) < _rank(min_report)
+                and _rank(severity) > _rank(min_report)
                 and not (mosca_blocks and act_now)):
             below_report += 1
             continue

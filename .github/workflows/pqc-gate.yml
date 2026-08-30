@@ -1,0 +1,52 @@
+name: PQC Crypto Gate
+
+# Fails the build when quantum-vulnerable cryptography is introduced.
+# A PR that adds e.g. rsa.generate_private_key(key_size=1024) flips this red.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+  security-events: write      # required to upload SARIF to code scanning
+
+jobs:
+  pqc-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install ECDAT
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: python -m pytest -q
+
+      - name: Cryptographic discovery + gate
+        id: gate
+        run: |
+          python app/engine/cli.py ci . \
+            --fail-on critical \
+            --cbom ecdat-cbom.json \
+            --sarif ecdat.sarif \
+            --report ecdat-report.md
+
+      - name: Upload CBOM / SARIF / report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ecdat-pqc-report
+          path: |
+            ecdat-cbom.json
+            ecdat.sarif
+            ecdat-report.md
+
+      - name: Publish findings to code scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ecdat.sarif

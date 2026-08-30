@@ -1,0 +1,40 @@
+name: "ECDAT crypto scan"
+description: "Discover cryptographic assets, assess quantum risk, and gate the build."
+inputs:
+  path:
+    description: "Directory to scan"
+    required: false
+    default: "."
+  policy:
+    description: "Path to a policy.yaml"
+    required: false
+    default: ""
+  fail-on:
+    description: "Severity that fails the build (critical|high|medium|low)"
+    required: false
+    default: "critical"
+outputs:
+  cbom-path:
+    description: "Path to the generated CycloneDX CBOM"
+    value: ${{ steps.run.outputs.cbom }}
+  sarif-path:
+    description: "Path to the generated SARIF file"
+    value: ${{ steps.run.outputs.sarif }}
+  report-path:
+    description: "Path to the markdown report"
+    value: ${{ steps.run.outputs.report }}
+runs:
+  using: composite
+  steps:
+    - id: run
+      shell: bash
+      run: |
+        POLICY_ARG=""
+        if [ -n "${{ inputs.policy }}" ]; then POLICY_ARG="--policy ${{ inputs.policy }}"; fi
+        python "${{ github.action_path }}/../../../app/engine/cli.py" ci "${{ inputs.path }}" \
+          $POLICY_ARG \
+          --fail-on "${{ inputs.fail-on }}" \
+          --cbom ecdat-cbom.json --sarif ecdat.sarif --report ecdat-report.md
+        echo "cbom=ecdat-cbom.json"   >> "$GITHUB_OUTPUT"
+        echo "sarif=ecdat.sarif"      >> "$GITHUB_OUTPUT"
+        echo "report=ecdat-report.md" >> "$GITHUB_OUTPUT"

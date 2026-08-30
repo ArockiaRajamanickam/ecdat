@@ -1,5 +1,6 @@
 fastapi
 uvicorn[standard]
+pytest
 tree-sitter
 tree-sitter-python
 tree-sitter-javascript
