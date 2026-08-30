@@ -1,251 +1,1318 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ECDAT — Cryptographic Discovery & Analysis</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECDAT — Enterprise Cryptographic Discovery</title>
+<link rel="icon" type="image/png" href="/assets/logo_mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0B1330; --p1:#10193A; --p2:#17224A; --p3:#22305F; --line:#2C3A66;
-    --gold:#D9A441; --white:#F1F4FC; --muted:#93A0C4;
-    --broken:#D26A56; --weak:#D9A441; --safe:#54AE9C; --pqc:#8093E6;
-    --sans:"IBM Plex Sans",system-ui,sans-serif; --disp:"Space Grotesk",var(--sans);
-    --mono:"IBM Plex Mono",ui-monospace,monospace;
+    --bg:#0B1330;
+    --p1:#10193A;
+    --p2:#17224A;
+    --p3:#22305F;
+    --line:#2C3A66;
+    --text:#F1F4FC;
+    --muted:#93A0C4;
+    --placeholder:#8C99C2;
+    --gold:#D9A441;
+    --gold-dark:#B5842A;
+    --broken:#D26A56;
+    --weak:#D9A441;
+    --safe:#54AE9C;
+    --pqc:#8093E6;
+    --radius:8px;
+    --radius-sm:6px;
+    --font-head:'Space Grotesk',system-ui,sans-serif;
+    --font-body:'IBM Plex Sans',system-ui,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
   }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--white);font-family:var(--sans);
-       font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:1120px;margin:0 auto;padding:34px 24px 80px}
-  .spine{position:fixed;left:0;top:0;bottom:0;width:6px;background:var(--gold)}
-  header .kick{color:var(--gold);font-weight:600;letter-spacing:.14em;font-size:12px;text-transform:uppercase}
-  h1{font-family:var(--disp);font-weight:700;font-size:52px;margin:.1em 0 .1em;letter-spacing:-.01em}
-  .sub{color:var(--muted);font-size:16px;max-width:640px}
-  .sub b{color:var(--white);font-weight:600}
-  .controls{margin:28px 0 8px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-  button,.demo{font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;border:none;border-radius:8px}
-  .demo{background:var(--p2);color:var(--white);padding:11px 16px;border:1px solid var(--line)}
-  .demo:hover{border-color:var(--gold)}
-  .demo.active{background:var(--gold);color:var(--bg);border-color:var(--gold)}
-  .repo{display:flex;gap:8px;flex:1;min-width:280px}
-  .repo input{flex:1;background:var(--p1);border:1px solid var(--line);color:var(--white);
-       border-radius:8px;padding:11px 13px;font-family:var(--mono);font-size:13px}
-  .repo input::placeholder{color:#5f6b8c}
-  .repo button{background:var(--p3);color:var(--white);padding:11px 18px}
-  .repo button:hover{background:var(--gold);color:var(--bg)}
-  .hint{color:var(--muted);font-size:12.5px;margin:2px 0 0}
-  .block{margin:16px 0}
-  .blabel{color:var(--white);font-weight:600;font-size:13.5px;margin:0 0 8px}
-  .samples{display:flex;gap:10px;flex-wrap:wrap}
-  #goLocal{background:var(--gold);color:var(--bg)} #goLocal:hover{filter:brightness(1.08)}
-  .modeTag{font-family:var(--mono);font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px;margin-left:8px;vertical-align:middle}
-  .modeTag.on{background:rgba(84,174,156,.18);color:var(--safe)}
-  .modeTag.off{background:rgba(147,160,196,.15);color:var(--muted)}
-  .block.disabled{opacity:.55}
-  .status{margin:18px 0;color:var(--muted);font-size:14px;min-height:20px}
-  .status .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gold);margin-right:8px;animation:pulse 1s infinite}
-  @keyframes pulse{50%{opacity:.3}}
-  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:8px 0 20px}
-  .stat{background:var(--p2);border-radius:12px;padding:18px 18px 16px}
-  .stat .n{font-family:var(--disp);font-weight:700;font-size:38px;line-height:1;color:var(--gold)}
-  .stat .l{color:var(--muted);font-size:12.5px;margin-top:8px}
-  .stat.big .n{color:var(--broken)}
-  .panel{background:var(--p1);border-radius:12px;padding:20px 22px;margin:0 0 20px}
-  .panel h2{font-family:var(--disp);font-weight:600;font-size:15px;letter-spacing:.02em;margin:0 0 14px;color:var(--muted);text-transform:uppercase}
-  .bar{display:flex;height:30px;border-radius:6px;overflow:hidden;background:var(--p3)}
-  .bar span{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#0b1330;min-width:2px}
-  .legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:13px;color:var(--muted)}
-  .legend b{color:var(--white)}
-  .sw{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:middle}
-  table{width:100%;border-collapse:collapse;font-size:13.5px}
-  th{text-align:left;color:var(--muted);font-weight:500;font-size:11.5px;letter-spacing:.06em;
-     text-transform:uppercase;padding:0 10px 10px;border-bottom:1px solid var(--line)}
-  td{padding:11px 10px;border-bottom:1px solid rgba(44,58,102,.5)}
-  tr:hover td{background:rgba(34,48,95,.35)}
-  .fp{font-family:var(--mono);font-size:12.5px;color:var(--white)}
-  .badge{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:20px;font-size:11.5px;font-weight:600}
-  .b-broken{background:rgba(210,106,86,.18);color:var(--broken)} .b-weak{background:rgba(217,164,65,.18);color:var(--weak)}
-  .b-safe{background:rgba(84,174,156,.18);color:var(--safe)} .b-pqc{background:rgba(128,147,230,.18);color:var(--pqc)}
-  .arrow{color:var(--muted)} .fix{font-family:var(--mono);font-size:12.5px;color:var(--pqc)}
-  .urg{color:var(--broken);font-weight:700;margin-left:6px}
-  .foot{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-  .dl{background:var(--gold);color:var(--bg);padding:12px 20px;font-weight:600;border-radius:8px}
-  .note{color:var(--muted);font-size:12.5px}
-  .hidden{display:none}
-  .tag{font-family:var(--mono);color:var(--muted);font-size:12.5px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    font-size:14px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%}
+  button{font-family:inherit}
+  a{color:var(--gold)}
+  ::selection{background:rgba(217,164,65,.25)}
+
+  /* Focus */
+  :focus{outline:none}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
+
+  /* ---------- App shell ---------- */
+  .app{display:flex;flex-direction:column;min-height:100vh}
+
+  .topbar{
+    display:flex;align-items:center;gap:12px;
+    height:56px;padding:0 20px;
+    background:var(--p1);
+    border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;
+  }
+  .brand{display:flex;align-items:center;gap:10px;min-width:0}
+  .brand img{width:28px;height:28px;flex:none}
+  .wordmark{
+    font-family:var(--font-head);font-weight:700;font-size:19px;letter-spacing:.06em;
+  }
+  .tagline{
+    font-size:12px;color:var(--muted);
+    border-left:1px solid var(--line);padding-left:12px;margin-left:2px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .mode-badge{
+    display:inline-flex;align-items:center;gap:7px;
+    font-size:12px;font-weight:500;color:var(--muted);
+    background:var(--p2);border:1px solid var(--line);
+    border-radius:999px;padding:4px 12px;white-space:nowrap;
+  }
+  .mode-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex:none}
+  .mode-badge.local{color:var(--safe)}
+  .mode-badge.local .dot{background:var(--safe)}
+  .mode-badge.mode-unknown{color:var(--weak)}
+  .mode-badge.mode-unknown .dot{background:var(--weak)}
+
+  .shell{display:flex;flex:1;min-height:0}
+
+  /* ---------- Sidebar ---------- */
+  .sidebar{
+    width:216px;flex:none;
+    background:var(--p1);
+    border-right:1px solid var(--line);
+    padding:18px 12px;
+    display:flex;flex-direction:column;gap:2px;
+  }
+  .side-label{
+    font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);padding:0 10px 8px;
+  }
+  .nav-btn{
+    display:flex;align-items:center;gap:10px;width:100%;
+    padding:9px 10px;border:0;border-radius:var(--radius-sm);
+    background:transparent;color:var(--muted);
+    font-size:13.5px;font-weight:500;text-align:left;cursor:pointer;
+  }
+  .nav-btn svg{flex:none;opacity:.85}
+  .nav-btn:hover{background:var(--p2);color:var(--text)}
+  .nav-btn[aria-current="page"]{
+    background:var(--p2);color:var(--text);
+    box-shadow:inset 2px 0 0 var(--gold);
+  }
+  .nav-count{
+    margin-left:auto;font-family:var(--font-mono);font-size:11px;
+    background:var(--p3);border:1px solid var(--line);
+    color:var(--muted);border-radius:999px;padding:0 7px;line-height:18px;
+  }
+  .nav-count.hot{color:var(--broken);border-color:rgba(210,106,86,.4)}
+  .sidebar-foot{margin-top:auto;padding:14px 10px 4px;border-top:1px solid var(--line)}
+  .sidebar-foot p{font-size:11.5px;color:var(--muted);line-height:1.5}
+  .sidebar-foot .ver{font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-top:6px;display:block}
+
+  /* ---------- Main ---------- */
+  main{flex:1;min-width:0;padding:26px 30px 60px;max-width:1240px}
+  .view[hidden]{display:none}
+  .view-head{margin-bottom:20px}
+  .view-head h1{font-family:var(--font-head);font-weight:700;font-size:21px;letter-spacing:.01em}
+  .view-head h1:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+  .view-head p{color:var(--muted);font-size:13.5px;margin-top:3px;max-width:64ch}
+
+  /* ---------- Panels ---------- */
+  .panel{
+    background:var(--p1);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+  }
+  .panel + .panel{margin-top:16px}
+  .panel-head{
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    padding:14px 18px;border-bottom:1px solid var(--line);
+  }
+  .panel-head h2{font-family:var(--font-head);font-weight:600;font-size:14.5px;letter-spacing:.02em}
+  .panel-body{padding:18px}
+
+  .rank-tag{
+    font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+    border-radius:4px;padding:2px 8px;border:1px solid var(--line);color:var(--muted);
+    background:var(--p2);flex:none;
+  }
+  .rank-tag.primary{color:#0B1330;background:var(--gold);border-color:var(--gold)}
+
+  /* ---------- Scan cards ---------- */
+  .scan-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .scan-card{
+    background:var(--p1);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px;display:flex;flex-direction:column;gap:10px;
+  }
+  .scan-card.primary{
+    grid-column:1 / -1;
+    border-color:rgba(217,164,65,.45);
+    background:linear-gradient(180deg, rgba(217,164,65,.05), rgba(217,164,65,0) 55%), var(--p1);
+  }
+  .scan-card h2{font-family:var(--font-head);font-weight:600;font-size:15px}
+  .scan-card .desc{color:var(--muted);font-size:13px;max-width:70ch}
+  .scan-card .card-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+
+  .input-row{display:flex;gap:10px;margin-top:4px;flex-wrap:wrap}
+  .input-row input[type="text"],
+  .input-row input[type="url"]{
+    flex:1;min-width:220px;
+    background:var(--p2);border:1px solid var(--line);border-radius:var(--radius-sm);
+    color:var(--text);padding:9px 12px;font-size:13.5px;font-family:var(--font-mono);
+  }
+  .input-row input::placeholder{color:var(--placeholder);font-family:var(--font-mono)}
+  .input-row input:focus-visible{outline:2px solid var(--gold);outline-offset:0;border-color:var(--gold)}
+  .input-row input:disabled{opacity:.45;cursor:not-allowed}
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    border-radius:var(--radius-sm);border:1px solid var(--line);
+    background:var(--p2);color:var(--text);
+    font-size:13.5px;font-weight:600;padding:9px 16px;cursor:pointer;
+    white-space:nowrap;text-decoration:none;
+  }
+  .btn:hover{background:var(--p3)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn:disabled:hover{background:var(--p2)}
+  .btn[aria-disabled="true"]{opacity:.45;cursor:not-allowed;pointer-events:none}
+  .btn-gold{background:var(--gold);border-color:var(--gold);color:#0B1330}
+  .btn-gold:hover{background:var(--gold-dark);border-color:var(--gold-dark)}
+  .btn-gold:disabled:hover{background:var(--gold);border-color:var(--gold)}
+  .btn-ghost{background:transparent}
+  .btn-ghost:hover{background:var(--p2)}
+
+  .local-note{
+    display:none;align-items:flex-start;gap:8px;
+    font-size:12.5px;color:var(--muted);
+    background:var(--p2);border:1px solid var(--line);border-radius:var(--radius-sm);
+    padding:9px 12px;margin-top:2px;
+  }
+  .local-note.show{display:flex}
+  .local-note a{color:var(--gold);font-weight:500}
+  .mode-warn{
+    display:none;align-items:flex-start;gap:8px;
+    font-size:12.5px;color:var(--weak);
+    background:rgba(217,164,65,.08);border:1px solid rgba(217,164,65,.35);border-radius:var(--radius-sm);
+    padding:9px 12px;margin-top:2px;
+  }
+  .mode-warn.show{display:flex}
+  .mode-warn svg{flex:none;margin-top:2px}
+  .mode-warn a{color:var(--gold);font-weight:500}
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+  .chip{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--p2);border:1px solid var(--line);border-radius:999px;
+    color:var(--text);font-size:12.5px;font-weight:500;
+    padding:6px 13px;cursor:pointer;
+  }
+  .chip:hover{border-color:var(--gold);background:var(--p3)}
+  .chip:disabled{opacity:.45;cursor:not-allowed}
+  .chip .chip-sub{font-family:var(--font-mono);font-size:11px;color:var(--muted)}
+  .chip-tag{
+    font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--muted);border:1px solid var(--line);border-radius:3px;padding:1px 5px;
+  }
+
+  /* ---------- States ---------- */
+  .state-box{
+    border:1px solid var(--line);border-radius:var(--radius);background:var(--p1);
+    padding:52px 24px;text-align:center;
+  }
+  .state-box img{width:190px;max-width:60%;opacity:.9;margin-bottom:18px}
+  .state-box h2{font-family:var(--font-head);font-weight:600;font-size:17px;margin-bottom:6px}
+  .state-box p{color:var(--muted);font-size:13.5px;max-width:52ch;margin:0 auto}
+  .state-box .btn{margin-top:18px}
+
+  .spinner{
+    width:34px;height:34px;margin:0 auto 16px;border-radius:50%;
+    border:3px solid var(--p3);border-top-color:var(--gold);
+    animation:spin .8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion: reduce){
+    .spinner{animation-duration:1.6s}
+    *{scroll-behavior:auto !important}
+  }
+
+  .error-box{border-color:rgba(210,106,86,.5)}
+  .error-box h2{color:var(--broken)}
+  .error-detail{
+    font-family:var(--font-mono);font-size:12.5px;color:var(--text);
+    background:var(--p2);border:1px solid var(--line);border-radius:var(--radius-sm);
+    padding:10px 14px;margin:14px auto 0;max-width:640px;
+    word-break:break-word;text-align:left;
+  }
+
+  /* ---------- Results ---------- */
+  .results-bar{
+    display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:16px;
+  }
+  .results-target{min-width:0}
+  .results-target .label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .results-target .name{
+    font-family:var(--font-mono);font-size:15px;font-weight:500;
+    word-break:break-all;margin-top:2px;
+  }
+  .results-actions{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+  .results-actions .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+  .results-actions .fine{font-size:11.5px;color:var(--muted);text-align:right}
+  .cbom-unavail{font-size:11.5px;color:var(--muted);font-style:italic}
+
+  .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+  .kpi{
+    background:var(--p1);border:1px solid var(--line);border-radius:var(--radius);
+    padding:14px 16px;
+  }
+  .kpi .k-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .kpi .k-value{font-family:var(--font-head);font-weight:700;font-size:27px;line-height:1.15;margin-top:6px}
+  .kpi .k-sub{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .kpi .k-value.pct-danger{color:var(--broken)}
+  .kpi .k-value.pct-warn{color:var(--weak)}
+  .kpi .k-value.pct-ok{color:var(--safe)}
+  .kpi .k-value.urgent-hot{color:var(--broken)}
+
+  .results-grid{display:grid;grid-template-columns:320px 1fr;gap:16px;align-items:start}
+
+  /* Donut */
+  .donut-wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .donut-center-num{font-family:var(--font-head);font-weight:700;font-size:22px;fill:var(--text)}
+  .donut-center-lbl{font-size:10px;letter-spacing:.1em;fill:var(--muted);text-transform:uppercase;font-family:var(--font-body)}
+  .legend{display:flex;flex-direction:column;gap:8px;min-width:150px;flex:1}
+  .legend-item{display:flex;align-items:center;gap:9px;font-size:12.5px}
+  .legend-swatch{width:10px;height:10px;border-radius:3px;flex:none}
+  .legend-name{color:var(--text)}
+  .legend-count{margin-left:auto;font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+  .safe-badge{
+    display:flex;align-items:center;gap:11px;margin-top:16px;padding-top:14px;
+    border-top:1px solid var(--line);font-size:12.5px;color:var(--safe);
+  }
+  .safe-badge img{width:34px;height:34px;flex:none}
+
+  /* Findings toolbar */
+  .find-toolbar{
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    padding:12px 16px;border-bottom:1px solid var(--line);
+  }
+  .search-wrap{position:relative;flex:1;min-width:190px;max-width:340px}
+  .search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none}
+  .search-wrap input{
+    width:100%;background:var(--p2);border:1px solid var(--line);border-radius:var(--radius-sm);
+    color:var(--text);padding:7px 12px 7px 32px;font-size:13px;
+  }
+  .search-wrap input::placeholder{color:var(--placeholder)}
+  .search-wrap input:focus-visible{outline:2px solid var(--gold);outline-offset:0;border-color:var(--gold)}
+  .filter-chips{display:flex;gap:6px;flex-wrap:wrap}
+  .fchip{
+    display:inline-flex;align-items:center;gap:6px;
+    background:transparent;border:1px solid var(--line);border-radius:999px;
+    color:var(--muted);font-size:12px;font-weight:500;padding:4px 11px;cursor:pointer;
+  }
+  .fchip:hover{background:var(--p2);color:var(--text)}
+  .fchip[aria-pressed="true"]{background:var(--p3);color:var(--text);border-color:var(--gold)}
+  .fchip .fdot{width:8px;height:8px;border-radius:50%;flex:none}
+  .fchip .fnum{font-family:var(--font-mono);font-size:11px}
+
+  /* Cap caveat strip */
+  .cap-note{
+    display:flex;gap:8px;align-items:flex-start;
+    padding:9px 16px;font-size:12px;color:var(--muted);
+    background:var(--p2);border-bottom:1px solid var(--line);
+  }
+  .cap-note svg{flex:none;margin-top:2px}
+  .cap-note strong{color:var(--text);font-weight:600}
+
+  /* Findings table */
+  .table-scroll{max-height:560px;overflow:auto;border-radius:0 0 var(--radius) var(--radius)}
+  table.findings{width:100%;border-collapse:collapse;font-size:13px;min-width:640px}
+  table.findings thead th{
+    position:sticky;top:0;z-index:5;
+    background:var(--p2);
+    text-align:left;font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--muted);padding:9px 14px;border-bottom:1px solid var(--line);white-space:nowrap;
+  }
+  table.findings thead th.sortable{cursor:pointer;user-select:none}
+  table.findings thead th.sortable:hover{color:var(--text)}
+  .sort-arrow{font-size:10px;margin-left:4px}
+  table.findings tbody td{
+    padding:9px 14px;border-bottom:1px solid rgba(44,58,102,.55);vertical-align:top;
+  }
+  tr.f-row{cursor:pointer}
+  tr.f-row:hover td{background:rgba(23,34,74,.6)}
+  tr.f-row[aria-expanded="true"] td{background:var(--p2)}
+
+  .sev-pill{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:11px;font-weight:600;letter-spacing:.03em;color:var(--text);
+    border-radius:999px;padding:3px 10px;white-space:nowrap;
+    border:1px solid var(--line);background:var(--p3);
+  }
+  .sev-pill .pdot{width:7px;height:7px;border-radius:50%}
+  .sev-BROKEN_Q .pdot{background:var(--broken)}
+  .sev-WEAK .pdot{background:var(--weak)}
+  .sev-SAFE .pdot{background:var(--safe)}
+  .sev-PQC .pdot{background:var(--pqc)}
+
+  .loc{font-family:var(--font-mono);font-size:12.5px;word-break:break-all}
+  .loc .line-no{color:var(--muted)}
+  .urgent-mark{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:15px;height:15px;border-radius:50%;flex:none;
+    background:rgba(210,106,86,.18);border:1px solid var(--broken);
+    color:var(--broken);font-weight:700;font-size:10.5px;line-height:1;
+    margin-right:7px;vertical-align:middle;
+  }
+  .algo{font-weight:500}
+  .reco{font-family:var(--font-mono);font-size:12.5px}
+  .reco.none{color:var(--muted);font-family:var(--font-body);font-style:italic}
+  .caret{
+    color:var(--muted);font-size:10px;display:inline-block;line-height:1;
+  }
+  tr[aria-expanded="true"] .caret{color:var(--gold)}
+  tr.snippet-row td{
+    background:var(--p2);padding:0 14px 12px;border-bottom:1px solid var(--line);
+  }
+  .snippet-inner{padding-top:10px}
+  .snippet-why{font-size:12.5px;color:var(--muted);margin-bottom:8px;max-width:90ch}
+  .snippet-why strong{color:var(--text);font-weight:600}
+  pre.snippet{
+    font-family:var(--font-mono);font-size:12px;line-height:1.6;
+    background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-sm);
+    padding:10px 14px;overflow-x:auto;white-space:pre;color:var(--text);
+  }
+  .table-empty{padding:34px 20px;text-align:center;color:var(--muted);font-size:13px}
+  .table-empty .cap-inline{display:block;margin-top:8px;font-size:12px}
+
+  /* ---------- About ---------- */
+  .about-grid{display:grid;grid-template-columns:1fr 260px;gap:16px;align-items:start}
+  .tier-list{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+  .tier-item{display:flex;gap:12px;align-items:flex-start}
+  .tier-item .legend-swatch{margin-top:5px}
+  .tier-item .t-name{font-weight:600;font-size:13.5px}
+  .tier-item p{color:var(--muted);font-size:12.5px}
+  .badge-card{text-align:center;padding:24px 18px}
+  .badge-card img{width:120px;margin-bottom:12px}
+  .badge-card p{font-size:12.5px;color:var(--muted)}
+
+  /* status live region for AT */
+  .visually-hidden{
+    position:absolute;width:1px;height:1px;overflow:hidden;
+    clip:rect(0 0 0 0);white-space:nowrap;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:1020px){
+    .results-grid{grid-template-columns:1fr}
+    .about-grid{grid-template-columns:1fr}
+  }
+  @media (max-width:860px){
+    .shell{flex-direction:column}
+    .sidebar{
+      width:100%;flex-direction:row;align-items:center;gap:4px;
+      padding:8px 12px;border-right:0;border-bottom:1px solid var(--line);
+      position:sticky;top:56px;z-index:30;
+    }
+    .side-label,.sidebar-foot{display:none}
+    .nav-btn{width:auto;padding:7px 12px}
+    .nav-btn[aria-current="page"]{box-shadow:inset 0 -2px 0 var(--gold)}
+    main{padding:20px 16px 50px}
+    .scan-grid{grid-template-columns:1fr}
+    .kpi-row{grid-template-columns:repeat(2,1fr)}
+    .tagline{display:none}
+    .results-actions{margin-left:0;align-items:flex-start}
+    .results-actions .row{justify-content:flex-start}
+    .results-actions .fine{text-align:left}
+  }
+  @media (max-width:520px){
+    .kpi-row{grid-template-columns:1fr 1fr}
+    .mode-badge span.mode-text{display:none}
+  }
 </style>
 </head>
 <body>
-<div class="spine"></div>
-<div class="wrap">
-  <header>
-    <div class="kick">Enterprise Cryptographic Discovery &amp; Analysis Tool</div>
-    <h1>ECDAT</h1>
-    <div class="sub">Point it at a codebase. It finds every use of cryptography, flags what a <b>quantum computer</b> will break, and names the exact post-quantum fix. Runs offline. <b>No code leaves the machine.</b></div>
+<div class="app">
+
+  <!-- ============ Top bar ============ -->
+  <header class="topbar">
+    <div class="brand">
+      <img src="/assets/logo_mark.png" alt="" aria-hidden="true">
+      <span class="wordmark">ECDAT</span>
+      <span class="tagline">Enterprise Cryptographic Discovery</span>
+    </div>
+    <div class="topbar-right">
+      <span class="mode-badge" id="modeBadge">
+        <span class="dot" aria-hidden="true"></span>
+        <span class="mode-text" id="modeText">Checking mode…</span>
+      </span>
+      <a class="btn btn-ghost" href="/api/download" id="topDownload" aria-label="Download ECDAT to run offline" download>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8m0 0 3-3m-3 3L5 7M3 13h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Download
+      </a>
+    </div>
   </header>
 
-  <!-- PRIMARY: scan your own code -->
-  <div class="block">
-    <div class="blabel">Scan your own code <span id="modeTag" class="modeTag"></span></div>
-    <div class="repo">
-      <input id="localpath" placeholder="/path/to/your/project   — a folder on this computer"/>
-      <button id="goLocal">Scan folder</button>
-    </div>
-    <div class="hint" id="localHint">Runs on this machine. Your code never leaves your computer.</div>
-  </div>
+  <div class="shell">
 
-  <!-- SECONDARY: a public repo -->
-  <div class="block">
-    <div class="blabel">…or a public GitHub repo</div>
-    <div class="repo">
-      <input id="repo" placeholder="https://github.com/owner/repo"/>
-      <button id="go">Scan repo</button>
-    </div>
-  </div>
-
-  <!-- TERTIARY: samples -->
-  <div class="block">
-    <div class="blabel">New here? Try a sample scan</div>
-    <div class="samples">
-      <button class="demo" data-demo="aion">Sample: a PQC messaging app</button>
-      <button class="demo" data-demo="pyca">Sample: pyca/cryptography</button>
-    </div>
-  </div>
-
-  <div class="status" id="status"></div>
-
-  <div id="results" class="hidden">
-    <div class="grid">
-      <div class="stat"><div class="n" id="s-files">—</div><div class="l">files scanned</div></div>
-      <div class="stat"><div class="n" id="s-total">—</div><div class="l">crypto findings</div></div>
-      <div class="stat big"><div class="n" id="s-vuln">—</div><div class="l" id="s-vuln-l">quantum-vulnerable</div></div>
-      <div class="stat"><div class="n" id="s-urgent">—</div><div class="l">urgent (Mosca)</div></div>
-    </div>
-
-    <div class="panel">
-      <h2 id="risk-title">Cryptographic risk breakdown</h2>
-      <div class="bar" id="bar"></div>
-      <div class="legend" id="legend"></div>
-    </div>
-
-    <div class="panel">
-      <h2>Findings &amp; prescribed fixes</h2>
-      <div style="max-height:420px;overflow:auto">
-      <table>
-        <thead><tr><th>Location</th><th>Algorithm</th><th>Risk</th><th>Replace with</th></tr></thead>
-        <tbody id="rows"></tbody>
-      </table>
+    <!-- ============ Sidebar ============ -->
+    <nav class="sidebar" aria-label="Console navigation">
+      <div class="side-label">Console</div>
+      <button class="nav-btn" data-view="scan" aria-current="page">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="m10.5 10.5 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Scan
+      </button>
+      <button class="nav-btn" data-view="results">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 13.5v-5m5 5v-9m5 9v-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Results
+        <span class="nav-count" id="navCount" hidden>0</span>
+      </button>
+      <button class="nav-btn" data-view="about">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M8 7.2v3.6M8 5.1v.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        About
+      </button>
+      <div class="sidebar-foot">
+        <p>Cryptography-discovery scanner for the post-quantum migration.</p>
+        <span class="ver">ECDAT console</span>
       </div>
-      <div class="foot">
-        <a class="dl" id="cbom" href="#">Download CBOM (CycloneDX)</a>
-        <span class="note">Standard machine-readable Cryptography Bill of Materials — plugs into any compliance pipeline.</span>
-      </div>
-    </div>
+    </nav>
+
+    <!-- ============ Main ============ -->
+    <main>
+
+      <!-- ======== SCAN VIEW ======== -->
+      <section class="view" id="view-scan" aria-labelledby="scan-h1">
+        <div class="view-head">
+          <h1 id="scan-h1" tabindex="-1">Start a scan</h1>
+          <p>Discover every cryptographic algorithm in a codebase and see what a quantum adversary breaks. Findings are graded across four tiers, from quantum-broken to post-quantum.</p>
+        </div>
+
+        <div class="scan-grid">
+          <!-- (a) PRIMARY: local folder -->
+          <div class="scan-card primary">
+            <div class="card-top">
+              <h2 id="local-h">Scan your own code</h2>
+              <span class="rank-tag primary">Recommended</span>
+            </div>
+            <p class="desc">Point ECDAT at a folder on this machine. Nothing leaves your computer — discovery runs entirely locally.</p>
+            <form class="input-row" id="localForm">
+              <input type="text" id="localPath" placeholder="/path/to/your/project" aria-labelledby="local-h" autocomplete="off" spellcheck="false">
+              <button type="submit" class="btn btn-gold" id="localBtn">Scan folder</button>
+            </form>
+            <div class="local-note" id="localNote" role="note">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="flex:none;margin-top:2px" aria-hidden="true"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M8 7.2v3.6M8 5.1v.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <span>Available when you run ECDAT on your own machine — <a href="/api/download" download>download it below</a>.</span>
+            </div>
+            <div class="mode-warn" id="modeWarn" role="note">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.8 1.5 13h13L8 1.8Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 6.4v3.1M8 11.2v.2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+              <span>Couldn't detect run mode, so local scanning is disabled as a precaution. If you are running ECDAT locally, reload the page. Otherwise, <a href="/api/download" download>download it</a> to scan your own code.</span>
+            </div>
+          </div>
+
+          <!-- (b) GitHub repo -->
+          <div class="scan-card">
+            <div class="card-top">
+              <h2 id="repo-h">Scan a public GitHub repo</h2>
+            </div>
+            <p class="desc">We clone the repository server-side and scan it. Public repositories only.</p>
+            <form class="input-row" id="repoForm">
+              <input type="url" id="repoUrl" placeholder="https://github.com/org/repo" aria-labelledby="repo-h" autocomplete="off" spellcheck="false">
+              <button type="submit" class="btn" id="repoBtn">Scan repo</button>
+            </form>
+          </div>
+
+          <!-- (c) samples -->
+          <div class="scan-card">
+            <div class="card-top">
+              <h2>Try a sample</h2>
+            </div>
+            <p class="desc">Pre-scanned example codebases, ready in one click.</p>
+            <div class="chips" id="demoChips" role="group" aria-label="Sample scans">
+              <span style="color:var(--muted);font-size:12.5px">Loading samples…</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======== RESULTS VIEW ======== -->
+      <section class="view" id="view-results" hidden aria-labelledby="results-h1">
+        <div class="view-head">
+          <h1 id="results-h1" tabindex="-1">Scan results</h1>
+        </div>
+
+        <!-- empty state -->
+        <div id="stateEmpty" class="state-box">
+          <img src="/assets/empty_state.png" alt="">
+          <h2>No scan yet</h2>
+          <p>Run a scan to map the cryptography in a codebase. Start with your own code, a public GitHub repository, or a one-click sample.</p>
+          <button class="btn btn-gold" id="emptyGoScan">Start a scan</button>
+        </div>
+
+        <!-- loading state -->
+        <div id="stateLoading" class="state-box" hidden>
+          <div class="spinner" aria-hidden="true"></div>
+          <h2>Scanning</h2>
+          <p id="loadingText">Working…</p>
+        </div>
+
+        <!-- error state -->
+        <div id="stateError" class="state-box error-box" hidden role="alert">
+          <h2>Scan failed</h2>
+          <p>ECDAT could not complete this scan. The server said:</p>
+          <div class="error-detail" id="errorDetail"></div>
+          <button class="btn" id="errorRetry">Back to scan</button>
+        </div>
+
+        <!-- results -->
+        <div id="stateResults" hidden>
+          <div class="results-bar">
+            <div class="results-target">
+              <div class="label">Target</div>
+              <div class="name" id="resTarget"></div>
+            </div>
+            <div class="results-actions">
+              <div class="row">
+                <a class="btn btn-gold" id="cbomLink" href="#" download>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8m0 0 3-3m-3 3L5 7M3 13h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Download CBOM
+                </a>
+                <span class="cbom-unavail" id="cbomUnavail" hidden>CBOM not available for this scan.</span>
+                <a class="btn" href="/api/download" download aria-label="Download ECDAT to run offline">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2.5" y="3" width="11" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 13.5h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  Download ECDAT (run offline)
+                </a>
+              </div>
+              <span class="fine">Run offline and scanning your own code stays entirely on your machine.</span>
+            </div>
+          </div>
+
+          <div class="kpi-row">
+            <div class="kpi">
+              <div class="k-label">Files scanned</div>
+              <div class="k-value" id="kpiFiles">–</div>
+              <div class="k-sub">source files inspected</div>
+            </div>
+            <div class="kpi">
+              <div class="k-label">Findings</div>
+              <div class="k-value" id="kpiFindings">–</div>
+              <div class="k-sub">crypto usages discovered</div>
+            </div>
+            <div class="kpi">
+              <div class="k-label">Quantum-vulnerable</div>
+              <div class="k-value" id="kpiPct">–</div>
+              <div class="k-sub" id="kpiPctSub">of all findings</div>
+            </div>
+            <div class="kpi">
+              <div class="k-label">Urgent (Mosca)</div>
+              <div class="k-value" id="kpiUrgent">–</div>
+              <div class="k-sub">migrate-now candidates</div>
+            </div>
+          </div>
+
+          <div class="results-grid">
+            <div class="panel">
+              <div class="panel-head"><h2>Risk distribution</h2></div>
+              <div class="panel-body">
+                <div class="donut-wrap">
+                  <div id="donutHost"></div>
+                  <div class="legend" id="legendHost"></div>
+                </div>
+                <div class="safe-badge" id="safeBadge" hidden>
+                  <img src="/assets/quantum_safe_badge.png" alt="">
+                  <span>No quantum-vulnerable cryptography detected in this scan.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <h2>Findings</h2>
+                <span class="rank-tag" id="findShownTag">0 shown</span>
+              </div>
+              <div class="find-toolbar">
+                <div class="search-wrap">
+                  <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="4.5" stroke="#8C99C2" stroke-width="1.5"/><path d="m10.5 10.5 3 3" stroke="#8C99C2" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  <input type="search" id="findSearch" placeholder="Search file, algorithm, fix…" aria-label="Search findings">
+                </div>
+                <div class="filter-chips" id="tierFilters" role="group" aria-label="Filter by tier"></div>
+              </div>
+              <div class="cap-note" id="capNote" hidden>
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M8 7.2v3.6M8 5.1v.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <span>The table lists the first <strong id="capShown">0</strong> of <strong id="capTotal">0</strong> findings. Search, filters and sort apply to this subset only — <a href="#" id="capCbomLink">download the CBOM</a> for the complete inventory.</span>
+              </div>
+              <div class="table-scroll" tabindex="0" role="region" aria-label="Findings table, scrollable">
+                <table class="findings">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="sortable" id="sevHeader" aria-sort="descending" title="Sort by severity">
+                        Severity<span class="sort-arrow" id="sevArrow" aria-hidden="true">▼</span>
+                      </th>
+                      <th scope="col">Location</th>
+                      <th scope="col">Algorithm</th>
+                      <th scope="col">Replace with</th>
+                      <th scope="col" aria-label="Expand"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="findBody"></tbody>
+                </table>
+                <div class="table-empty" id="tableEmpty" hidden>
+                  No findings match your filters.
+                  <span class="cap-inline" id="tableEmptyCap" hidden></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======== ABOUT VIEW ======== -->
+      <section class="view" id="view-about" hidden aria-labelledby="about-h1">
+        <div class="view-head">
+          <h1 id="about-h1" tabindex="-1">About ECDAT</h1>
+          <p>ECDAT discovers every use of cryptography in a codebase and produces a Cryptography Bill of Materials (CBOM), so teams can plan the migration to post-quantum algorithms before harvest-now-decrypt-later attacks pay off.</p>
+        </div>
+
+        <div class="about-grid">
+          <div class="panel">
+            <div class="panel-head"><h2>How findings are graded</h2></div>
+            <div class="panel-body">
+              <div class="tier-list">
+                <div class="tier-item">
+                  <span class="legend-swatch" style="background:var(--broken)"></span>
+                  <div><div class="t-name">Quantum-broken (BROKEN_Q)</div>
+                  <p>Public-key crypto that Shor's algorithm defeats outright — RSA, ECC, classic Diffie–Hellman. Highest migration priority; anything encrypted today can be harvested and decrypted later.</p></div>
+                </div>
+                <div class="tier-item">
+                  <span class="legend-swatch" style="background:var(--weak)"></span>
+                  <div><div class="t-name">Weak today (WEAK)</div>
+                  <p>Algorithms already broken or deprecated on classical hardware — MD5, SHA-1, DES, RC4. Replace regardless of quantum timelines.</p></div>
+                </div>
+                <div class="tier-item">
+                  <span class="legend-swatch" style="background:var(--safe)"></span>
+                  <div><div class="t-name">Safe (SAFE)</div>
+                  <p>Symmetric crypto and hashes that survive Grover's algorithm at adequate key sizes — AES-256, SHA-256 and up. No change needed.</p></div>
+                </div>
+                <div class="tier-item">
+                  <span class="legend-swatch" style="background:var(--pqc)"></span>
+                  <div><div class="t-name">Post-quantum (PQC)</div>
+                  <p>NIST-standardised post-quantum algorithms — ML-KEM, ML-DSA, SLH-DSA. Already where you want to be.</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel badge-card">
+            <img src="/assets/quantum_safe_badge.png" alt="Quantum safe badge">
+            <p>Run ECDAT offline on your own machine. Your code never leaves your infrastructure.</p>
+            <a class="btn btn-gold" href="/api/download" download style="margin-top:14px">Download ECDAT</a>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <div class="panel-head"><h2>Urgency: the Mosca inequality</h2></div>
+          <div class="panel-body">
+            <p style="color:var(--muted);font-size:13px;max-width:80ch">A finding is marked urgent when the data it protects must stay secret longer than the time you have before cryptographically-relevant quantum computers arrive — Mosca's <span style="font-family:var(--font-mono)">X + Y &gt; Z</span>. Urgent findings are flagged with an <span class="urgent-mark" style="vertical-align:baseline">!</span> marker in the findings table and should lead your migration backlog.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
   </div>
 </div>
 
+<div class="visually-hidden" role="status" aria-live="polite" id="ariaStatus"></div>
+
 <script>
-const $=s=>document.querySelector(s);
-const TIERS=[["BROKEN_Q","Quantum-broken","broken","var(--broken)"],
-             ["WEAK","Weak today","weak","var(--weak)"],
-             ["SAFE","Safe","safe","var(--safe)"],
-             ["PQC","Post-quantum","pqc","var(--pqc)"]];
-let liveCbom=null;
+"use strict";
+(function(){
 
-function setStatus(msg,busy){ $("#status").innerHTML = msg? (busy?`<span class="dot"></span>`:"")+msg : ""; }
+  /* ---------------- constants ---------------- */
+  var TIERS = ["BROKEN_Q","WEAK","SAFE","PQC"];
+  var TIER_META = {
+    BROKEN_Q: { color:"#D26A56", label:"Quantum-broken", rank:0 },
+    WEAK:     { color:"#D9A441", label:"Weak today",     rank:1 },
+    SAFE:     { color:"#54AE9C", label:"Safe",           rank:2 },
+    PQC:      { color:"#8093E6", label:"Post-quantum",   rank:3 }
+  };
 
-function render(d){
-  $("#results").classList.remove("hidden");
-  $("#s-files").textContent=d.files_scanned;
-  $("#s-total").textContent=d.total;
-  $("#s-vuln").textContent=d.pct_vulnerable+"%";
-  $("#s-vuln-l").textContent=`quantum-vulnerable (${d.vulnerable})`;
-  $("#s-urgent").textContent=d.urgent;
-  $("#risk-title").textContent=`Cryptographic risk — ${d.target}`;
-  // bar
-  const bar=$("#bar"); bar.innerHTML=""; const leg=$("#legend"); leg.innerHTML="";
-  TIERS.forEach(([k,lab,cls,col])=>{
-    const c=d.counts[k]||0; if(!d.total) return;
-    const pct=100*c/d.total;
-    if(c>0){const s=document.createElement("span");s.style.background=col;s.style.flex=pct;
-      s.textContent=c>1?c:"";s.title=`${lab}: ${c}`;bar.appendChild(s);}
-    const li=document.createElement("span");li.innerHTML=`<span class="sw" style="background:${col}"></span>${lab} <b>${c}</b>`;leg.appendChild(li);
-  });
-  // rows
-  const rows=$("#rows");rows.innerHTML="";
-  d.findings.forEach(f=>{
-    const cls={BROKEN_Q:"b-broken",WEAK:"b-weak",SAFE:"b-safe",PQC:"b-pqc"}[f.tier];
-    const tr=document.createElement("tr");
-    tr.innerHTML=`<td><span class="fp">${f.file}:${f.line}</span>${f.urgent?'<span class="urg" title="Mosca-urgent">!</span>':''}</td>
-      <td>${f.algorithm}</td>
-      <td><span class="badge ${cls}">${f.tier_label}</span></td>
-      <td>${f.tier==='SAFE'||f.tier==='PQC'?'<span class="note">no change needed</span>':'<span class="fix">'+f.recommendation+'</span>'}</td>`;
-    rows.appendChild(tr);
-  });
-}
+  /* ---------------- state ---------------- */
+  var state = {
+    modeLocal: false,
+    modeUnknown: false,
+    demos: [],
+    summary: null,
+    cbom: { kind: null, href: null, name: "cbom.json" }, // kind: 'url' | 'blob'
+    blobUrl: null,
+    filter: "ALL",
+    search: "",
+    sortDesc: true,       // true = most severe first
+    expanded: {},
+    scanning: false,
+    resultState: "empty"  // empty | loading | error | results
+  };
 
-async function loadDemo(id){
-  document.querySelectorAll(".demo").forEach(b=>b.classList.toggle("active",b.dataset.demo===id));
-  setStatus("Loading sample…",true);
-  const d=await (await fetch(`/api/scan/${id}`)).json();
-  liveCbom=null; $("#cbom").setAttribute("href",`/api/cbom/${id}`); $("#cbom").removeAttribute("download");
-  render(d); setStatus(`Sample scan — ${d.files_scanned} files, ${d.total} findings.`);
-}
-document.querySelectorAll(".demo").forEach(b=>b.onclick=()=>loadDemo(b.dataset.demo));
-
-function attachLiveCbom(d){
-  const blob=new Blob([JSON.stringify(d.cbom||{},null,1)],{type:"application/json"});
-  $("#cbom").setAttribute("href",URL.createObjectURL(blob)); $("#cbom").setAttribute("download","ecdat-cbom.json");
-}
-
-// scan a folder on THIS computer (only works when run locally)
-$("#goLocal").onclick=async()=>{
-  const path=$("#localpath").value.trim(); if(!path)return;
-  setStatus(`Scanning ${path} …`,true);
-  try{
-    const r=await fetch("/api/scan_local",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({path})});
-    const d=await r.json();
-    if(!r.ok){setStatus("⚠ "+(d.detail||"Scan failed"));return;}
-    attachLiveCbom(d); render(d);
-    setStatus(`Scan complete — ${d.files_scanned} files, ${d.total} findings in ${d.target}.`);
-  }catch(e){setStatus("⚠ "+e.message);}
-};
-$("#localpath").addEventListener("keydown",e=>{if(e.key==="Enter")$("#goLocal").click();});
-
-// detect whether we're running locally or on the hosted demo
-async function initMode(){
-  let local=false;
-  try{ local=(await (await fetch("/api/mode")).json()).local; }catch(e){}
-  const tag=$("#modeTag");
-  if(local){
-    tag.textContent="on this machine"; tag.className="modeTag on";
-    $("#localpath").focus();
-    setStatus("Ready. Enter a folder path above to scan your own code.");
-  }else{
-    tag.textContent="demo server"; tag.className="modeTag off";
-    $("#localHint").innerHTML="To scan a folder on <b>your</b> computer, download ECDAT from GitHub and run it locally (see the README). On this demo server, use a public repo or a sample below.";
-    document.querySelector(".block").classList.add("disabled");
-    loadDemo("aion"); // show something on the public demo
+  /* ---------------- helpers ---------------- */
+  function $(id){ return document.getElementById(id); }
+  function escapeHtml(s){
+    return String(s == null ? "" : s)
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
   }
-}
-initMode();
+  function num(v){ var n = Number(v); return isFinite(n) ? n : 0; }
+  function fmt(n){
+    var v = Number(n);
+    if (!isFinite(v)) return "0";
+    return v.toLocaleString("en-US");
+  }
+  function announce(msg){ $("ariaStatus").textContent = msg; }
 
-$("#go").onclick=async()=>{
-  const url=$("#repo").value.trim(); if(!url)return;
-  document.querySelectorAll(".demo").forEach(b=>b.classList.remove("active"));
-  setStatus(`Cloning and scanning ${url} …`,true);
-  try{
-    const r=await fetch("/api/scan",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({repo_url:url})});
-    if(!r.ok){const e=await r.json();setStatus("⚠ "+(e.detail||"Scan failed"));return;}
-    const d=await r.json(); liveCbom=d.cbom;
-    const blob=new Blob([JSON.stringify(d.cbom,null,1)],{type:"application/json"});
-    $("#cbom").setAttribute("href",URL.createObjectURL(blob)); $("#cbom").setAttribute("download","ecdat-cbom.json");
-    render(d); setStatus(`Scan complete — ${d.files_scanned} files, ${d.total} findings in ${d.target}.`);
-  }catch(e){setStatus("⚠ "+e.message);}
-};
-$("#repo").addEventListener("keydown",e=>{if(e.key==="Enter")$("#go").click();});
+  async function api(url, opts){
+    var res;
+    try {
+      res = await fetch(url, opts);
+    } catch (e) {
+      throw new Error("Could not reach the ECDAT server. Is it still running?");
+    }
+    if (!res.ok) {
+      var detail = "HTTP " + res.status;
+      try {
+        var j = await res.json();
+        if (j && j.detail) {
+          detail = (typeof j.detail === "string") ? j.detail : JSON.stringify(j.detail);
+        }
+      } catch (e) { /* body was not JSON */ }
+      throw new Error(detail);
+    }
+    try {
+      return await res.json();
+    } catch (e) {
+      throw new Error("The server returned an unreadable response.");
+    }
+  }
+
+  /* ---------------- navigation ---------------- */
+  var navBtns = Array.prototype.slice.call(document.querySelectorAll(".nav-btn"));
+  function showView(name, focusHeading){
+    navBtns.forEach(function(b){
+      if (b.getAttribute("data-view") === name) b.setAttribute("aria-current","page");
+      else b.removeAttribute("aria-current");
+    });
+    ["scan","results","about"].forEach(function(v){
+      $("view-" + v).hidden = (v !== name);
+    });
+    if (focusHeading) {
+      var h = $(name === "scan" ? "scan-h1" : name === "about" ? "about-h1" : "results-h1");
+      if (h) { try { h.focus({ preventScroll: false }); } catch (e) { h.focus(); } }
+    }
+  }
+  navBtns.forEach(function(b){
+    b.addEventListener("click", function(){ showView(b.getAttribute("data-view"), true); });
+  });
+  $("emptyGoScan").addEventListener("click", function(){ showView("scan", true); });
+  $("errorRetry").addEventListener("click", function(){ showView("scan", true); });
+
+  /* ---------------- result states ---------------- */
+  function setResultState(name, extra){
+    state.resultState = name;
+    $("stateEmpty").hidden   = (name !== "empty");
+    $("stateLoading").hidden = (name !== "loading");
+    $("stateError").hidden   = (name !== "error");
+    $("stateResults").hidden = (name !== "results");
+    if (name === "loading") {
+      $("loadingText").textContent = extra || "Working…";
+      announce("Scanning. " + (extra || ""));
+    }
+    if (name === "error") {
+      // The error box carries role="alert" and announces itself assertively.
+      $("errorDetail").textContent = extra || "Unknown error.";
+    }
+  }
+
+  /* ---------------- mode ---------------- */
+  async function loadMode(){
+    var badge = $("modeBadge"), txt = $("modeText");
+    state.modeUnknown = false;
+    try {
+      var m = await api("/api/mode");
+      state.modeLocal = !!(m && m.local);
+    } catch (e) {
+      state.modeLocal = false;
+      state.modeUnknown = true;
+    }
+    badge.classList.remove("local", "mode-unknown");
+    if (state.modeUnknown) {
+      badge.classList.add("mode-unknown");
+      txt.textContent = "Mode unknown";
+      badge.title = "ECDAT could not determine whether it is running locally. Local scanning is disabled as a precaution.";
+    } else if (state.modeLocal) {
+      badge.classList.add("local");
+      txt.textContent = "Local mode";
+      badge.title = "ECDAT is running on this machine — folder scans stay local.";
+    } else {
+      txt.textContent = "Hosted demo";
+      badge.title = "Running on a shared server. Download ECDAT to scan your own code locally.";
+    }
+    applyModeToLocalCard();
+  }
+  function applyModeToLocalCard(){
+    var disabled = !state.modeLocal || state.scanning;
+    $("localPath").disabled = disabled;
+    $("localBtn").disabled = disabled;
+    // Show the standard "hosted" note only when genuinely hosted; show the
+    // probe-failure warning when mode detection errored.
+    $("localNote").classList.toggle("show", !state.modeLocal && !state.modeUnknown);
+    $("modeWarn").classList.toggle("show", state.modeUnknown);
+  }
+
+  /* ---------------- demos ---------------- */
+  async function loadDemos(){
+    var host = $("demoChips");
+    try {
+      var demos = await api("/api/demos");
+      if (!Array.isArray(demos)) demos = [];
+      state.demos = demos;
+      if (!demos.length) {
+        host.innerHTML = '<span style="color:var(--muted);font-size:12.5px">No samples available.</span>';
+        return;
+      }
+      host.innerHTML = demos.map(function(d){
+        var sub = "";
+        if (typeof d.vulnerable === "number" && typeof d.total === "number") {
+          sub = '<span class="chip-sub">' + fmt(d.vulnerable) + "/" + fmt(d.total) + " vulnerable</span>";
+        }
+        return '<button type="button" class="chip" data-demo="' + escapeHtml(d.id) + '"' +
+               (d.note ? ' title="' + escapeHtml(d.note) + '"' : "") +
+               ' aria-label="Scan sample: ' + escapeHtml(d.label || d.id) + '">' +
+               '<span class="chip-tag">Sample</span>' +
+               '<span>' + escapeHtml(d.label || d.id) + "</span>" + sub +
+               "</button>";
+      }).join("");
+      Array.prototype.slice.call(host.querySelectorAll("[data-demo]")).forEach(function(btn){
+        btn.addEventListener("click", function(){ runDemoScan(btn.getAttribute("data-demo")); });
+      });
+    } catch (e) {
+      host.innerHTML = '<span style="color:var(--muted);font-size:12.5px">Could not load samples (' +
+        escapeHtml(e.message) + ").</span>";
+    }
+  }
+
+  /* ---------------- scanning ---------------- */
+  function setScanning(on){
+    state.scanning = on;
+    $("repoBtn").disabled = on;
+    $("repoUrl").disabled = on;
+    Array.prototype.slice.call(document.querySelectorAll("#demoChips .chip")).forEach(function(c){
+      c.disabled = on;
+    });
+    applyModeToLocalCard();
+  }
+
+  function beginScan(statusText){
+    setScanning(true);
+    showView("results");
+    setResultState("loading", statusText);
+  }
+  function failScan(err){
+    setScanning(false);
+    setResultState("error", (err && err.message) ? err.message : String(err));
+  }
+  function finishScan(summary, cbom){
+    setScanning(false);
+    if (!summary || typeof summary !== "object" ||
+        !summary.counts || typeof summary.counts !== "object" ||
+        !Array.isArray(summary.findings)) {
+      setResultState("error", "The scan finished but returned an unexpected response shape.");
+      return;
+    }
+    state.summary = summary;
+    state.cbom = cbom || { kind: null, href: null, name: "cbom.json" };
+    state.filter = "ALL";
+    state.search = "";
+    state.sortDesc = true;
+    state.expanded = {};
+    $("findSearch").value = "";
+    renderResults();
+    setResultState("results");
+    announce("Scan complete. " + fmt(summary.total) + " findings in " + fmt(summary.files_scanned) + " files.");
+    // Send keyboard / screen-reader focus into the new content.
+    var h = $("results-h1");
+    if (h) { try { h.focus(); } catch (e) {} }
+  }
+
+  function makeBlobCbom(cbomObj, target){
+    var name = "cbom-" + String(target || "scan").replace(/[^A-Za-z0-9._-]+/g, "_").slice(0, 60) + ".json";
+    if (state.blobUrl) { try { URL.revokeObjectURL(state.blobUrl); } catch (e) {} state.blobUrl = null; }
+    if (!cbomObj || typeof cbomObj !== "object") {
+      return { kind: null, href: null, name: name };
+    }
+    try {
+      var blob = new Blob([JSON.stringify(cbomObj, null, 2)], { type: "application/json" });
+      state.blobUrl = URL.createObjectURL(blob);
+      return { kind: "blob", href: state.blobUrl, name: name };
+    } catch (e) {
+      return { kind: null, href: null, name: name };
+    }
+  }
+
+  async function runDemoScan(id){
+    if (state.scanning) return;
+    var demo = null;
+    for (var i = 0; i < state.demos.length; i++) if (state.demos[i].id === id) demo = state.demos[i];
+    beginScan("Scanning sample “" + (demo ? (demo.label || id) : id) + "” …");
+    try {
+      var summary = await api("/api/scan/" + encodeURIComponent(id));
+      finishScan(summary, {
+        kind: "url",
+        href: "/api/cbom/" + encodeURIComponent(id),
+        name: "cbom-" + id + ".json"
+      });
+    } catch (e) { failScan(e); }
+  }
+
+  async function runRepoScan(url){
+    if (state.scanning) return;
+    beginScan("Cloning and scanning " + url + " … this can take a minute for large repositories.");
+    try {
+      var summary = await api("/api/scan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ repo_url: url })
+      });
+      finishScan(summary, makeBlobCbom(summary && summary.cbom, (summary && summary.target) || url));
+    } catch (e) { failScan(e); }
+  }
+
+  async function runLocalScan(path){
+    if (state.scanning) return;
+    beginScan("Scanning " + path + " on this machine … nothing leaves your computer.");
+    try {
+      var summary = await api("/api/scan_local", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path: path })
+      });
+      finishScan(summary, makeBlobCbom(summary && summary.cbom, (summary && summary.target) || path));
+    } catch (e) { failScan(e); }
+  }
+
+  $("repoForm").addEventListener("submit", function(ev){
+    ev.preventDefault();
+    var url = $("repoUrl").value.trim();
+    if (!url) { $("repoUrl").focus(); return; }
+    runRepoScan(url);
+  });
+  $("localForm").addEventListener("submit", function(ev){
+    ev.preventDefault();
+    if (!state.modeLocal) return;
+    var path = $("localPath").value.trim();
+    if (!path) { $("localPath").focus(); return; }
+    runLocalScan(path);
+  });
+
+  /* ---------------- results rendering ---------------- */
+  // Derive the vulnerable count from the same model the donut uses:
+  // BROKEN_Q + WEAK. This keeps the headline % and its colour in lock-step
+  // with the chart beneath it rather than trusting a separate scalar field.
+  function vulnerableFrom(counts){
+    return num(counts.BROKEN_Q) + num(counts.WEAK);
+  }
+  function pctClass(p){
+    if (p >= 40) return "pct-danger";
+    if (p > 0) return "pct-warn";
+    return "pct-ok";
+  }
+
+  function renderResults(){
+    var s = state.summary;
+    var counts = s.counts || {};
+    var total = num(s.total);
+    var vuln = vulnerableFrom(counts);
+    var pct = total > 0 ? (vuln / total) * 100 : 0;
+
+    // target + CBOM link
+    $("resTarget").textContent = s.target || "(unknown target)";
+    var link = $("cbomLink");
+    var unavail = $("cbomUnavail");
+    if (state.cbom && state.cbom.href) {
+      link.href = state.cbom.href;
+      link.setAttribute("download", state.cbom.name);
+      link.removeAttribute("aria-disabled");
+      link.hidden = false;
+      unavail.hidden = true;
+    } else {
+      // Keep the affordance visible but disabled, and announce why in text —
+      // never leave the user with no CBOM control at all.
+      link.removeAttribute("href");
+      link.setAttribute("aria-disabled", "true");
+      link.hidden = false;
+      unavail.hidden = false;
+    }
+    // capNote inline CBOM link mirrors the main one
+    var capCbom = $("capCbomLink");
+    if (state.cbom && state.cbom.href) {
+      capCbom.href = state.cbom.href;
+      capCbom.setAttribute("download", state.cbom.name);
+      capCbom.removeAttribute("aria-disabled");
+    } else {
+      capCbom.removeAttribute("href");
+      capCbom.setAttribute("aria-disabled", "true");
+    }
+
+    // KPIs
+    $("kpiFiles").textContent = fmt(s.files_scanned);
+    $("kpiFindings").textContent = fmt(total);
+    var pctEl = $("kpiPct");
+    pctEl.textContent = (Math.round(pct * 10) / 10) + "%";
+    pctEl.className = "k-value " + pctClass(pct);
+    $("kpiPctSub").textContent = fmt(vuln) + " of " + fmt(total) + " findings";
+    var urg = num(s.urgent);
+    var urgEl = $("kpiUrgent");
+    urgEl.textContent = fmt(urg);
+    urgEl.className = "k-value" + (urg > 0 ? " urgent-hot" : "");
+
+    // safe badge
+    $("safeBadge").hidden = !(vuln === 0 && total > 0);
+
+    // nav badge
+    var nc = $("navCount");
+    nc.hidden = false;
+    nc.textContent = fmt(total);
+    nc.classList.toggle("hot", vuln > 0);
+
+    renderDonut(counts, total);
+    renderTierFilters(counts);
+    renderCapNote();
+    renderTable();
+  }
+
+  function renderDonut(counts, total){
+    var R = 52, CX = 70, CY = 70, SW = 16;
+    var C = 2 * Math.PI * R;
+    var segs = "";
+    var nonZero = TIERS.filter(function(t){ return num(counts[t]) > 0; });
+    if (!total || !nonZero.length) {
+      segs = '<circle r="' + R + '" cx="' + CX + '" cy="' + CY + '" fill="none" stroke="#22305F" stroke-width="' + SW + '"/>';
+    } else {
+      // Faithful proportion map: each arc length is exactly its share of the
+      // circumference — no minimum-arc floor, so a sub-1% tier stays visually
+      // tiny (and is still fully enumerated in the legend below).
+      var offset = 0;
+      nonZero.forEach(function(t){
+        var v = num(counts[t]);
+        var len = (v / total) * C;
+        segs += '<circle r="' + R + '" cx="' + CX + '" cy="' + CY + '" fill="none"' +
+          ' stroke="' + TIER_META[t].color + '" stroke-width="' + SW + '"' +
+          ' stroke-dasharray="' + len.toFixed(3) + " " + (C - len).toFixed(3) + '"' +
+          ' stroke-dashoffset="' + (-offset).toFixed(3) + '"' +
+          ' transform="rotate(-90 ' + CX + " " + CY + ')" stroke-linecap="butt"/>';
+        offset += len;
+      });
+    }
+    var desc = TIERS.map(function(t){
+      return TIER_META[t].label + ": " + num(counts[t]);
+    }).join(", ");
+    $("donutHost").innerHTML =
+      '<svg width="140" height="140" viewBox="0 0 140 140" role="img" aria-label="Risk distribution. ' + escapeHtml(desc) + '">' +
+      segs +
+      '<text x="70" y="68" text-anchor="middle" class="donut-center-num">' + fmt(total) + "</text>" +
+      '<text x="70" y="84" text-anchor="middle" class="donut-center-lbl">findings</text>' +
+      "</svg>";
+
+    $("legendHost").innerHTML = TIERS.map(function(t){
+      var v = num(counts[t]);
+      var p = total ? Math.round((v / total) * 100) : 0;
+      return '<div class="legend-item">' +
+        '<span class="legend-swatch" style="background:' + TIER_META[t].color + '"></span>' +
+        '<span class="legend-name">' + escapeHtml(TIER_META[t].label) + "</span>" +
+        '<span class="legend-count">' + fmt(v) + " · " + p + "%</span>" +
+        "</div>";
+    }).join("");
+  }
+
+  function renderTierFilters(counts){
+    var host = $("tierFilters");
+    var total = state.summary ? num(state.summary.total) : 0;
+    var chips = [
+      { key: "ALL", label: "All", color: null, count: total }
+    ].concat(TIERS.map(function(t){
+      return { key: t, label: TIER_META[t].label, color: TIER_META[t].color, count: num(counts[t]) };
+    }));
+    host.innerHTML = chips.map(function(c){
+      return '<button type="button" class="fchip" data-tier="' + c.key + '"' +
+        ' aria-pressed="' + (state.filter === c.key ? "true" : "false") + '">' +
+        (c.color ? '<span class="fdot" style="background:' + c.color + '" aria-hidden="true"></span>' : "") +
+        escapeHtml(c.label) + ' <span class="fnum">' + fmt(c.count) + "</span></button>";
+    }).join("");
+    Array.prototype.slice.call(host.querySelectorAll("[data-tier]")).forEach(function(btn){
+      btn.addEventListener("click", function(){
+        state.filter = btn.getAttribute("data-tier");
+        renderTierFilters(state.summary.counts || {});
+        renderTable();
+      });
+    });
+  }
+
+  function isCapped(){
+    var s = state.summary;
+    if (!s) return false;
+    return num(s.total) > s.findings.length;
+  }
+
+  function renderCapNote(){
+    var s = state.summary;
+    var cap = isCapped();
+    var note = $("capNote");
+    note.hidden = !cap;
+    if (cap) {
+      $("capShown").textContent = fmt(s.findings.length);
+      $("capTotal").textContent = fmt(s.total);
+    }
+  }
+
+  function visibleFindings(){
+    var s = state.summary;
+    if (!s || !Array.isArray(s.findings)) return [];
+    var q = state.search.trim().toLowerCase();
+    var rows = s.findings.map(function(f, i){ return { f: f, i: i }; });
+    rows = rows.filter(function(r){
+      if (state.filter !== "ALL" && r.f.tier !== state.filter) return false;
+      if (q) {
+        var hay = [r.f.file, r.f.algorithm, r.f.recommendation, r.f.tier_label, r.f.why]
+          .map(function(x){ return String(x || "").toLowerCase(); }).join(" ");
+        if (hay.indexOf(q) === -1) return false;
+      }
+      return true;
+    });
+    rows.sort(function(a, b){
+      var ra = TIER_META[a.f.tier] ? TIER_META[a.f.tier].rank : 9;
+      var rb = TIER_META[b.f.tier] ? TIER_META[b.f.tier].rank : 9;
+      if (ra !== rb) return state.sortDesc ? ra - rb : rb - ra;
+      var ua = a.f.urgent ? 0 : 1, ub = b.f.urgent ? 0 : 1;
+      if (ua !== ub) return ua - ub;
+      return a.i - b.i;
+    });
+    return rows;
+  }
+
+  function renderTable(){
+    var s = state.summary;
+    if (!s) return;
+    var rows = visibleFindings();
+    var body = $("findBody");
+    var cap = isCapped();
+
+    $("findShownTag").textContent = fmt(rows.length) + " shown";
+    $("tableEmpty").hidden = rows.length > 0;
+
+    // When the empty message shows AND the list is server-truncated, warn that
+    // a match could exist beyond the cap — the filtered count is not the whole
+    // story. This is the crucial honesty fix for the cap-vs-search mismatch.
+    var emptyCap = $("tableEmptyCap");
+    if (rows.length === 0 && cap) {
+      emptyCap.hidden = false;
+      emptyCap.textContent = "The table holds only the first " + fmt(s.findings.length) +
+        " of " + fmt(s.total) + " findings, so a match may exist beyond the cap. Download the CBOM for the complete inventory.";
+    } else {
+      emptyCap.hidden = true;
+    }
+
+    body.innerHTML = rows.map(function(r){
+      var f = r.f;
+      var meta = TIER_META[f.tier] || { color: "#93A0C4", label: f.tier || "?" };
+      var tierClass = TIER_META[f.tier] ? "sev-" + f.tier : "";
+      var expanded = !!state.expanded[r.i];
+      var noChange = (f.tier === "SAFE" || f.tier === "PQC");
+      var reco = noChange
+        ? '<span class="reco none">no change needed</span>'
+        : '<span class="reco">' + escapeHtml(f.recommendation || "—") + "</span>";
+      var urgent = f.urgent
+        ? '<span class="urgent-mark" title="Urgent under the Mosca inequality" role="img" aria-label="Urgent">!</span>'
+        : "";
+      var lineTxt = (f.line != null && f.line !== "") ? escapeHtml(f.line) : "?";
+      var main =
+        '<tr class="f-row" data-idx="' + r.i + '" role="button" aria-expanded="' + expanded + '" tabindex="0"' +
+        ' aria-label="Finding: ' + escapeHtml(f.tier_label || meta.label) + ", " + escapeHtml(f.file || "") +
+          " line " + lineTxt + (f.urgent ? ", urgent" : "") + '. Activate to toggle code snippet.">' +
+        '<td><span class="sev-pill ' + tierClass + '"><span class="pdot" aria-hidden="true"></span>' +
+          escapeHtml(f.tier_label || meta.label) + "</span></td>" +
+        '<td>' + urgent + '<span class="loc">' + escapeHtml(f.file || "") +
+          '<span class="line-no">:' + lineTxt + "</span></span></td>" +
+        '<td><span class="algo">' + escapeHtml(f.algorithm || "") + "</span></td>" +
+        "<td>" + reco + "</td>" +
+        '<td style="text-align:right"><span class="caret" aria-hidden="true">' + (expanded ? "▲" : "▼") + "</span></td>" +
+        "</tr>";
+      var snip = "";
+      if (expanded) {
+        snip = '<tr class="snippet-row"><td colspan="5"><div class="snippet-inner">' +
+          (f.why ? '<div class="snippet-why"><strong>Why:</strong> ' + escapeHtml(f.why) + "</div>" : "") +
+          (f.snippet ? '<pre class="snippet"><code>' + escapeHtml(f.snippet) + "</code></pre>" : "") +
+          "</div></td></tr>";
+      }
+      return main + snip;
+    }).join("");
+  }
+
+  function toggleRow(idx){
+    if (state.expanded[idx]) delete state.expanded[idx];
+    else state.expanded[idx] = true;
+    renderTable();
+  }
+
+  // Single activation path: the row itself is the control (role=button,
+  // tabindex=0). The caret is decorative (aria-hidden, not focusable), so
+  // there is exactly one tab stop and one Space/Enter toggle per row.
+  $("findBody").addEventListener("click", function(ev){
+    var row = ev.target.closest ? ev.target.closest("tr.f-row") : null;
+    if (row) toggleRow(Number(row.getAttribute("data-idx")));
+  });
+  $("findBody").addEventListener("keydown", function(ev){
+    if (ev.key !== "Enter" && ev.key !== " ") return;
+    var row = ev.target.closest ? ev.target.closest("tr.f-row") : null;
+    if (row) { ev.preventDefault(); toggleRow(Number(row.getAttribute("data-idx"))); }
+  });
+
+  var searchTimer = null;
+  $("findSearch").addEventListener("input", function(){
+    clearTimeout(searchTimer);
+    var val = this.value;
+    searchTimer = setTimeout(function(){
+      state.search = val;
+      renderTable();
+    }, 120);
+  });
+
+  $("sevHeader").addEventListener("click", function(){
+    state.sortDesc = !state.sortDesc;
+    this.setAttribute("aria-sort", state.sortDesc ? "descending" : "ascending");
+    $("sevArrow").textContent = state.sortDesc ? "▼" : "▲";
+    renderTable();
+  });
+  $("sevHeader").addEventListener("keydown", function(ev){
+    if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); this.click(); }
+  });
+  $("sevHeader").setAttribute("tabindex", "0");
+
+  // Prevent a disabled CBOM link from navigating.
+  ["cbomLink","capCbomLink"].forEach(function(id){
+    $(id).addEventListener("click", function(ev){
+      if (this.getAttribute("aria-disabled") === "true") ev.preventDefault();
+    });
+  });
+
+  /* ---------------- boot ---------------- */
+  setResultState("empty");
+  showView("scan");
+  loadMode();
+  loadDemos();
+
+})();
 </script>
 </body>
 </html>

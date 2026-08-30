@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """ECDAT backend — serves the dashboard, canned demo scans, and live GitHub-repo scans."""
-import os, json, re, tempfile, subprocess, shutil
+import os, json, re, tempfile, subprocess, shutil, io, zipfile
 from collections import Counter
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse, FileResponse, Response
@@ -28,6 +28,13 @@ DEMOS = {
 
 def summarise(res):
     hi = [f for f in res["findings"] if f.get("confidence")=="high"]
+    # dedupe identical (file, line, algorithm) hits so the table/counts are clean
+    seen=set(); dedup=[]
+    for f in hi:
+        k=(f["rel_file"], f["line"], f["algorithm"])
+        if k in seen: continue
+        seen.add(k); dedup.append(f)
+    hi = dedup
     tc = Counter(f["tier"] for f in hi)
     total = len(hi)
     vuln = tc["BROKEN_Q"] + tc["WEAK"]
@@ -112,5 +119,44 @@ def scan_live(req:ScanReq):
         raise HTTPException(408,"Repo too large to scan in time. Try a smaller one.")
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
+
+RUN_SH = """#!/usr/bin/env bash
+set -e
+cd "$(dirname "$0")"
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+echo "ECDAT is starting — open http://localhost:8000"
+ECDAT_LOCAL=1 uvicorn app.server:app --port 8000
+"""
+RUN_BAT = """@echo off
+cd /d %~dp0
+python -m venv .venv
+call .venv\\Scripts\\activate
+pip install -r requirements.txt
+set ECDAT_LOCAL=1
+echo ECDAT is starting - open http://localhost:8000
+uvicorn app.server:app --port 8000
+"""
+
+@app.get("/api/download")
+def download():
+    """Package the tool as a zip so a visitor can run it on their own machine."""
+    root = os.path.dirname(HERE)
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
+        for folder, dirs, files in os.walk(HERE):
+            dirs[:] = [d for d in dirs if d not in ("__pycache__",)]
+            for fn in files:
+                if fn.endswith((".pyc",)): continue
+                full = os.path.join(folder, fn)
+                z.write(full, os.path.join("ecdat", "app", os.path.relpath(full, HERE)))
+        for fn in ("requirements.txt", "README.md", ".python-version"):
+            p = os.path.join(root, fn)
+            if os.path.exists(p): z.write(p, os.path.join("ecdat", fn))
+        z.writestr("ecdat/run.sh", RUN_SH)
+        z.writestr("ecdat/run.bat", RUN_BAT)
+    buf.seek(0)
+    return Response(buf.read(), media_type="application/zip",
+                    headers={"Content-Disposition": "attachment; filename=ecdat.zip"})
 
 app.mount("/", StaticFiles(directory=STATIC, html=True), name="static")

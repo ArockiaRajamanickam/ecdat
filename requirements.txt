@@ -1,2 +1,6 @@
 fastapi
 uvicorn[standard]
+tree-sitter
+tree-sitter-python
+tree-sitter-javascript
+tree-sitter-java
