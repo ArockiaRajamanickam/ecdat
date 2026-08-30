@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ECDAT — Cryptographic Discovery & Analysis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B1330; --p1:#10193A; --p2:#17224A; --p3:#22305F; --line:#2C3A66;
+    --gold:#D9A441; --white:#F1F4FC; --muted:#93A0C4;
+    --broken:#D26A56; --weak:#D9A441; --safe:#54AE9C; --pqc:#8093E6;
+    --sans:"IBM Plex Sans",system-ui,sans-serif; --disp:"Space Grotesk",var(--sans);
+    --mono:"IBM Plex Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--white);font-family:var(--sans);
+       font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:34px 24px 80px}
+  .spine{position:fixed;left:0;top:0;bottom:0;width:6px;background:var(--gold)}
+  header .kick{color:var(--gold);font-weight:600;letter-spacing:.14em;font-size:12px;text-transform:uppercase}
+  h1{font-family:var(--disp);font-weight:700;font-size:52px;margin:.1em 0 .1em;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:16px;max-width:640px}
+  .sub b{color:var(--white);font-weight:600}
+  .controls{margin:28px 0 8px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  button,.demo{font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;border:none;border-radius:8px}
+  .demo{background:var(--p2);color:var(--white);padding:11px 16px;border:1px solid var(--line)}
+  .demo:hover{border-color:var(--gold)}
+  .demo.active{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+  .repo{display:flex;gap:8px;flex:1;min-width:280px}
+  .repo input{flex:1;background:var(--p1);border:1px solid var(--line);color:var(--white);
+       border-radius:8px;padding:11px 13px;font-family:var(--mono);font-size:13px}
+  .repo input::placeholder{color:#5f6b8c}
+  .repo button{background:var(--p3);color:var(--white);padding:11px 18px}
+  .repo button:hover{background:var(--gold);color:var(--bg)}
+  .hint{color:var(--muted);font-size:12.5px;margin:2px 0 0}
+  .status{margin:18px 0;color:var(--muted);font-size:14px;min-height:20px}
+  .status .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gold);margin-right:8px;animation:pulse 1s infinite}
+  @keyframes pulse{50%{opacity:.3}}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:8px 0 20px}
+  .stat{background:var(--p2);border-radius:12px;padding:18px 18px 16px}
+  .stat .n{font-family:var(--disp);font-weight:700;font-size:38px;line-height:1;color:var(--gold)}
+  .stat .l{color:var(--muted);font-size:12.5px;margin-top:8px}
+  .stat.big .n{color:var(--broken)}
+  .panel{background:var(--p1);border-radius:12px;padding:20px 22px;margin:0 0 20px}
+  .panel h2{font-family:var(--disp);font-weight:600;font-size:15px;letter-spacing:.02em;margin:0 0 14px;color:var(--muted);text-transform:uppercase}
+  .bar{display:flex;height:30px;border-radius:6px;overflow:hidden;background:var(--p3)}
+  .bar span{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#0b1330;min-width:2px}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:13px;color:var(--muted)}
+  .legend b{color:var(--white)}
+  .sw{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:middle}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th{text-align:left;color:var(--muted);font-weight:500;font-size:11.5px;letter-spacing:.06em;
+     text-transform:uppercase;padding:0 10px 10px;border-bottom:1px solid var(--line)}
+  td{padding:11px 10px;border-bottom:1px solid rgba(44,58,102,.5)}
+  tr:hover td{background:rgba(34,48,95,.35)}
+  .fp{font-family:var(--mono);font-size:12.5px;color:var(--white)}
+  .badge{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:20px;font-size:11.5px;font-weight:600}
+  .b-broken{background:rgba(210,106,86,.18);color:var(--broken)} .b-weak{background:rgba(217,164,65,.18);color:var(--weak)}
+  .b-safe{background:rgba(84,174,156,.18);color:var(--safe)} .b-pqc{background:rgba(128,147,230,.18);color:var(--pqc)}
+  .arrow{color:var(--muted)} .fix{font-family:var(--mono);font-size:12.5px;color:var(--pqc)}
+  .urg{color:var(--broken);font-weight:700;margin-left:6px}
+  .foot{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .dl{background:var(--gold);color:var(--bg);padding:12px 20px;font-weight:600;border-radius:8px}
+  .note{color:var(--muted);font-size:12.5px}
+  .hidden{display:none}
+  .tag{font-family:var(--mono);color:var(--muted);font-size:12.5px}
+</style>
+</head>
+<body>
+<div class="spine"></div>
+<div class="wrap">
+  <header>
+    <div class="kick">Enterprise Cryptographic Discovery &amp; Analysis Tool</div>
+    <h1>ECDAT</h1>
+    <div class="sub">Point it at a codebase. It finds every use of cryptography, flags what a <b>quantum computer</b> will break, and names the exact post-quantum fix. Runs offline. <b>No code leaves the machine.</b></div>
+  </header>
+
+  <div class="controls">
+    <button class="demo active" data-demo="aion">Scan AION (our own PQC system)</button>
+    <button class="demo" data-demo="pyca">Scan pyca/cryptography</button>
+    <div class="repo">
+      <input id="repo" placeholder="https://github.com/owner/repo  — scan any public repo"/>
+      <button id="go">Scan</button>
+    </div>
+  </div>
+  <div class="hint">Demos use real, pre-computed scans. The live box clones and scans a public GitHub repo on the spot.</div>
+
+  <div class="status" id="status"></div>
+
+  <div id="results" class="hidden">
+    <div class="grid">
+      <div class="stat"><div class="n" id="s-files">—</div><div class="l">files scanned</div></div>
+      <div class="stat"><div class="n" id="s-total">—</div><div class="l">crypto findings</div></div>
+      <div class="stat big"><div class="n" id="s-vuln">—</div><div class="l" id="s-vuln-l">quantum-vulnerable</div></div>
+      <div class="stat"><div class="n" id="s-urgent">—</div><div class="l">urgent (Mosca)</div></div>
+    </div>
+
+    <div class="panel">
+      <h2 id="risk-title">Cryptographic risk breakdown</h2>
+      <div class="bar" id="bar"></div>
+      <div class="legend" id="legend"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Findings &amp; prescribed fixes</h2>
+      <div style="max-height:420px;overflow:auto">
+      <table>
+        <thead><tr><th>Location</th><th>Algorithm</th><th>Risk</th><th>Replace with</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+      </div>
+      <div class="foot">
+        <a class="dl" id="cbom" href="#">Download CBOM (CycloneDX)</a>
+        <span class="note">Standard machine-readable Cryptography Bill of Materials — plugs into any compliance pipeline.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const TIERS=[["BROKEN_Q","Quantum-broken","broken","var(--broken)"],
+             ["WEAK","Weak today","weak","var(--weak)"],
+             ["SAFE","Safe","safe","var(--safe)"],
+             ["PQC","Post-quantum","pqc","var(--pqc)"]];
+let liveCbom=null;
+
+function setStatus(msg,busy){ $("#status").innerHTML = msg? (busy?`<span class="dot"></span>`:"")+msg : ""; }
+
+function render(d){
+  $("#results").classList.remove("hidden");
+  $("#s-files").textContent=d.files_scanned;
+  $("#s-total").textContent=d.total;
+  $("#s-vuln").textContent=d.pct_vulnerable+"%";
+  $("#s-vuln-l").textContent=`quantum-vulnerable (${d.vulnerable})`;
+  $("#s-urgent").textContent=d.urgent;
+  $("#risk-title").textContent=`Cryptographic risk — ${d.target}`;
+  // bar
+  const bar=$("#bar"); bar.innerHTML=""; const leg=$("#legend"); leg.innerHTML="";
+  TIERS.forEach(([k,lab,cls,col])=>{
+    const c=d.counts[k]||0; if(!d.total) return;
+    const pct=100*c/d.total;
+    if(c>0){const s=document.createElement("span");s.style.background=col;s.style.flex=pct;
+      s.textContent=c>1?c:"";s.title=`${lab}: ${c}`;bar.appendChild(s);}
+    const li=document.createElement("span");li.innerHTML=`<span class="sw" style="background:${col}"></span>${lab} <b>${c}</b>`;leg.appendChild(li);
+  });
+  // rows
+  const rows=$("#rows");rows.innerHTML="";
+  d.findings.forEach(f=>{
+    const cls={BROKEN_Q:"b-broken",WEAK:"b-weak",SAFE:"b-safe",PQC:"b-pqc"}[f.tier];
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td><span class="fp">${f.file}:${f.line}</span>${f.urgent?'<span class="urg" title="Mosca-urgent">!</span>':''}</td>
+      <td>${f.algorithm}</td>
+      <td><span class="badge ${cls}">${f.tier_label}</span></td>
+      <td>${f.tier==='SAFE'||f.tier==='PQC'?'<span class="note">no change needed</span>':'<span class="fix">'+f.recommendation+'</span>'}</td>`;
+    rows.appendChild(tr);
+  });
+}
+
+async function loadDemo(id){
+  document.querySelectorAll(".demo").forEach(b=>b.classList.toggle("active",b.dataset.demo===id));
+  setStatus("Loading scan…",true);
+  const d=await (await fetch(`/api/scan/${id}`)).json();
+  liveCbom=null; $("#cbom").setAttribute("href",`/api/cbom/${id}`); $("#cbom").removeAttribute("download");
+  render(d); setStatus(`Scan complete — ${d.files_scanned} files, ${d.total} findings.`);
+}
+document.querySelectorAll(".demo").forEach(b=>b.onclick=()=>loadDemo(b.dataset.demo));
+
+$("#go").onclick=async()=>{
+  const url=$("#repo").value.trim(); if(!url)return;
+  document.querySelectorAll(".demo").forEach(b=>b.classList.remove("active"));
+  setStatus(`Cloning and scanning ${url} …`,true);
+  try{
+    const r=await fetch("/api/scan",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({repo_url:url})});
+    if(!r.ok){const e=await r.json();setStatus("⚠ "+(e.detail||"Scan failed"));return;}
+    const d=await r.json(); liveCbom=d.cbom;
+    const blob=new Blob([JSON.stringify(d.cbom,null,1)],{type:"application/json"});
+    $("#cbom").setAttribute("href",URL.createObjectURL(blob)); $("#cbom").setAttribute("download","ecdat-cbom.json");
+    render(d); setStatus(`Scan complete — ${d.files_scanned} files, ${d.total} findings in ${d.target}.`);
+  }catch(e){setStatus("⚠ "+e.message);}
+};
+$("#repo").addEventListener("keydown",e=>{if(e.key==="Enter")$("#go").click();});
+
+loadDemo("aion");
+</script>
+</body>
+</html>

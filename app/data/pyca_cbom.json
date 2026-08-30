@@ -1,0 +1,127 @@
+{
+ "bomFormat": "CycloneDX",
+ "specVersion": "1.6",
+ "metadata": {
+  "timestamp": "2026-08-30T07:25:24.042104+00:00",
+  "tools": [
+   {
+    "name": "ECDAT",
+    "version": "0.1-mvp"
+   }
+  ],
+  "component": {
+   "name": "pyca/cryptography",
+   "type": "application"
+  }
+ },
+ "components": [
+  {
+   "type": "cryptographic-asset",
+   "name": "SHA-256+",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "quantumRisk": "SAFE",
+    "recommendation": "No change needed"
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "name": "AES-256",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "quantumRisk": "SAFE",
+    "recommendation": "No change needed"
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "name": "RSA",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "quantumRisk": "QUANTUM-BROKEN (Shor)",
+    "recommendation": "ML-KEM-768 (encryption) / ML-DSA-65 (signatures), hybrid"
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "name": "SHA-1",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "quantumRisk": "WEAK / BROKEN TODAY",
+    "recommendation": "SHA-256 / SHA-3"
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "name": "ML-DSA",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "quantumRisk": "PQC / quantum-safe",
+    "recommendation": "Already quantum-safe"
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "name": "MD5",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "quantumRisk": "WEAK / BROKEN TODAY",
+    "recommendation": "SHA-256 / SHA-3"
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "name": "ECDH/X25519",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "quantumRisk": "QUANTUM-BROKEN (Shor)",
+    "recommendation": "ML-KEM-768 (hybrid key exchange)"
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "name": "ML-KEM",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "quantumRisk": "PQC / quantum-safe",
+    "recommendation": "Already quantum-safe"
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "name": "ECDSA",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "quantumRisk": "QUANTUM-BROKEN (Shor)",
+    "recommendation": "ML-DSA-65 (signatures)"
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "name": "RC4",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "quantumRisk": "WEAK / BROKEN TODAY",
+    "recommendation": "AES-256-GCM"
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "name": "DES/3DES",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "quantumRisk": "WEAK / BROKEN TODAY",
+    "recommendation": "AES-256-GCM"
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "name": "Diffie-Hellman",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "quantumRisk": "QUANTUM-BROKEN (Shor)",
+    "recommendation": "ML-KEM-768 (hybrid)"
+   }
+  }
+ ]
+}

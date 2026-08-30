@@ -1,0 +1,64 @@
+{
+ "bomFormat": "CycloneDX",
+ "specVersion": "1.6",
+ "metadata": {
+  "timestamp": "2026-08-30T07:25:24.041218+00:00",
+  "tools": [
+   {
+    "name": "ECDAT",
+    "version": "0.1-mvp"
+   }
+  ],
+  "component": {
+   "name": "AION",
+   "type": "application"
+  }
+ },
+ "components": [
+  {
+   "type": "cryptographic-asset",
+   "name": "ECDH/X25519",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "quantumRisk": "QUANTUM-BROKEN (Shor)",
+    "recommendation": "ML-KEM-768 (hybrid key exchange)"
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "name": "ML-KEM",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "quantumRisk": "PQC / quantum-safe",
+    "recommendation": "Already quantum-safe"
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "name": "AES-256",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "quantumRisk": "SAFE",
+    "recommendation": "No change needed"
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "name": "SHA-256+",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "quantumRisk": "SAFE",
+    "recommendation": "No change needed"
+   }
+  },
+  {
+   "type": "cryptographic-asset",
+   "name": "Diffie-Hellman",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "quantumRisk": "QUANTUM-BROKEN (Shor)",
+    "recommendation": "ML-KEM-768 (hybrid)"
+   }
+  }
+ ]
+}
