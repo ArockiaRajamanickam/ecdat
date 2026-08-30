@@ -172,7 +172,12 @@ def download():
         for fn in ("requirements.txt", "README.md", ".python-version"):
             p = os.path.join(root, fn)
             if os.path.exists(p): z.write(p, os.path.join("ecdat", fn))
-        z.writestr("ecdat/run.sh", RUN_SH)
+        # run.sh must arrive executable, or a user gets "permission denied".
+        # zipfile keeps unix mode in the high 16 bits of external_attr.
+        sh = zipfile.ZipInfo("ecdat/run.sh")
+        sh.external_attr = (0o755 << 16)
+        sh.date_time = (2026, 1, 1, 0, 0, 0)
+        z.writestr(sh, RUN_SH)
         z.writestr("ecdat/run.bat", RUN_BAT)
     buf.seek(0)
     return Response(buf.read(), media_type="application/zip",

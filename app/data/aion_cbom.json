@@ -1,10 +1,10 @@
 {
  "bomFormat": "CycloneDX",
  "specVersion": "1.6",
- "serialNumber": "urn:uuid:754c65df-b55a-4223-a754-754c65dfb55a",
+ "serialNumber": "urn:uuid:c8b90d47-6eb2-49f9-ac8b-c8b90d476eb2",
  "version": 1,
  "metadata": {
-  "timestamp": "2026-08-30T12:16:40Z",
+  "timestamp": "2026-08-30T12:58:03Z",
   "tools": {
    "components": [
     {
@@ -38,11 +38,11 @@
    },
    {
     "name": "ecdat:scan:started",
-    "value": "2026-08-30T12:16:39Z"
+    "value": "2026-08-30T12:58:03Z"
    },
    {
     "name": "ecdat:scan:finished",
-    "value": "2026-08-30T12:16:40Z"
+    "value": "2026-08-30T12:58:03Z"
    },
    {
     "name": "ecdat:scan:files-scanned",
@@ -1681,7 +1681,7 @@
     },
     {
      "name": "ecdat:recommendation:rationale",
-     "value": "Signatures over RSA, DSA, ECDSA or EdDSA are forgeable once Shor's algorithm is available. Signature exposure is not retroactive - a forged signature only matters in the future - so the deadline is the lifetime of the verifying trust anchor (roots, firmware keys, code-signing chains). Risk engine finding: Ed25519 (EdDSA over edwards25519) rests on ECDLP; a CRQC forges signatures by recovering the private scalar. Evidence: 1 occurrence(s) across 1 file(s), first at /Users/arockia/Downloads/aion-protocol-platform/config/grmg-license-public.pem:1. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. Certificate/PKI-level change; plan for dual-algorithm (composite or parallel chain) issuance during the overlap period. New key material, so no automatic patch. Standard: NIST FIPS 204 (ML-DSA), final August 2024. Alternatives: SLH-DSA (FIPS 205) for long-lived roots and firmware, where a conservative hash-based assumption is worth the signature size."
+     "value": "Signatures over RSA, DSA, ECDSA or EdDSA are forgeable once Shor's algorithm is available. Signature exposure is not retroactive - a forged signature only matters in the future - so the deadline is the lifetime of the verifying trust anchor (roots, firmware keys, code-signing chains). Risk engine finding: Ed25519 (EdDSA over edwards25519) rests on ECDLP; a CRQC forges signatures by recovering the private scalar. Evidence: 1 occurrence(s) across 1 file(s), first at config/grmg-license-public.pem:1. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. Certificate/PKI-level change; plan for dual-algorithm (composite or parallel chain) issuance during the overlap period. New key material, so no automatic patch. Standard: NIST FIPS 204 (ML-DSA), final August 2024. Alternatives: SLH-DSA (FIPS 205) for long-lived roots and firmware, where a conservative hash-based assumption is worth the signature size."
     },
     {
      "name": "ecdat:occurrences:count",
@@ -1724,7 +1724,7 @@
     "occurrences": [
      {
       "bom-ref": "crypto/ed25519/ed25519-key/24ee7c90c2aced34/occ/1",
-      "location": "/Users/arockia/Downloads/aion-protocol-platform/config/grmg-license-public.pem",
+      "location": "config/grmg-license-public.pem",
       "line": 1,
       "symbol": "-----BEGIN PUBLIC KEY----- Ed25519 (SubjectPublicKeyInfo)",
       "additionalContext": "-----BEGIN PUBLIC KEY----- Ed25519 (SubjectPublicKeyInfo) [detector=certs confidence=high]"
@@ -1737,7 +1737,7 @@
     "severity": "critical",
     "score": 73.0,
     "recommendation": "ML-DSA-65",
-    "recommendationRationale": "Signatures over RSA, DSA, ECDSA or EdDSA are forgeable once Shor's algorithm is available. Signature exposure is not retroactive - a forged signature only matters in the future - so the deadline is the lifetime of the verifying trust anchor (roots, firmware keys, code-signing chains). Risk engine finding: Ed25519 (EdDSA over edwards25519) rests on ECDLP; a CRQC forges signatures by recovering the private scalar. Evidence: 1 occurrence(s) across 1 file(s), first at /Users/arockia/Downloads/aion-protocol-platform/config/grmg-license-public.pem:1. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. Certificate/PKI-level change; plan for dual-algorithm (composite or parallel chain) issuance during the overlap period. New key material, so no automatic patch. Standard: NIST FIPS 204 (ML-DSA), final August 2024. Alternatives: SLH-DSA (FIPS 205) for long-lived roots and firmware, where a conservative hash-based assumption is worth the signature size.",
+    "recommendationRationale": "Signatures over RSA, DSA, ECDSA or EdDSA are forgeable once Shor's algorithm is available. Signature exposure is not retroactive - a forged signature only matters in the future - so the deadline is the lifetime of the verifying trust anchor (roots, firmware keys, code-signing chains). Risk engine finding: Ed25519 (EdDSA over edwards25519) rests on ECDLP; a CRQC forges signatures by recovering the private scalar. Evidence: 1 occurrence(s) across 1 file(s), first at config/grmg-license-public.pem:1. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. Certificate/PKI-level change; plan for dual-algorithm (composite or parallel chain) issuance during the overlap period. New key material, so no automatic patch. Standard: NIST FIPS 204 (ML-DSA), final August 2024. Alternatives: SLH-DSA (FIPS 205) for long-lived roots and firmware, where a conservative hash-based assumption is worth the signature size.",
     "dataClass": "secret",
     "criticality": "critical",
     "mosca": {

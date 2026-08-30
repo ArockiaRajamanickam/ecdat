@@ -83,6 +83,18 @@ def scan(root: str, policy: Policy | None = None, target: str | None = None,
         a.occurrences = [o for o in a.occurrences if not _excluded(o.file or "")]
     artefacts = [a for a in artefacts if a.occurrences]
 
+    # Report every path relative to the scan root. Detectors disagree (source
+    # detectors return relative paths, the cert detector absolute ones) and a
+    # mixed table is unreadable.
+    for a in artefacts:
+        for o in a.occurrences:
+            f = o.file or ""
+            if f.startswith(root):
+                try:
+                    o.file = os.path.relpath(f, root)
+                except Exception:
+                    pass
+
     # 3. normalise -> 4. risk -> 5. recommend
     artefacts = infer_missing_params(merge_compatible(merge_artefacts(artefacts)))
     try:

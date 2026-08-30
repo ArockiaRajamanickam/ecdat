@@ -1,10 +1,10 @@
 {
  "bomFormat": "CycloneDX",
  "specVersion": "1.6",
- "serialNumber": "urn:uuid:f874f094-b2d3-490f-af87-f874f094b2d3",
+ "serialNumber": "urn:uuid:0e82307c-69fc-43f9-a0e8-0e82307c69fc",
  "version": 1,
  "metadata": {
-  "timestamp": "2026-08-30T12:17:13Z",
+  "timestamp": "2026-08-30T12:58:03Z",
   "tools": {
    "components": [
     {
@@ -38,11 +38,11 @@
    },
    {
     "name": "ecdat:scan:started",
-    "value": "2026-08-30T12:17:13Z"
+    "value": "2026-08-30T12:58:03Z"
    },
    {
     "name": "ecdat:scan:finished",
-    "value": "2026-08-30T12:17:13Z"
+    "value": "2026-08-30T12:58:03Z"
    },
    {
     "name": "ecdat:scan:files-scanned",
@@ -3949,7 +3949,7 @@
     },
     {
      "name": "ecdat:recommendation:rationale",
-     "value": "Grover's algorithm gives only a quadratic speed-up, so a 256-bit symmetric key or a 384-bit digest keeps a 128-bit or better post-quantum margin. The quantum exposure in this system is in the asymmetric layer, not here. Risk engine finding: SHA-2 has no structural break; the verdict depends on digest length because Grover reduces preimage cost to 2^(n/2) and BHT-style collision search is bounded by the classical 2^(n/2) birthday bound. A 256-bit digest gives 128-bit collision resistance classically and a 128-bit preimage margin under Grover; CNSA 2.0 requires SHA-384 or larger for national security systems, so this is adequate for integrity today but is not the CNSA 2.0 target. Evidence: 2 occurrence(s) across 2 file(s), first at /private/tmp/claude-501/-Users-arockia-Downloads/9689b40f-114f-42ba-a237-7cc6e26ca293/scratchpad/ecdat_deck/bench_pyca/src/rust/cryptography-x509-verification/src/certificate.rs:31. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None; keep the key-establishment layer under review instead. Standard: NIST SP 800-131A Rev.2. Alternatives: None needed."
+     "value": "Grover's algorithm gives only a quadratic speed-up, so a 256-bit symmetric key or a 384-bit digest keeps a 128-bit or better post-quantum margin. The quantum exposure in this system is in the asymmetric layer, not here. Risk engine finding: SHA-2 has no structural break; the verdict depends on digest length because Grover reduces preimage cost to 2^(n/2) and BHT-style collision search is bounded by the classical 2^(n/2) birthday bound. A 256-bit digest gives 128-bit collision resistance classically and a 128-bit preimage margin under Grover; CNSA 2.0 requires SHA-384 or larger for national security systems, so this is adequate for integrity today but is not the CNSA 2.0 target. Evidence: 2 occurrence(s) across 2 file(s), first at rust/cryptography-x509-verification/src/certificate.rs:31. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None; keep the key-establishment layer under review instead. Standard: NIST SP 800-131A Rev.2. Alternatives: None needed."
     },
     {
      "name": "ecdat:occurrences:count",
@@ -3992,14 +3992,14 @@
     "occurrences": [
      {
       "bom-ref": "crypto/sha-2/sha-256-certificate/d321e57d890b7c20/occ/1",
-      "location": "/private/tmp/claude-501/-Users-arockia-Downloads/9689b40f-114f-42ba-a237-7cc6e26ca293/scratchpad/ecdat_deck/bench_pyca/src/rust/cryptography-x509-verification/src/certificate.rs",
+      "location": "rust/cryptography-x509-verification/src/certificate.rs",
       "line": 31,
       "symbol": "X.509 certificate (PEM) CN=cryptography CA signed with ecdsa-with-SHA256 (hash SHA-256)",
       "additionalContext": "X.509 certificate (PEM) CN=cryptography CA signed with ecdsa-with-SHA256 (hash SHA-256) [detector=certs confidence=high]"
      },
      {
       "bom-ref": "crypto/sha-2/sha-256-certificate/d321e57d890b7c20/occ/2",
-      "location": "/private/tmp/claude-501/-Users-arockia-Downloads/9689b40f-114f-42ba-a237-7cc6e26ca293/scratchpad/ecdat_deck/bench_pyca/src/rust/cryptography-x509-verification/src/lib.rs",
+      "location": "rust/cryptography-x509-verification/src/lib.rs",
       "line": 670,
       "symbol": "X.509 certificate (PEM) CN=looping self-signed CA signed with ecdsa-with-SHA256 (hash SHA-256)",
       "additionalContext": "X.509 certificate (PEM) CN=looping self-signed CA signed with ecdsa-with-SHA256 (hash SHA-256) [detector=certs confidence=high]"
@@ -4012,7 +4012,7 @@
     "severity": "medium",
     "score": 20.08,
     "recommendation": "no change - retain (symmetric/hash primitive at an adequate level)",
-    "recommendationRationale": "Grover's algorithm gives only a quadratic speed-up, so a 256-bit symmetric key or a 384-bit digest keeps a 128-bit or better post-quantum margin. The quantum exposure in this system is in the asymmetric layer, not here. Risk engine finding: SHA-2 has no structural break; the verdict depends on digest length because Grover reduces preimage cost to 2^(n/2) and BHT-style collision search is bounded by the classical 2^(n/2) birthday bound. A 256-bit digest gives 128-bit collision resistance classically and a 128-bit preimage margin under Grover; CNSA 2.0 requires SHA-384 or larger for national security systems, so this is adequate for integrity today but is not the CNSA 2.0 target. Evidence: 2 occurrence(s) across 2 file(s), first at /private/tmp/claude-501/-Users-arockia-Downloads/9689b40f-114f-42ba-a237-7cc6e26ca293/scratchpad/ecdat_deck/bench_pyca/src/rust/cryptography-x509-verification/src/certificate.rs:31. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None; keep the key-establishment layer under review instead. Standard: NIST SP 800-131A Rev.2. Alternatives: None needed.",
+    "recommendationRationale": "Grover's algorithm gives only a quadratic speed-up, so a 256-bit symmetric key or a 384-bit digest keeps a 128-bit or better post-quantum margin. The quantum exposure in this system is in the asymmetric layer, not here. Risk engine finding: SHA-2 has no structural break; the verdict depends on digest length because Grover reduces preimage cost to 2^(n/2) and BHT-style collision search is bounded by the classical 2^(n/2) birthday bound. A 256-bit digest gives 128-bit collision resistance classically and a 128-bit preimage margin under Grover; CNSA 2.0 requires SHA-384 or larger for national security systems, so this is adequate for integrity today but is not the CNSA 2.0 target. Evidence: 2 occurrence(s) across 2 file(s), first at rust/cryptography-x509-verification/src/certificate.rs:31. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None; keep the key-establishment layer under review instead. Standard: NIST SP 800-131A Rev.2. Alternatives: None needed.",
     "dataClass": "internal",
     "criticality": "medium",
     "mosca": {
@@ -6402,7 +6402,7 @@
     },
     {
      "name": "ecdat:recommendation:rationale",
-     "value": "Signatures over RSA, DSA, ECDSA or EdDSA are forgeable once Shor's algorithm is available. Signature exposure is not retroactive - a forged signature only matters in the future - so the deadline is the lifetime of the verifying trust anchor (roots, firmware keys, code-signing chains). Risk engine finding: ECDSA rests on the elliptic-curve discrete log problem; Shor solves ECDLP in polynomial time and needs fewer logical qubits than for equivalent RSA. Curve secp256r1 (256-bit field, 128-bit classical security; NIST P-256, the most deployed curve). Evidence: 2 occurrence(s) across 2 file(s), first at /private/tmp/claude-501/-Users-arockia-Downloads/9689b40f-114f-42ba-a237-7cc6e26ca293/scratchpad/ecdat_deck/bench_pyca/src/rust/cryptography-x509-verification/src/certificate.rs:31. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. Certificate/PKI-level change; plan for dual-algorithm (composite or parallel chain) issuance during the overlap period. New key material, so no automatic patch. Standard: NIST FIPS 204 (ML-DSA), final August 2024. Alternatives: SLH-DSA (FIPS 205) for long-lived roots and firmware, where a conservative hash-based assumption is worth the signature size."
+     "value": "Signatures over RSA, DSA, ECDSA or EdDSA are forgeable once Shor's algorithm is available. Signature exposure is not retroactive - a forged signature only matters in the future - so the deadline is the lifetime of the verifying trust anchor (roots, firmware keys, code-signing chains). Risk engine finding: ECDSA rests on the elliptic-curve discrete log problem; Shor solves ECDLP in polynomial time and needs fewer logical qubits than for equivalent RSA. Curve secp256r1 (256-bit field, 128-bit classical security; NIST P-256, the most deployed curve). Evidence: 2 occurrence(s) across 2 file(s), first at rust/cryptography-x509-verification/src/certificate.rs:31. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. Certificate/PKI-level change; plan for dual-algorithm (composite or parallel chain) issuance during the overlap period. New key material, so no automatic patch. Standard: NIST FIPS 204 (ML-DSA), final August 2024. Alternatives: SLH-DSA (FIPS 205) for long-lived roots and firmware, where a conservative hash-based assumption is worth the signature size."
     },
     {
      "name": "ecdat:occurrences:count",
@@ -6445,14 +6445,14 @@
     "occurrences": [
      {
       "bom-ref": "crypto/ecdsa/ecdsa-secp256r1-certificate/d89712ad2aa89da6/occ/1",
-      "location": "/private/tmp/claude-501/-Users-arockia-Downloads/9689b40f-114f-42ba-a237-7cc6e26ca293/scratchpad/ecdat_deck/bench_pyca/src/rust/cryptography-x509-verification/src/certificate.rs",
+      "location": "rust/cryptography-x509-verification/src/certificate.rs",
       "line": 31,
       "symbol": "X.509 certificate (PEM) CN=cryptography CA key=ECDSA-secp256r1 sig=ecdsa-with-SHA256 notAfter=2038-12-31T08:30:00+00:00 [long-lived (8033d validity); self-signed]",
       "additionalContext": "X.509 certificate (PEM) CN=cryptography CA key=ECDSA-secp256r1 sig=ecdsa-with-SHA256 notAfter=2038-12-31T08:30:00+00:00 [long-lived (8033d validity); self-signed] [detector=certs confidence=high]"
      },
      {
       "bom-ref": "crypto/ecdsa/ecdsa-secp256r1-certificate/d89712ad2aa89da6/occ/2",
-      "location": "/private/tmp/claude-501/-Users-arockia-Downloads/9689b40f-114f-42ba-a237-7cc6e26ca293/scratchpad/ecdat_deck/bench_pyca/src/rust/cryptography-x509-verification/src/lib.rs",
+      "location": "rust/cryptography-x509-verification/src/lib.rs",
       "line": 670,
       "symbol": "X.509 certificate (PEM) CN=looping self-signed CA key=ECDSA-secp256r1 sig=ecdsa-with-SHA256 notAfter=2024-01-31T00:00:00+00:00 [EXPIRED 943d ago; self-signed]",
       "additionalContext": "X.509 certificate (PEM) CN=looping self-signed CA key=ECDSA-secp256r1 sig=ecdsa-with-SHA256 notAfter=2024-01-31T00:00:00+00:00 [EXPIRED 943d ago; self-signed] [detector=certs confidence=high]"
@@ -6465,7 +6465,7 @@
     "severity": "critical",
     "score": 40.15,
     "recommendation": "ML-DSA-65",
-    "recommendationRationale": "Signatures over RSA, DSA, ECDSA or EdDSA are forgeable once Shor's algorithm is available. Signature exposure is not retroactive - a forged signature only matters in the future - so the deadline is the lifetime of the verifying trust anchor (roots, firmware keys, code-signing chains). Risk engine finding: ECDSA rests on the elliptic-curve discrete log problem; Shor solves ECDLP in polynomial time and needs fewer logical qubits than for equivalent RSA. Curve secp256r1 (256-bit field, 128-bit classical security; NIST P-256, the most deployed curve). Evidence: 2 occurrence(s) across 2 file(s), first at /private/tmp/claude-501/-Users-arockia-Downloads/9689b40f-114f-42ba-a237-7cc6e26ca293/scratchpad/ecdat_deck/bench_pyca/src/rust/cryptography-x509-verification/src/certificate.rs:31. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. Certificate/PKI-level change; plan for dual-algorithm (composite or parallel chain) issuance during the overlap period. New key material, so no automatic patch. Standard: NIST FIPS 204 (ML-DSA), final August 2024. Alternatives: SLH-DSA (FIPS 205) for long-lived roots and firmware, where a conservative hash-based assumption is worth the signature size.",
+    "recommendationRationale": "Signatures over RSA, DSA, ECDSA or EdDSA are forgeable once Shor's algorithm is available. Signature exposure is not retroactive - a forged signature only matters in the future - so the deadline is the lifetime of the verifying trust anchor (roots, firmware keys, code-signing chains). Risk engine finding: ECDSA rests on the elliptic-curve discrete log problem; Shor solves ECDLP in polynomial time and needs fewer logical qubits than for equivalent RSA. Curve secp256r1 (256-bit field, 128-bit classical security; NIST P-256, the most deployed curve). Evidence: 2 occurrence(s) across 2 file(s), first at rust/cryptography-x509-verification/src/certificate.rs:31. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. Certificate/PKI-level change; plan for dual-algorithm (composite or parallel chain) issuance during the overlap period. New key material, so no automatic patch. Standard: NIST FIPS 204 (ML-DSA), final August 2024. Alternatives: SLH-DSA (FIPS 205) for long-lived roots and firmware, where a conservative hash-based assumption is worth the signature size.",
     "dataClass": "internal",
     "criticality": "medium",
     "mosca": {
@@ -6587,7 +6587,7 @@
     },
     {
      "name": "ecdat:recommendation:rationale",
-     "value": "Signatures over RSA, DSA, ECDSA or EdDSA are forgeable once Shor's algorithm is available. Signature exposure is not retroactive - a forged signature only matters in the future - so the deadline is the lifetime of the verifying trust anchor (roots, firmware keys, code-signing chains). Risk engine finding: RSA security rests on integer factorisation, which Shor's algorithm solves in polynomial time on a CRQC. Observed modulus size: 512 bits. It is also below the 2048-bit classical floor of SP 800-131A r2, so 512 bits is inadequate today even without a quantum computer. Evidence: 1 occurrence(s) across 1 file(s), first at /private/tmp/claude-501/-Users-arockia-Downloads/9689b40f-114f-42ba-a237-7cc6e26ca293/scratchpad/ecdat_deck/bench_pyca/src/rust/cryptography-x509-verification/src/ops.rs:110. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. Certificate/PKI-level change; plan for dual-algorithm (composite or parallel chain) issuance during the overlap period. New key material, so no automatic patch. Standard: NIST FIPS 204 (ML-DSA), final August 2024. Alternatives: SLH-DSA (FIPS 205) for long-lived roots and firmware, where a conservative hash-based assumption is worth the signature size."
+     "value": "Signatures over RSA, DSA, ECDSA or EdDSA are forgeable once Shor's algorithm is available. Signature exposure is not retroactive - a forged signature only matters in the future - so the deadline is the lifetime of the verifying trust anchor (roots, firmware keys, code-signing chains). Risk engine finding: RSA security rests on integer factorisation, which Shor's algorithm solves in polynomial time on a CRQC. Observed modulus size: 512 bits. It is also below the 2048-bit classical floor of SP 800-131A r2, so 512 bits is inadequate today even without a quantum computer. Evidence: 1 occurrence(s) across 1 file(s), first at rust/cryptography-x509-verification/src/ops.rs:110. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. Certificate/PKI-level change; plan for dual-algorithm (composite or parallel chain) issuance during the overlap period. New key material, so no automatic patch. Standard: NIST FIPS 204 (ML-DSA), final August 2024. Alternatives: SLH-DSA (FIPS 205) for long-lived roots and firmware, where a conservative hash-based assumption is worth the signature size."
     },
     {
      "name": "ecdat:occurrences:count",
@@ -6630,7 +6630,7 @@
     "occurrences": [
      {
       "bom-ref": "crypto/rsa/rsa-512-certificate/ad13022cf5120e8a/occ/1",
-      "location": "/private/tmp/claude-501/-Users-arockia-Downloads/9689b40f-114f-42ba-a237-7cc6e26ca293/scratchpad/ecdat_deck/bench_pyca/src/rust/cryptography-x509-verification/src/ops.rs",
+      "location": "rust/cryptography-x509-verification/src/ops.rs",
       "line": 110,
       "symbol": "X.509 certificate (PEM) CN=SSLeay/rsa test cert key=RSA-512 sig=Unknown OID notAfter=1995-07-17T23:33:12+00:00 [EXPIRED 11367d ago]",
       "additionalContext": "X.509 certificate (PEM) CN=SSLeay/rsa test cert key=RSA-512 sig=Unknown OID notAfter=1995-07-17T23:33:12+00:00 [EXPIRED 11367d ago] [detector=certs confidence=high]"
@@ -6643,7 +6643,7 @@
     "severity": "critical",
     "score": 40.15,
     "recommendation": "ML-DSA-65",
-    "recommendationRationale": "Signatures over RSA, DSA, ECDSA or EdDSA are forgeable once Shor's algorithm is available. Signature exposure is not retroactive - a forged signature only matters in the future - so the deadline is the lifetime of the verifying trust anchor (roots, firmware keys, code-signing chains). Risk engine finding: RSA security rests on integer factorisation, which Shor's algorithm solves in polynomial time on a CRQC. Observed modulus size: 512 bits. It is also below the 2048-bit classical floor of SP 800-131A r2, so 512 bits is inadequate today even without a quantum computer. Evidence: 1 occurrence(s) across 1 file(s), first at /private/tmp/claude-501/-Users-arockia-Downloads/9689b40f-114f-42ba-a237-7cc6e26ca293/scratchpad/ecdat_deck/bench_pyca/src/rust/cryptography-x509-verification/src/ops.rs:110. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. Certificate/PKI-level change; plan for dual-algorithm (composite or parallel chain) issuance during the overlap period. New key material, so no automatic patch. Standard: NIST FIPS 204 (ML-DSA), final August 2024. Alternatives: SLH-DSA (FIPS 205) for long-lived roots and firmware, where a conservative hash-based assumption is worth the signature size.",
+    "recommendationRationale": "Signatures over RSA, DSA, ECDSA or EdDSA are forgeable once Shor's algorithm is available. Signature exposure is not retroactive - a forged signature only matters in the future - so the deadline is the lifetime of the verifying trust anchor (roots, firmware keys, code-signing chains). Risk engine finding: RSA security rests on integer factorisation, which Shor's algorithm solves in polynomial time on a CRQC. Observed modulus size: 512 bits. It is also below the 2048-bit classical floor of SP 800-131A r2, so 512 bits is inadequate today even without a quantum computer. Evidence: 1 occurrence(s) across 1 file(s), first at rust/cryptography-x509-verification/src/ops.rs:110. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. Certificate/PKI-level change; plan for dual-algorithm (composite or parallel chain) issuance during the overlap period. New key material, so no automatic patch. Standard: NIST FIPS 204 (ML-DSA), final August 2024. Alternatives: SLH-DSA (FIPS 205) for long-lived roots and firmware, where a conservative hash-based assumption is worth the signature size.",
     "dataClass": "internal",
     "criticality": "medium",
     "mosca": {
