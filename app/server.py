@@ -10,7 +10,10 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import ecdat
 
-HERE = os.path.dirname(os.path.abspath(__file__))
+if getattr(sys, "frozen", False):          # running inside a PyInstaller bundle
+    HERE = os.path.join(sys._MEIPASS, "app")
+else:
+    HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
 STATIC = os.path.join(HERE, "static")
 

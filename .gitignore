@@ -2,3 +2,8 @@
 __pycache__/
 *.pyc
 /tmp/
+build/
+dist/
+*.egg-info/
+assets_gen/
+ci_build.yml
