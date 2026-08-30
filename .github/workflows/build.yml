@@ -1,0 +1,49 @@
+name: build-binaries
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            asset: ECDAT-windows.exe
+            out: dist/ECDAT.exe
+          - os: macos-latest
+            asset: ECDAT-macos
+            out: dist/ECDAT
+          - os: ubuntu-latest
+            asset: ECDAT-linux
+            out: dist/ECDAT
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller
+      - name: Build
+        run: pyinstaller --noconfirm --clean ECDAT.spec
+      - name: Rename artifact
+        shell: bash
+        run: cp "${{ matrix.out }}" "dist/${{ matrix.asset }}"
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset }}
+          path: dist/${{ matrix.asset }}
+      - name: Attach to release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/${{ matrix.asset }}
