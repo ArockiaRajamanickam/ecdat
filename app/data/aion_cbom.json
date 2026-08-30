@@ -1,63 +1,2379 @@
 {
  "bomFormat": "CycloneDX",
  "specVersion": "1.6",
+ "serialNumber": "urn:uuid:754c65df-b55a-4223-a754-754c65dfb55a",
+ "version": 1,
  "metadata": {
-  "timestamp": "2026-08-30T08:37:08.964873+00:00",
-  "tools": [
-   {
-    "name": "ECDAT",
-    "version": "0.2-semantic"
-   }
-  ],
+  "timestamp": "2026-08-30T12:16:40Z",
+  "tools": {
+   "components": [
+    {
+     "type": "application",
+     "bom-ref": "tool/ecdat",
+     "author": "ECDAT Project",
+     "publisher": "ECDAT Project",
+     "name": "ECDAT",
+     "version": "1.0.0",
+     "description": "Enterprise Cryptographic Discovery & Analysis Tool - cryptographic inventory, quantum-risk classification, Mosca prioritisation and NIST PQC migration guidance.",
+     "externalReferences": [
+      {
+       "type": "website",
+       "url": "https://github.com/ecdat/ecdat"
+      }
+     ]
+    }
+   ]
+  },
   "component": {
+   "type": "application",
+   "bom-ref": "target/aion",
    "name": "AION",
-   "type": "application"
-  }
+   "version": "unknown",
+   "description": "Scan target inventoried by ECDAT"
+  },
+  "properties": [
+   {
+    "name": "ecdat:scan:target",
+    "value": "AION"
+   },
+   {
+    "name": "ecdat:scan:started",
+    "value": "2026-08-30T12:16:39Z"
+   },
+   {
+    "name": "ecdat:scan:finished",
+    "value": "2026-08-30T12:16:40Z"
+   },
+   {
+    "name": "ecdat:scan:files-scanned",
+    "value": "49"
+   },
+   {
+    "name": "ecdat:scan:policy",
+    "value": "ECDAT baseline policy (NTRO / SIH 2026)"
+   },
+   {
+    "name": "ecdat:scan:artefacts",
+    "value": "11"
+   },
+   {
+    "name": "ecdat:scan:errors",
+    "value": "0"
+   },
+   {
+    "name": "ecdat:scan:severity:none",
+    "value": "5"
+   },
+   {
+    "name": "ecdat:scan:severity:low",
+    "value": "1"
+   },
+   {
+    "name": "ecdat:scan:severity:medium",
+    "value": "1"
+   },
+   {
+    "name": "ecdat:scan:severity:high",
+    "value": "0"
+   },
+   {
+    "name": "ecdat:scan:severity:critical",
+    "value": "4"
+   },
+   {
+    "name": "ecdat:scan:mosca:act-now",
+    "value": "11"
+   }
+  ]
  },
  "components": [
   {
+   "bom-ref": "crypto/hkdf/hkdf/421f44a7857b9f81",
    "type": "cryptographic-asset",
-   "name": "ECDH/X25519",
+   "name": "HKDF",
+   "description": "HKDF algorithm discovered by ECDAT static analysis: HKDF is an extract-then-expand KDF whose security follows the underlying HMAC; quantum-adequate with SHA-256 or better.",
    "cryptoProperties": {
     "assetType": "algorithm",
-    "quantumRisk": "QUANTUM-BROKEN (Shor)",
-    "recommendation": "ML-KEM-768 (hybrid key exchange)"
+    "algorithmProperties": {
+     "primitive": "kdf",
+     "executionEnvironment": "software-plain-ram",
+     "implementationPlatform": "generic",
+     "certificationLevel": [
+      "none"
+     ],
+     "cryptoFunctions": [
+      "keyderive"
+     ]
+    }
+   },
+   "properties": [
+    {
+     "name": "ecdat:asset:family",
+     "value": "HKDF"
+    },
+    {
+     "name": "ecdat:asset:kind",
+     "value": "algorithm"
+    },
+    {
+     "name": "ecdat:asset:key",
+     "value": "HKDF|None|None|None"
+    },
+    {
+     "name": "ecdat:quantum:risk",
+     "value": "quantum_safe"
+    },
+    {
+     "name": "ecdat:quantum:reason",
+     "value": "HKDF is an extract-then-expand KDF whose security follows the underlying HMAC; quantum-adequate with SHA-256 or better."
+    },
+    {
+     "name": "ecdat:severity",
+     "value": "none"
+    },
+    {
+     "name": "ecdat:score",
+     "value": "2.01"
+    },
+    {
+     "name": "ecdat:data-class",
+     "value": "internal"
+    },
+    {
+     "name": "ecdat:criticality",
+     "value": "medium"
+    },
+    {
+     "name": "ecdat:policy:name",
+     "value": "ECDAT baseline policy (NTRO / SIH 2026)"
+    },
+    {
+     "name": "ecdat:kb:citation",
+     "value": "RFC 5869"
+    },
+    {
+     "name": "ecdat:mosca:x-years",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:mosca:y-years",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:mosca:z-year",
+     "value": "2035"
+    },
+    {
+     "name": "ecdat:mosca:deadline-year",
+     "value": "2025"
+    },
+    {
+     "name": "ecdat:mosca:shortfall-years",
+     "value": "1"
+    },
+    {
+     "name": "ecdat:mosca:act-now",
+     "value": "true"
+    },
+    {
+     "name": "ecdat:mosca:statement",
+     "value": "X(5) + Y(5) = 10 years of exposure exceeds the 9 years left until Z=2035. Migration should already have started in 2025; the organisation is carrying 1 year(s) of uncovered risk."
+    },
+    {
+     "name": "ecdat:recommendation",
+     "value": "no change - retain (symmetric/hash primitive at an adequate level)"
+    },
+    {
+     "name": "ecdat:recommendation:rationale",
+     "value": "Grover's algorithm gives only a quadratic speed-up, so a 256-bit symmetric key or a 384-bit digest keeps a 128-bit or better post-quantum margin. The quantum exposure in this system is in the asymmetric layer, not here. Risk engine finding: HKDF is an extract-then-expand KDF whose security follows the underlying HMAC; quantum-adequate with SHA-256 or better. Evidence: 5 occurrence(s) across 3 file(s), first at public/aion-client.js:24. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None; keep the key-establishment layer under review instead. Standard: NIST SP 800-131A Rev.2. Alternatives: None needed."
+    },
+    {
+     "name": "ecdat:occurrences:count",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:detectors",
+     "value": "source_js"
+    },
+    {
+     "name": "ecdat:trade-off:size",
+     "value": "Unchanged."
+    },
+    {
+     "name": "ecdat:trade-off:performance",
+     "value": "Unchanged."
+    },
+    {
+     "name": "ecdat:trade-off:maturity",
+     "value": "Current standard."
+    },
+    {
+     "name": "ecdat:trade-off:interop",
+     "value": "Unchanged."
+    },
+    {
+     "name": "ecdat:trade-off:migration",
+     "value": "None; keep the key-establishment layer under review instead."
+    },
+    {
+     "name": "ecdat:trade-off:rule-id",
+     "value": "QSAFE_OK"
+    },
+    {
+     "name": "ecdat:trade-off:standard",
+     "value": "NIST SP 800-131A Rev.2"
+    }
+   ],
+   "evidence": {
+    "occurrences": [
+     {
+      "bom-ref": "crypto/hkdf/hkdf/421f44a7857b9f81/occ/1",
+      "location": "public/aion-client.js",
+      "line": 24,
+      "symbol": "const hkdfKey = await crypto.subtle.importKey('raw', bits, 'HKDF', false, ['deriveKey']);",
+      "additionalContext": "const hkdfKey = await crypto.subtle.importKey('raw', bits, 'HKDF', false, ['deriveKey']); [detector=source_js confidence=medium]"
+     },
+     {
+      "bom-ref": "crypto/hkdf/hkdf/421f44a7857b9f81/occ/2",
+      "location": "public/aion-client.js",
+      "line": 26,
+      "symbol": "const aesKey = await crypto.subtle.deriveKey(",
+      "additionalContext": "const aesKey = await crypto.subtle.deriveKey( [detector=source_js confidence=medium]"
+     },
+     {
+      "bom-ref": "crypto/hkdf/hkdf/421f44a7857b9f81/occ/3",
+      "location": "public/aion-fs.js",
+      "line": 64,
+      "symbol": "const base = await crypto.subtle.importKey('raw', ikm, 'HKDF', false, ['deriveKey']);",
+      "additionalContext": "const base = await crypto.subtle.importKey('raw', ikm, 'HKDF', false, ['deriveKey']); [detector=source_js confidence=medium]"
+     },
+     {
+      "bom-ref": "crypto/hkdf/hkdf/421f44a7857b9f81/occ/4",
+      "location": "public/aion-fs.js",
+      "line": 65,
+      "symbol": "return crypto.subtle.deriveKey(",
+      "additionalContext": "return crypto.subtle.deriveKey( [detector=source_js confidence=medium]"
+     },
+     {
+      "bom-ref": "crypto/hkdf/hkdf/421f44a7857b9f81/occ/5",
+      "location": "src/crypto.js",
+      "line": 54,
+      "symbol": "const okm = crypto.hkdfSync(HKDF_HASH, ecdh, saltBuf, infoBuf, KEY_LEN);",
+      "additionalContext": "const okm = crypto.hkdfSync(HKDF_HASH, ecdh, saltBuf, infoBuf, KEY_LEN); [detector=source_js confidence=high]"
+     }
+    ]
+   },
+   "ecdat": {
+    "quantumRisk": "quantum_safe",
+    "quantumRiskReason": "HKDF is an extract-then-expand KDF whose security follows the underlying HMAC; quantum-adequate with SHA-256 or better.",
+    "severity": "none",
+    "score": 2.01,
+    "recommendation": "no change - retain (symmetric/hash primitive at an adequate level)",
+    "recommendationRationale": "Grover's algorithm gives only a quadratic speed-up, so a 256-bit symmetric key or a 384-bit digest keeps a 128-bit or better post-quantum margin. The quantum exposure in this system is in the asymmetric layer, not here. Risk engine finding: HKDF is an extract-then-expand KDF whose security follows the underlying HMAC; quantum-adequate with SHA-256 or better. Evidence: 5 occurrence(s) across 3 file(s), first at public/aion-client.js:24. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None; keep the key-establishment layer under review instead. Standard: NIST SP 800-131A Rev.2. Alternatives: None needed.",
+    "dataClass": "internal",
+    "criticality": "medium",
+    "mosca": {
+     "xYears": 5,
+     "yYears": 5,
+     "zYear": 2035,
+     "deadlineYear": 2025,
+     "shortfallYears": 1,
+     "actNow": true,
+     "statement": "X(5) + Y(5) = 10 years of exposure exceeds the 9 years left until Z=2035. Migration should already have started in 2025; the organisation is carrying 1 year(s) of uncovered risk."
+    },
+    "tradeOffs": {
+     "size": "Unchanged.",
+     "performance": "Unchanged.",
+     "maturity": "Current standard.",
+     "interop": "Unchanged.",
+     "migration": "None; keep the key-establishment layer under review instead.",
+     "rule_id": "QSAFE_OK",
+     "standard": "NIST SP 800-131A Rev.2"
+    },
+    "occurrenceCount": 5,
+    "detectors": [
+     "source_js"
+    ],
+    "policyName": "ECDAT baseline policy (NTRO / SIH 2026)",
+    "kbCitation": "RFC 5869"
    }
   },
   {
+   "bom-ref": "crypto/aes/aes-256-gcm/402252aea91e2186",
+   "type": "cryptographic-asset",
+   "name": "AES-256-GCM",
+   "description": "AES algorithm discovered by ECDAT static analysis: AES is a symmetric block cipher; Grover's algorithm halves the effective key strength, so the verdict depends on the key size. A 256-bit key retains ~128-bit effective strength against Grover, which meets CNSA 2.0.",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "algorithmProperties": {
+     "primitive": "ae",
+     "parameterSetIdentifier": "256",
+     "mode": "gcm",
+     "executionEnvironment": "software-plain-ram",
+     "implementationPlatform": "generic",
+     "certificationLevel": [
+      "none"
+     ],
+     "cryptoFunctions": [
+      "encrypt",
+      "decrypt",
+      "tag"
+     ],
+     "classicalSecurityLevel": 256
+    },
+    "oid": "2.16.840.1.101.3.4.1.46"
+   },
+   "properties": [
+    {
+     "name": "ecdat:asset:family",
+     "value": "AES"
+    },
+    {
+     "name": "ecdat:asset:kind",
+     "value": "algorithm"
+    },
+    {
+     "name": "ecdat:asset:key",
+     "value": "AES|256|None|GCM"
+    },
+    {
+     "name": "ecdat:quantum:risk",
+     "value": "quantum_safe"
+    },
+    {
+     "name": "ecdat:quantum:reason",
+     "value": "AES is a symmetric block cipher; Grover's algorithm halves the effective key strength, so the verdict depends on the key size. A 256-bit key retains ~128-bit effective strength against Grover, which meets CNSA 2.0."
+    },
+    {
+     "name": "ecdat:severity",
+     "value": "none"
+    },
+    {
+     "name": "ecdat:score",
+     "value": "2.01"
+    },
+    {
+     "name": "ecdat:data-class",
+     "value": "internal"
+    },
+    {
+     "name": "ecdat:criticality",
+     "value": "medium"
+    },
+    {
+     "name": "ecdat:policy:name",
+     "value": "ECDAT baseline policy (NTRO / SIH 2026)"
+    },
+    {
+     "name": "ecdat:kb:citation",
+     "value": "FIPS 197; Grover 1996, quadratic speed-up for unstructured search; NSA CNSA 2.0 suite (2022, FAQ updated 2024)"
+    },
+    {
+     "name": "ecdat:mosca:x-years",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:mosca:y-years",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:mosca:z-year",
+     "value": "2035"
+    },
+    {
+     "name": "ecdat:mosca:deadline-year",
+     "value": "2025"
+    },
+    {
+     "name": "ecdat:mosca:shortfall-years",
+     "value": "1"
+    },
+    {
+     "name": "ecdat:mosca:act-now",
+     "value": "true"
+    },
+    {
+     "name": "ecdat:mosca:statement",
+     "value": "X(5) + Y(5) = 10 years of exposure exceeds the 9 years left until Z=2035. Migration should already have started in 2025; the organisation is carrying 1 year(s) of uncovered risk."
+    },
+    {
+     "name": "ecdat:recommendation",
+     "value": "no change - retain (symmetric/hash primitive at an adequate level)"
+    },
+    {
+     "name": "ecdat:recommendation:rationale",
+     "value": "Grover's algorithm gives only a quadratic speed-up, so a 256-bit symmetric key or a 384-bit digest keeps a 128-bit or better post-quantum margin. The quantum exposure in this system is in the asymmetric layer, not here. Risk engine finding: AES is a symmetric block cipher; Grover's algorithm halves the effective key strength, so the verdict depends on the key size. A 256-bit key retains ~128-bit effective strength against Grover, which meets CNSA 2.0. Evidence: 2 occurrence(s) across 2 file(s), first at public/aion-client.js:26. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None; keep the key-establishment layer under review instead. Standard: NIST SP 800-131A Rev.2. Alternatives: None needed."
+    },
+    {
+     "name": "ecdat:occurrences:count",
+     "value": "2"
+    },
+    {
+     "name": "ecdat:detectors",
+     "value": "source_js"
+    },
+    {
+     "name": "ecdat:trade-off:size",
+     "value": "Unchanged."
+    },
+    {
+     "name": "ecdat:trade-off:performance",
+     "value": "Unchanged."
+    },
+    {
+     "name": "ecdat:trade-off:maturity",
+     "value": "Current standard."
+    },
+    {
+     "name": "ecdat:trade-off:interop",
+     "value": "Unchanged."
+    },
+    {
+     "name": "ecdat:trade-off:migration",
+     "value": "None; keep the key-establishment layer under review instead."
+    },
+    {
+     "name": "ecdat:trade-off:rule-id",
+     "value": "QSAFE_OK"
+    },
+    {
+     "name": "ecdat:trade-off:standard",
+     "value": "NIST SP 800-131A Rev.2"
+    }
+   ],
+   "evidence": {
+    "occurrences": [
+     {
+      "bom-ref": "crypto/aes/aes-256-gcm/402252aea91e2186/occ/1",
+      "location": "public/aion-client.js",
+      "line": 26,
+      "symbol": "const aesKey = await crypto.subtle.deriveKey(",
+      "additionalContext": "const aesKey = await crypto.subtle.deriveKey( [detector=source_js confidence=medium]"
+     },
+     {
+      "bom-ref": "crypto/aes/aes-256-gcm/402252aea91e2186/occ/2",
+      "location": "public/aion-fs.js",
+      "line": 65,
+      "symbol": "return crypto.subtle.deriveKey(",
+      "additionalContext": "return crypto.subtle.deriveKey( [detector=source_js confidence=medium]"
+     }
+    ]
+   },
+   "ecdat": {
+    "quantumRisk": "quantum_safe",
+    "quantumRiskReason": "AES is a symmetric block cipher; Grover's algorithm halves the effective key strength, so the verdict depends on the key size. A 256-bit key retains ~128-bit effective strength against Grover, which meets CNSA 2.0.",
+    "severity": "none",
+    "score": 2.01,
+    "recommendation": "no change - retain (symmetric/hash primitive at an adequate level)",
+    "recommendationRationale": "Grover's algorithm gives only a quadratic speed-up, so a 256-bit symmetric key or a 384-bit digest keeps a 128-bit or better post-quantum margin. The quantum exposure in this system is in the asymmetric layer, not here. Risk engine finding: AES is a symmetric block cipher; Grover's algorithm halves the effective key strength, so the verdict depends on the key size. A 256-bit key retains ~128-bit effective strength against Grover, which meets CNSA 2.0. Evidence: 2 occurrence(s) across 2 file(s), first at public/aion-client.js:26. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None; keep the key-establishment layer under review instead. Standard: NIST SP 800-131A Rev.2. Alternatives: None needed.",
+    "dataClass": "internal",
+    "criticality": "medium",
+    "mosca": {
+     "xYears": 5,
+     "yYears": 5,
+     "zYear": 2035,
+     "deadlineYear": 2025,
+     "shortfallYears": 1,
+     "actNow": true,
+     "statement": "X(5) + Y(5) = 10 years of exposure exceeds the 9 years left until Z=2035. Migration should already have started in 2025; the organisation is carrying 1 year(s) of uncovered risk."
+    },
+    "tradeOffs": {
+     "size": "Unchanged.",
+     "performance": "Unchanged.",
+     "maturity": "Current standard.",
+     "interop": "Unchanged.",
+     "migration": "None; keep the key-establishment layer under review instead.",
+     "rule_id": "QSAFE_OK",
+     "standard": "NIST SP 800-131A Rev.2"
+    },
+    "occurrenceCount": 2,
+    "detectors": [
+     "source_js"
+    ],
+    "policyName": "ECDAT baseline policy (NTRO / SIH 2026)",
+    "kbCitation": "FIPS 197; Grover 1996, quadratic speed-up for unstructured search; NSA CNSA 2.0 suite (2022, FAQ updated 2024)"
+   }
+  },
+  {
+   "bom-ref": "crypto/hmac/hmac-sha-256/262795b046957deb",
+   "type": "cryptographic-asset",
+   "name": "HMAC-SHA-256",
+   "description": "HMAC algorithm discovered by ECDAT static analysis: HMAC's security reduces to the PRF property of the hash rather than collision resistance; with a >= 256-bit key and a modern hash it is quantum-adequate, and Grover only halves the key search. Underlying hash: SHA-256.",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "algorithmProperties": {
+     "primitive": "mac",
+     "parameterSetIdentifier": "SHA-256",
+     "executionEnvironment": "software-plain-ram",
+     "implementationPlatform": "generic",
+     "certificationLevel": [
+      "none"
+     ],
+     "cryptoFunctions": [
+      "tag"
+     ]
+    }
+   },
+   "properties": [
+    {
+     "name": "ecdat:asset:family",
+     "value": "HMAC"
+    },
+    {
+     "name": "ecdat:asset:kind",
+     "value": "algorithm"
+    },
+    {
+     "name": "ecdat:asset:key",
+     "value": "HMAC|None|None|None"
+    },
+    {
+     "name": "ecdat:quantum:risk",
+     "value": "quantum_safe"
+    },
+    {
+     "name": "ecdat:quantum:reason",
+     "value": "HMAC's security reduces to the PRF property of the hash rather than collision resistance; with a >= 256-bit key and a modern hash it is quantum-adequate, and Grover only halves the key search. Underlying hash: SHA-256."
+    },
+    {
+     "name": "ecdat:severity",
+     "value": "none"
+    },
+    {
+     "name": "ecdat:score",
+     "value": "2.01"
+    },
+    {
+     "name": "ecdat:data-class",
+     "value": "internal"
+    },
+    {
+     "name": "ecdat:criticality",
+     "value": "medium"
+    },
+    {
+     "name": "ecdat:policy:name",
+     "value": "ECDAT baseline policy (NTRO / SIH 2026)"
+    },
+    {
+     "name": "ecdat:kb:citation",
+     "value": "FIPS 198-1; Bellare 2006; Grover 1996, quadratic speed-up for unstructured search"
+    },
+    {
+     "name": "ecdat:mosca:x-years",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:mosca:y-years",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:mosca:z-year",
+     "value": "2035"
+    },
+    {
+     "name": "ecdat:mosca:deadline-year",
+     "value": "2025"
+    },
+    {
+     "name": "ecdat:mosca:shortfall-years",
+     "value": "1"
+    },
+    {
+     "name": "ecdat:mosca:act-now",
+     "value": "true"
+    },
+    {
+     "name": "ecdat:mosca:statement",
+     "value": "X(5) + Y(5) = 10 years of exposure exceeds the 9 years left until Z=2035. Migration should already have started in 2025; the organisation is carrying 1 year(s) of uncovered risk."
+    },
+    {
+     "name": "ecdat:recommendation",
+     "value": "no change - retain (symmetric/hash primitive at an adequate level)"
+    },
+    {
+     "name": "ecdat:recommendation:rationale",
+     "value": "Grover's algorithm gives only a quadratic speed-up, so a 256-bit symmetric key or a 384-bit digest keeps a 128-bit or better post-quantum margin. The quantum exposure in this system is in the asymmetric layer, not here. Risk engine finding: HMAC's security reduces to the PRF property of the hash rather than collision resistance; with a >= 256-bit key and a modern hash it is quantum-adequate, and Grover only halves the key search. Underlying hash: SHA-256. Evidence: 1 occurrence(s) across 1 file(s), first at src/license.js:105. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None; keep the key-establishment layer under review instead. Standard: NIST SP 800-131A Rev.2. Alternatives: None needed."
+    },
+    {
+     "name": "ecdat:occurrences:count",
+     "value": "1"
+    },
+    {
+     "name": "ecdat:detectors",
+     "value": "source_js"
+    },
+    {
+     "name": "ecdat:trade-off:size",
+     "value": "Unchanged."
+    },
+    {
+     "name": "ecdat:trade-off:performance",
+     "value": "Unchanged."
+    },
+    {
+     "name": "ecdat:trade-off:maturity",
+     "value": "Current standard."
+    },
+    {
+     "name": "ecdat:trade-off:interop",
+     "value": "Unchanged."
+    },
+    {
+     "name": "ecdat:trade-off:migration",
+     "value": "None; keep the key-establishment layer under review instead."
+    },
+    {
+     "name": "ecdat:trade-off:rule-id",
+     "value": "QSAFE_OK"
+    },
+    {
+     "name": "ecdat:trade-off:standard",
+     "value": "NIST SP 800-131A Rev.2"
+    }
+   ],
+   "evidence": {
+    "occurrences": [
+     {
+      "bom-ref": "crypto/hmac/hmac-sha-256/262795b046957deb/occ/1",
+      "location": "src/license.js",
+      "line": 105,
+      "symbol": "return crypto.createHmac('sha256', Buffer.from(lic.sig, 'base64'))",
+      "additionalContext": "return crypto.createHmac('sha256', Buffer.from(lic.sig, 'base64')) [detector=source_js confidence=high]"
+     }
+    ]
+   },
+   "ecdat": {
+    "quantumRisk": "quantum_safe",
+    "quantumRiskReason": "HMAC's security reduces to the PRF property of the hash rather than collision resistance; with a >= 256-bit key and a modern hash it is quantum-adequate, and Grover only halves the key search. Underlying hash: SHA-256.",
+    "severity": "none",
+    "score": 2.01,
+    "recommendation": "no change - retain (symmetric/hash primitive at an adequate level)",
+    "recommendationRationale": "Grover's algorithm gives only a quadratic speed-up, so a 256-bit symmetric key or a 384-bit digest keeps a 128-bit or better post-quantum margin. The quantum exposure in this system is in the asymmetric layer, not here. Risk engine finding: HMAC's security reduces to the PRF property of the hash rather than collision resistance; with a >= 256-bit key and a modern hash it is quantum-adequate, and Grover only halves the key search. Underlying hash: SHA-256. Evidence: 1 occurrence(s) across 1 file(s), first at src/license.js:105. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None; keep the key-establishment layer under review instead. Standard: NIST SP 800-131A Rev.2. Alternatives: None needed.",
+    "dataClass": "internal",
+    "criticality": "medium",
+    "mosca": {
+     "xYears": 5,
+     "yYears": 5,
+     "zYear": 2035,
+     "deadlineYear": 2025,
+     "shortfallYears": 1,
+     "actNow": true,
+     "statement": "X(5) + Y(5) = 10 years of exposure exceeds the 9 years left until Z=2035. Migration should already have started in 2025; the organisation is carrying 1 year(s) of uncovered risk."
+    },
+    "tradeOffs": {
+     "size": "Unchanged.",
+     "performance": "Unchanged.",
+     "maturity": "Current standard.",
+     "interop": "Unchanged.",
+     "migration": "None; keep the key-establishment layer under review instead.",
+     "rule_id": "QSAFE_OK",
+     "standard": "NIST SP 800-131A Rev.2"
+    },
+    "occurrenceCount": 1,
+    "detectors": [
+     "source_js"
+    ],
+    "policyName": "ECDAT baseline policy (NTRO / SIH 2026)",
+    "kbCitation": "FIPS 198-1; Bellare 2006; Grover 1996, quadratic speed-up for unstructured search"
+   }
+  },
+  {
+   "bom-ref": "crypto/scrypt/scrypt/2192728627f4d3c8",
+   "type": "cryptographic-asset",
+   "name": "scrypt",
+   "description": "scrypt algorithm discovered by ECDAT static analysis: scrypt is a memory-hard password KDF with no quantum-specific break.",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "algorithmProperties": {
+     "primitive": "kdf",
+     "executionEnvironment": "software-plain-ram",
+     "implementationPlatform": "generic",
+     "certificationLevel": [
+      "none"
+     ],
+     "cryptoFunctions": [
+      "keyderive"
+     ]
+    }
+   },
+   "properties": [
+    {
+     "name": "ecdat:asset:family",
+     "value": "scrypt"
+    },
+    {
+     "name": "ecdat:asset:kind",
+     "value": "algorithm"
+    },
+    {
+     "name": "ecdat:asset:key",
+     "value": "scrypt|None|None|None"
+    },
+    {
+     "name": "ecdat:quantum:risk",
+     "value": "quantum_safe"
+    },
+    {
+     "name": "ecdat:quantum:reason",
+     "value": "scrypt is a memory-hard password KDF with no quantum-specific break."
+    },
+    {
+     "name": "ecdat:severity",
+     "value": "none"
+    },
+    {
+     "name": "ecdat:score",
+     "value": "1.09"
+    },
+    {
+     "name": "ecdat:data-class",
+     "value": "internal"
+    },
+    {
+     "name": "ecdat:criticality",
+     "value": "low"
+    },
+    {
+     "name": "ecdat:policy:rule",
+     "value": "**/scripts/**"
+    },
+    {
+     "name": "ecdat:policy:name",
+     "value": "ECDAT baseline policy (NTRO / SIH 2026)"
+    },
+    {
+     "name": "ecdat:kb:citation",
+     "value": "RFC 7914"
+    },
+    {
+     "name": "ecdat:mosca:x-years",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:mosca:y-years",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:mosca:z-year",
+     "value": "2035"
+    },
+    {
+     "name": "ecdat:mosca:deadline-year",
+     "value": "2025"
+    },
+    {
+     "name": "ecdat:mosca:shortfall-years",
+     "value": "1"
+    },
+    {
+     "name": "ecdat:mosca:act-now",
+     "value": "true"
+    },
+    {
+     "name": "ecdat:mosca:statement",
+     "value": "X(5) + Y(5) = 10 years of exposure exceeds the 9 years left until Z=2035. Migration should already have started in 2025; the organisation is carrying 1 year(s) of uncovered risk."
+    },
+    {
+     "name": "ecdat:recommendation",
+     "value": "no change - retain (symmetric/hash primitive at an adequate level)"
+    },
+    {
+     "name": "ecdat:recommendation:rationale",
+     "value": "Grover's algorithm gives only a quadratic speed-up, so a 256-bit symmetric key or a 384-bit digest keeps a 128-bit or better post-quantum margin. The quantum exposure in this system is in the asymmetric layer, not here. Risk engine finding: scrypt is a memory-hard password KDF with no quantum-specific break. Evidence: 9 occurrence(s) across 6 file(s), first at scripts/setup.js:15. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None; keep the key-establishment layer under review instead. Standard: NIST SP 800-131A Rev.2. Alternatives: None needed."
+    },
+    {
+     "name": "ecdat:occurrences:count",
+     "value": "9"
+    },
+    {
+     "name": "ecdat:detectors",
+     "value": "source_js"
+    },
+    {
+     "name": "ecdat:trade-off:size",
+     "value": "Unchanged."
+    },
+    {
+     "name": "ecdat:trade-off:performance",
+     "value": "Unchanged."
+    },
+    {
+     "name": "ecdat:trade-off:maturity",
+     "value": "Current standard."
+    },
+    {
+     "name": "ecdat:trade-off:interop",
+     "value": "Unchanged."
+    },
+    {
+     "name": "ecdat:trade-off:migration",
+     "value": "None; keep the key-establishment layer under review instead."
+    },
+    {
+     "name": "ecdat:trade-off:rule-id",
+     "value": "QSAFE_OK"
+    },
+    {
+     "name": "ecdat:trade-off:standard",
+     "value": "NIST SP 800-131A Rev.2"
+    }
+   ],
+   "evidence": {
+    "occurrences": [
+     {
+      "bom-ref": "crypto/scrypt/scrypt/2192728627f4d3c8/occ/1",
+      "location": "scripts/setup.js",
+      "line": 15,
+      "symbol": "const dk = crypto.scryptSync(password, salt, 32, { N: 32768, r: 8, p: 1, maxmem: 64 * 1024 * 1024 });",
+      "additionalContext": "const dk = crypto.scryptSync(password, salt, 32, { N: 32768, r: 8, p: 1, maxmem: 64 * 1024 * 1024 }); [detector=source_js confidence=high]"
+     },
+     {
+      "bom-ref": "crypto/scrypt/scrypt/2192728627f4d3c8/occ/2",
+      "location": "src/peerStore.js",
+      "line": 114,
+      "symbol": "const dk = crypto.scryptSync(password, salt, SCRYPT_KEYLEN, { N: SCRYPT_N, r: SCRYPT_R, p: SCRYPT_P, maxmem: 64 * 1024 * 1024 });",
+      "additionalContext": "const dk = crypto.scryptSync(password, salt, SCRYPT_KEYLEN, { N: SCRYPT_N, r: SCRYPT_R, p: SCRYPT_P, maxmem: 64 * 1024 * 1024 }); [detector=source_js confidence=high]"
+     },
+     {
+      "bom-ref": "crypto/scrypt/scrypt/2192728627f4d3c8/occ/3",
+      "location": "src/peerStore.js",
+      "line": 122,
+      "symbol": "const dk = crypto.scryptSync(password, Buffer.from(parts[5], 'hex'), SCRYPT_KEYLEN,",
+      "additionalContext": "const dk = crypto.scryptSync(password, Buffer.from(parts[5], 'hex'), SCRYPT_KEYLEN, [detector=source_js confidence=high]"
+     },
+     {
+      "bom-ref": "crypto/scrypt/scrypt/2192728627f4d3c8/occ/4",
+      "location": "src/peerStore.js",
+      "line": 205,
+      "symbol": "crypto.scryptSync(String(password || ''), this._dummySalt || (this._dummySalt = crypto.randomBytes(16)),",
+      "additionalContext": "crypto.scryptSync(String(password || ''), this._dummySalt || (this._dummySalt = crypto.randomBytes(16)), [detector=source_js confidence=high]"
+     },
+     {
+      "bom-ref": "crypto/scrypt/scrypt/2192728627f4d3c8/occ/5",
+      "location": "src/server.js",
+      "line": 159,
+      "symbol": "const dk = crypto.scryptSync(password, salt, 32, { N: 32768, r: 8, p: 1, maxmem: 64 * 1024 * 1024 });",
+      "additionalContext": "const dk = crypto.scryptSync(password, salt, 32, { N: 32768, r: 8, p: 1, maxmem: 64 * 1024 * 1024 }); [detector=source_js confidence=high]"
+     },
+     {
+      "bom-ref": "crypto/scrypt/scrypt/2192728627f4d3c8/occ/6",
+      "location": "src/server.js",
+      "line": 176,
+      "symbol": "const dk = crypto.scryptSync(pw, Buffer.from(p[5], 'hex'), 32, { N: +p[2], r: +p[3], p: +p[4], maxmem: 64 * 1024 * 1024 });",
+      "additionalContext": "const dk = crypto.scryptSync(pw, Buffer.from(p[5], 'hex'), 32, { N: +p[2], r: +p[3], p: +p[4], maxmem: 64 * 1024 * 1024 }); [detector=source_js confidence=high]"
+     },
+     {
+      "bom-ref": "crypto/scrypt/scrypt/2192728627f4d3c8/occ/7",
+      "location": "test/browser.js",
+      "line": 16,
+      "symbol": "const dk = crypto.scryptSync('admin-pw-12345', salt, 32, { N: 32768, r: 8, p: 1, maxmem: 64*1024*1024 });",
+      "additionalContext": "const dk = crypto.scryptSync('admin-pw-12345', salt, 32, { N: 32768, r: 8, p: 1, maxmem: 64*1024*1024 }); [detector=source_js confidence=high]"
+     },
+     {
+      "bom-ref": "crypto/scrypt/scrypt/2192728627f4d3c8/occ/8",
+      "location": "test/integration.js",
+      "line": 14,
+      "symbol": "const dk = crypto.scryptSync('test-admin-pw', salt, 32, { N: 32768, r: 8, p: 1, maxmem: 64 * 1024 * 1024 });",
+      "additionalContext": "const dk = crypto.scryptSync('test-admin-pw', salt, 32, { N: 32768, r: 8, p: 1, maxmem: 64 * 1024 * 1024 }); [detector=source_js confidence=high]"
+     },
+     {
+      "bom-ref": "crypto/scrypt/scrypt/2192728627f4d3c8/occ/9",
+      "location": "test/security-live.js",
+      "line": 21,
+      "symbol": "const dk = crypto.scryptSync('admin-pw-12345', salt, 32, { N: 32768, r: 8, p: 1, maxmem: 64 * 1024 * 1024 });",
+      "additionalContext": "const dk = crypto.scryptSync('admin-pw-12345', salt, 32, { N: 32768, r: 8, p: 1, maxmem: 64 * 1024 * 1024 }); [detector=source_js confidence=high]"
+     }
+    ]
+   },
+   "ecdat": {
+    "quantumRisk": "quantum_safe",
+    "quantumRiskReason": "scrypt is a memory-hard password KDF with no quantum-specific break.",
+    "severity": "none",
+    "score": 1.09,
+    "recommendation": "no change - retain (symmetric/hash primitive at an adequate level)",
+    "recommendationRationale": "Grover's algorithm gives only a quadratic speed-up, so a 256-bit symmetric key or a 384-bit digest keeps a 128-bit or better post-quantum margin. The quantum exposure in this system is in the asymmetric layer, not here. Risk engine finding: scrypt is a memory-hard password KDF with no quantum-specific break. Evidence: 9 occurrence(s) across 6 file(s), first at scripts/setup.js:15. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None; keep the key-establishment layer under review instead. Standard: NIST SP 800-131A Rev.2. Alternatives: None needed.",
+    "dataClass": "internal",
+    "criticality": "low",
+    "mosca": {
+     "xYears": 5,
+     "yYears": 5,
+     "zYear": 2035,
+     "deadlineYear": 2025,
+     "shortfallYears": 1,
+     "actNow": true,
+     "statement": "X(5) + Y(5) = 10 years of exposure exceeds the 9 years left until Z=2035. Migration should already have started in 2025; the organisation is carrying 1 year(s) of uncovered risk."
+    },
+    "tradeOffs": {
+     "size": "Unchanged.",
+     "performance": "Unchanged.",
+     "maturity": "Current standard.",
+     "interop": "Unchanged.",
+     "migration": "None; keep the key-establishment layer under review instead.",
+     "rule_id": "QSAFE_OK",
+     "standard": "NIST SP 800-131A Rev.2"
+    },
+    "occurrenceCount": 9,
+    "detectors": [
+     "source_js"
+    ],
+    "policyRule": "**/scripts/**",
+    "policyName": "ECDAT baseline policy (NTRO / SIH 2026)",
+    "kbCitation": "RFC 7914"
+   }
+  },
+  {
+   "bom-ref": "crypto/ml-kem/ml-kem/a691545d6d483d83",
    "type": "cryptographic-asset",
    "name": "ML-KEM",
+   "description": "ML-KEM algorithm discovered by ECDAT static analysis: ML-KEM (formerly CRYSTALS-Kyber) is the NIST-standardised module-lattice KEM; its security rests on Module-LWE, for which no efficient quantum algorithm is known.",
    "cryptoProperties": {
     "assetType": "algorithm",
-    "quantumRisk": "PQC / quantum-safe",
-    "recommendation": "Already quantum-safe"
+    "algorithmProperties": {
+     "primitive": "kem",
+     "executionEnvironment": "software-plain-ram",
+     "implementationPlatform": "generic",
+     "certificationLevel": [
+      "none"
+     ],
+     "cryptoFunctions": [
+      "encapsulate",
+      "decapsulate",
+      "keygen"
+     ]
+    }
+   },
+   "properties": [
+    {
+     "name": "ecdat:asset:family",
+     "value": "ML-KEM"
+    },
+    {
+     "name": "ecdat:asset:kind",
+     "value": "algorithm"
+    },
+    {
+     "name": "ecdat:asset:key",
+     "value": "ML-KEM|None|None|None"
+    },
+    {
+     "name": "ecdat:quantum:risk",
+     "value": "pqc"
+    },
+    {
+     "name": "ecdat:quantum:reason",
+     "value": "ML-KEM (formerly CRYSTALS-Kyber) is the NIST-standardised module-lattice KEM; its security rests on Module-LWE, for which no efficient quantum algorithm is known."
+    },
+    {
+     "name": "ecdat:severity",
+     "value": "none"
+    },
+    {
+     "name": "ecdat:score",
+     "value": "0.0"
+    },
+    {
+     "name": "ecdat:data-class",
+     "value": "public"
+    },
+    {
+     "name": "ecdat:criticality",
+     "value": "low"
+    },
+    {
+     "name": "ecdat:policy:rule",
+     "value": "**/test/**"
+    },
+    {
+     "name": "ecdat:policy:name",
+     "value": "ECDAT baseline policy (NTRO / SIH 2026)"
+    },
+    {
+     "name": "ecdat:kb:citation",
+     "value": "NIST FIPS 203 (ML-KEM, Aug 2024)"
+    },
+    {
+     "name": "ecdat:mosca:x-years",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:mosca:y-years",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:mosca:z-year",
+     "value": "2035"
+    },
+    {
+     "name": "ecdat:mosca:deadline-year",
+     "value": "2025"
+    },
+    {
+     "name": "ecdat:mosca:shortfall-years",
+     "value": "1"
+    },
+    {
+     "name": "ecdat:mosca:act-now",
+     "value": "true"
+    },
+    {
+     "name": "ecdat:mosca:statement",
+     "value": "X(5) + Y(5) = 10 years of exposure exceeds the 9 years left until Z=2035. Migration should already have started in 2025; the organisation is carrying 1 year(s) of uncovered risk."
+    },
+    {
+     "name": "ecdat:recommendation",
+     "value": "no change - already quantum-safe"
+    },
+    {
+     "name": "ecdat:recommendation:rationale",
+     "value": "This asset already uses a NIST-standardised post-quantum algorithm at a parameter set of NIST category 3 or above. Record it in the CBOM as compliant and keep the parameter set under review. Risk engine finding: ML-KEM (formerly CRYSTALS-Kyber) is the NIST-standardised module-lattice KEM; its security rests on Module-LWE, for which no efficient quantum algorithm is known. Evidence: 4 occurrence(s) across 2 file(s), first at test/integration.js:40. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None required. Standard: NIST FIPS 203 (ML-KEM), final August 2024 / NIST FIPS 204 (ML-DSA), final August 2024 / NIST FIPS 205 (SLH-DSA), final August 2024. Alternatives: Consider hybrid mode during the transition period for defence in depth."
+    },
+    {
+     "name": "ecdat:occurrences:count",
+     "value": "4"
+    },
+    {
+     "name": "ecdat:detectors",
+     "value": "source_js"
+    },
+    {
+     "name": "ecdat:trade-off:size",
+     "value": "ML-KEM-768: encapsulation key 1184 B, ciphertext 1088 B, shared secret 32 B; ML-DSA-65: signature 3309 B (~3.3 KB), public key 1952 B."
+    },
+    {
+     "name": "ecdat:trade-off:performance",
+     "value": "Lattice operations are fast; bandwidth is the cost centre."
+    },
+    {
+     "name": "ecdat:trade-off:maturity",
+     "value": "Standardised August 2024."
+    },
+    {
+     "name": "ecdat:trade-off:interop",
+     "value": "Confirm the implementation tracks the final FIPS versions rather than a pre-standard Kyber/Dilithium draft - the drafts are not interoperable with the final standards."
+    },
+    {
+     "name": "ecdat:trade-off:migration",
+     "value": "None required."
+    },
+    {
+     "name": "ecdat:trade-off:rule-id",
+     "value": "PQC_OK"
+    },
+    {
+     "name": "ecdat:trade-off:standard",
+     "value": "NIST FIPS 203 (ML-KEM), final August 2024 / NIST FIPS 204 (ML-DSA), final August 2024 / NIST FIPS 205 (SLH-DSA), final August 2024"
+    }
+   ],
+   "evidence": {
+    "occurrences": [
+     {
+      "bom-ref": "crypto/ml-kem/ml-kem/a691545d6d483d83/occ/1",
+      "location": "test/integration.js",
+      "line": 40,
+      "symbol": "(async () => {",
+      "additionalContext": "(async () => { [detector=source_js confidence=high]"
+     },
+     {
+      "bom-ref": "crypto/ml-kem/ml-kem/a691545d6d483d83/occ/2",
+      "location": "test/integration.js",
+      "line": 48,
+      "symbol": "ok('version reports crypto suite', /ML-KEM|X25519/.test(r.json.cryptoSuite));",
+      "additionalContext": "ok('version reports crypto suite', /ML-KEM|X25519/.test(r.json.cryptoSuite)); [detector=source_js confidence=high]"
+     },
+     {
+      "bom-ref": "crypto/ml-kem/ml-kem/a691545d6d483d83/occ/3",
+      "location": "test/security-live.js",
+      "line": 46,
+      "symbol": "(async () => {",
+      "additionalContext": "(async () => { [detector=source_js confidence=high]"
+     },
+     {
+      "bom-ref": "crypto/ml-kem/ml-kem/a691545d6d483d83/occ/4",
+      "location": "test/security-live.js",
+      "line": 102,
+      "symbol": "ok('cryptoSuite does NOT claim ML-KEM as live', !/ML-KEM/.test(r.json.cryptoSuite), r.json.cryptoSuite);",
+      "additionalContext": "ok('cryptoSuite does NOT claim ML-KEM as live', !/ML-KEM/.test(r.json.cryptoSuite), r.json.cryptoSuite); [detector=source_js confidence=high]"
+     }
+    ]
+   },
+   "ecdat": {
+    "quantumRisk": "pqc",
+    "quantumRiskReason": "ML-KEM (formerly CRYSTALS-Kyber) is the NIST-standardised module-lattice KEM; its security rests on Module-LWE, for which no efficient quantum algorithm is known.",
+    "severity": "none",
+    "score": 0.0,
+    "recommendation": "no change - already quantum-safe",
+    "recommendationRationale": "This asset already uses a NIST-standardised post-quantum algorithm at a parameter set of NIST category 3 or above. Record it in the CBOM as compliant and keep the parameter set under review. Risk engine finding: ML-KEM (formerly CRYSTALS-Kyber) is the NIST-standardised module-lattice KEM; its security rests on Module-LWE, for which no efficient quantum algorithm is known. Evidence: 4 occurrence(s) across 2 file(s), first at test/integration.js:40. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None required. Standard: NIST FIPS 203 (ML-KEM), final August 2024 / NIST FIPS 204 (ML-DSA), final August 2024 / NIST FIPS 205 (SLH-DSA), final August 2024. Alternatives: Consider hybrid mode during the transition period for defence in depth.",
+    "dataClass": "public",
+    "criticality": "low",
+    "mosca": {
+     "xYears": 5,
+     "yYears": 5,
+     "zYear": 2035,
+     "deadlineYear": 2025,
+     "shortfallYears": 1,
+     "actNow": true,
+     "statement": "X(5) + Y(5) = 10 years of exposure exceeds the 9 years left until Z=2035. Migration should already have started in 2025; the organisation is carrying 1 year(s) of uncovered risk."
+    },
+    "tradeOffs": {
+     "size": "ML-KEM-768: encapsulation key 1184 B, ciphertext 1088 B, shared secret 32 B; ML-DSA-65: signature 3309 B (~3.3 KB), public key 1952 B.",
+     "performance": "Lattice operations are fast; bandwidth is the cost centre.",
+     "maturity": "Standardised August 2024.",
+     "interop": "Confirm the implementation tracks the final FIPS versions rather than a pre-standard Kyber/Dilithium draft - the drafts are not interoperable with the final standards.",
+     "migration": "None required.",
+     "rule_id": "PQC_OK",
+     "standard": "NIST FIPS 203 (ML-KEM), final August 2024 / NIST FIPS 204 (ML-DSA), final August 2024 / NIST FIPS 205 (SLH-DSA), final August 2024"
+    },
+    "occurrenceCount": 4,
+    "detectors": [
+     "source_js"
+    ],
+    "policyRule": "**/test/**",
+    "policyName": "ECDAT baseline policy (NTRO / SIH 2026)",
+    "kbCitation": "NIST FIPS 203 (ML-KEM, Aug 2024)"
    }
   },
   {
+   "bom-ref": "crypto/unknown/unknown-crypto-createcipheriv/3a8d4c91e929318e",
    "type": "cryptographic-asset",
-   "name": "AES-256",
+   "name": "UNKNOWN (crypto.createCipheriv)",
+   "description": "Unknown algorithm discovered by ECDAT static analysis: 'Unknown' is not in the ECDAT knowledge base (v1.0.0 (2026-08)); no quantum verdict is issued. Add an entry to app/engine/kb.py to classify it.",
    "cryptoProperties": {
     "assetType": "algorithm",
-    "quantumRisk": "SAFE",
-    "recommendation": "No change needed"
+    "algorithmProperties": {
+     "primitive": "unknown",
+     "parameterSetIdentifier": "(crypto.createCipheriv)",
+     "executionEnvironment": "software-plain-ram",
+     "implementationPlatform": "generic",
+     "certificationLevel": [
+      "none"
+     ],
+     "cryptoFunctions": [
+      "unknown"
+     ]
+    }
+   },
+   "properties": [
+    {
+     "name": "ecdat:asset:family",
+     "value": "Unknown"
+    },
+    {
+     "name": "ecdat:asset:kind",
+     "value": "algorithm"
+    },
+    {
+     "name": "ecdat:asset:key",
+     "value": "Unknown|None|None|None"
+    },
+    {
+     "name": "ecdat:quantum:risk",
+     "value": "unknown"
+    },
+    {
+     "name": "ecdat:quantum:reason",
+     "value": "'Unknown' is not in the ECDAT knowledge base (v1.0.0 (2026-08)); no quantum verdict is issued. Add an entry to app/engine/kb.py to classify it."
+    },
+    {
+     "name": "ecdat:severity",
+     "value": "low"
+    },
+    {
+     "name": "ecdat:score",
+     "value": "10.04"
+    },
+    {
+     "name": "ecdat:data-class",
+     "value": "internal"
+    },
+    {
+     "name": "ecdat:criticality",
+     "value": "medium"
+    },
+    {
+     "name": "ecdat:policy:name",
+     "value": "ECDAT baseline policy (NTRO / SIH 2026)"
+    },
+    {
+     "name": "ecdat:kb:citation",
+     "value": "no KB entry; verdict withheld"
+    },
+    {
+     "name": "ecdat:mosca:x-years",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:mosca:y-years",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:mosca:z-year",
+     "value": "2035"
+    },
+    {
+     "name": "ecdat:mosca:deadline-year",
+     "value": "2025"
+    },
+    {
+     "name": "ecdat:mosca:shortfall-years",
+     "value": "1"
+    },
+    {
+     "name": "ecdat:mosca:act-now",
+     "value": "true"
+    },
+    {
+     "name": "ecdat:mosca:statement",
+     "value": "X(5) + Y(5) = 10 years of exposure exceeds the 9 years left until Z=2035. Migration should already have started in 2025; the organisation is carrying 1 year(s) of uncovered risk."
+    },
+    {
+     "name": "ecdat:recommendation",
+     "value": "manual review required"
+    },
+    {
+     "name": "ecdat:recommendation:rationale",
+     "value": "ECDAT identified a cryptographic asset but could not resolve its algorithm, parameters or usage with enough confidence to name a replacement. An engineer must classify it before it can be scheduled for migration. Risk engine finding: 'Unknown' is not in the ECDAT knowledge base (v1.0.0 (2026-08)); no quantum verdict is issued. Add an entry to app/engine/kb.py to classify it. Evidence: 2 occurrence(s) across 1 file(s), first at src/crypto.js:61. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. Start by recording the usage (key establishment, signature, data at rest) - that alone selects the target algorithm. Standard: NIST IR 8547 (initial public draft, transition to PQC). Alternatives: n/a"
+    },
+    {
+     "name": "ecdat:occurrences:count",
+     "value": "2"
+    },
+    {
+     "name": "ecdat:detectors",
+     "value": "source_js"
+    },
+    {
+     "name": "ecdat:trade-off:size",
+     "value": "Unknown until the asset is classified."
+    },
+    {
+     "name": "ecdat:trade-off:performance",
+     "value": "Unknown until the asset is classified."
+    },
+    {
+     "name": "ecdat:trade-off:maturity",
+     "value": "Unknown."
+    },
+    {
+     "name": "ecdat:trade-off:interop",
+     "value": "Unknown."
+    },
+    {
+     "name": "ecdat:trade-off:migration",
+     "value": "Start by recording the usage (key establishment, signature, data at rest) - that alone selects the target algorithm."
+    },
+    {
+     "name": "ecdat:trade-off:rule-id",
+     "value": "UNKNOWN"
+    },
+    {
+     "name": "ecdat:trade-off:standard",
+     "value": "NIST IR 8547 (initial public draft, transition to PQC)"
+    }
+   ],
+   "evidence": {
+    "occurrences": [
+     {
+      "bom-ref": "crypto/unknown/unknown-crypto-createcipheriv/3a8d4c91e929318e/occ/1",
+      "location": "src/crypto.js",
+      "line": 61,
+      "symbol": "const cipher = crypto.createCipheriv(AES_ALG, key, iv, { authTagLength: 16 });",
+      "additionalContext": "const cipher = crypto.createCipheriv(AES_ALG, key, iv, { authTagLength: 16 }); [detector=source_js confidence=low]"
+     },
+     {
+      "bom-ref": "crypto/unknown/unknown-crypto-createcipheriv/3a8d4c91e929318e/occ/2",
+      "location": "src/crypto.js",
+      "line": 78,
+      "symbol": "const decipher = crypto.createDecipheriv(AES_ALG, key, iv, { authTagLength: 16 });",
+      "additionalContext": "const decipher = crypto.createDecipheriv(AES_ALG, key, iv, { authTagLength: 16 }); [detector=source_js confidence=low]"
+     }
+    ]
+   },
+   "ecdat": {
+    "quantumRisk": "unknown",
+    "quantumRiskReason": "'Unknown' is not in the ECDAT knowledge base (v1.0.0 (2026-08)); no quantum verdict is issued. Add an entry to app/engine/kb.py to classify it.",
+    "severity": "low",
+    "score": 10.04,
+    "recommendation": "manual review required",
+    "recommendationRationale": "ECDAT identified a cryptographic asset but could not resolve its algorithm, parameters or usage with enough confidence to name a replacement. An engineer must classify it before it can be scheduled for migration. Risk engine finding: 'Unknown' is not in the ECDAT knowledge base (v1.0.0 (2026-08)); no quantum verdict is issued. Add an entry to app/engine/kb.py to classify it. Evidence: 2 occurrence(s) across 1 file(s), first at src/crypto.js:61. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. Start by recording the usage (key establishment, signature, data at rest) - that alone selects the target algorithm. Standard: NIST IR 8547 (initial public draft, transition to PQC). Alternatives: n/a",
+    "dataClass": "internal",
+    "criticality": "medium",
+    "mosca": {
+     "xYears": 5,
+     "yYears": 5,
+     "zYear": 2035,
+     "deadlineYear": 2025,
+     "shortfallYears": 1,
+     "actNow": true,
+     "statement": "X(5) + Y(5) = 10 years of exposure exceeds the 9 years left until Z=2035. Migration should already have started in 2025; the organisation is carrying 1 year(s) of uncovered risk."
+    },
+    "tradeOffs": {
+     "size": "Unknown until the asset is classified.",
+     "performance": "Unknown until the asset is classified.",
+     "maturity": "Unknown.",
+     "interop": "Unknown.",
+     "migration": "Start by recording the usage (key establishment, signature, data at rest) - that alone selects the target algorithm.",
+     "rule_id": "UNKNOWN",
+     "standard": "NIST IR 8547 (initial public draft, transition to PQC)"
+    },
+    "occurrenceCount": 2,
+    "detectors": [
+     "source_js"
+    ],
+    "policyName": "ECDAT baseline policy (NTRO / SIH 2026)",
+    "kbCitation": "no KB entry; verdict withheld"
    }
   },
   {
+   "bom-ref": "crypto/sha-2/sha-256/c1ddac627ddcc8ed",
    "type": "cryptographic-asset",
-   "name": "SHA-256+",
+   "name": "SHA-256",
+   "description": "SHA-2 algorithm discovered by ECDAT static analysis: SHA-2 has no structural break; the verdict depends on digest length because Grover reduces preimage cost to 2^(n/2) and BHT-style collision search is bounded by the classical 2^(n/2) birthday bound. A 256-bit digest gives 128-bit collision resistance classically and a 128-bit preimage margin under Grover; CNSA 2.0 requires SHA-384 or larger for national security systems, so this is adequate for integrity today but is not the CNSA 2.0 target.",
    "cryptoProperties": {
     "assetType": "algorithm",
-    "quantumRisk": "SAFE",
-    "recommendation": "No change needed"
+    "algorithmProperties": {
+     "primitive": "hash",
+     "parameterSetIdentifier": "256",
+     "executionEnvironment": "software-plain-ram",
+     "implementationPlatform": "generic",
+     "certificationLevel": [
+      "none"
+     ],
+     "cryptoFunctions": [
+      "digest"
+     ],
+     "classicalSecurityLevel": 128
+    },
+    "oid": "2.16.840.1.101.3.4.2.1"
+   },
+   "properties": [
+    {
+     "name": "ecdat:asset:family",
+     "value": "SHA-2"
+    },
+    {
+     "name": "ecdat:asset:kind",
+     "value": "algorithm"
+    },
+    {
+     "name": "ecdat:asset:key",
+     "value": "SHA-2|256|None|None"
+    },
+    {
+     "name": "ecdat:quantum:risk",
+     "value": "grover_weakened"
+    },
+    {
+     "name": "ecdat:quantum:reason",
+     "value": "SHA-2 has no structural break; the verdict depends on digest length because Grover reduces preimage cost to 2^(n/2) and BHT-style collision search is bounded by the classical 2^(n/2) birthday bound. A 256-bit digest gives 128-bit collision resistance classically and a 128-bit preimage margin under Grover; CNSA 2.0 requires SHA-384 or larger for national security systems, so this is adequate for integrity today but is not the CNSA 2.0 target."
+    },
+    {
+     "name": "ecdat:severity",
+     "value": "medium"
+    },
+    {
+     "name": "ecdat:score",
+     "value": "20.08"
+    },
+    {
+     "name": "ecdat:data-class",
+     "value": "internal"
+    },
+    {
+     "name": "ecdat:criticality",
+     "value": "medium"
+    },
+    {
+     "name": "ecdat:policy:name",
+     "value": "ECDAT baseline policy (NTRO / SIH 2026)"
+    },
+    {
+     "name": "ecdat:kb:citation",
+     "value": "FIPS 180-4; Grover 1996, quadratic speed-up for unstructured search; NSA CNSA 2.0 suite (2022, FAQ updated 2024)"
+    },
+    {
+     "name": "ecdat:mosca:x-years",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:mosca:y-years",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:mosca:z-year",
+     "value": "2035"
+    },
+    {
+     "name": "ecdat:mosca:deadline-year",
+     "value": "2025"
+    },
+    {
+     "name": "ecdat:mosca:shortfall-years",
+     "value": "1"
+    },
+    {
+     "name": "ecdat:mosca:act-now",
+     "value": "true"
+    },
+    {
+     "name": "ecdat:mosca:statement",
+     "value": "X(5) + Y(5) = 10 years of exposure exceeds the 9 years left until Z=2035. Migration should already have started in 2025; the organisation is carrying 1 year(s) of uncovered risk."
+    },
+    {
+     "name": "ecdat:recommendation",
+     "value": "no change - retain (symmetric/hash primitive at an adequate level)"
+    },
+    {
+     "name": "ecdat:recommendation:rationale",
+     "value": "Grover's algorithm gives only a quadratic speed-up, so a 256-bit symmetric key or a 384-bit digest keeps a 128-bit or better post-quantum margin. The quantum exposure in this system is in the asymmetric layer, not here. Risk engine finding: SHA-2 has no structural break; the verdict depends on digest length because Grover reduces preimage cost to 2^(n/2) and BHT-style collision search is bounded by the classical 2^(n/2) birthday bound. A 256-bit digest gives 128-bit collision resistance classically and a 128-bit preimage margin under Grover; CNSA 2.0 requires SHA-384 or larger for national security systems, so this is adequate for integrity today but is not the CNSA 2.0 target. Evidence: 9 occurrence(s) across 8 file(s), first at public/aion-client.js:26. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None; keep the key-establishment layer under review instead. Standard: NIST SP 800-131A Rev.2. Alternatives: None needed."
+    },
+    {
+     "name": "ecdat:occurrences:count",
+     "value": "9"
+    },
+    {
+     "name": "ecdat:detectors",
+     "value": "source_js"
+    },
+    {
+     "name": "ecdat:trade-off:size",
+     "value": "Unchanged."
+    },
+    {
+     "name": "ecdat:trade-off:performance",
+     "value": "Unchanged."
+    },
+    {
+     "name": "ecdat:trade-off:maturity",
+     "value": "Current standard."
+    },
+    {
+     "name": "ecdat:trade-off:interop",
+     "value": "Unchanged."
+    },
+    {
+     "name": "ecdat:trade-off:migration",
+     "value": "None; keep the key-establishment layer under review instead."
+    },
+    {
+     "name": "ecdat:trade-off:rule-id",
+     "value": "QSAFE_OK"
+    },
+    {
+     "name": "ecdat:trade-off:standard",
+     "value": "NIST SP 800-131A Rev.2"
+    }
+   ],
+   "evidence": {
+    "occurrences": [
+     {
+      "bom-ref": "crypto/sha-2/sha-256/c1ddac627ddcc8ed/occ/1",
+      "location": "public/aion-client.js",
+      "line": 26,
+      "symbol": "const aesKey = await crypto.subtle.deriveKey(",
+      "additionalContext": "const aesKey = await crypto.subtle.deriveKey( [detector=source_js confidence=medium]"
+     },
+     {
+      "bom-ref": "crypto/sha-2/sha-256/c1ddac627ddcc8ed/occ/2",
+      "location": "public/aion-fs.js",
+      "line": 65,
+      "symbol": "return crypto.subtle.deriveKey(",
+      "additionalContext": "return crypto.subtle.deriveKey( [detector=source_js confidence=medium]"
+     },
+     {
+      "bom-ref": "crypto/sha-2/sha-256/c1ddac627ddcc8ed/occ/3",
+      "location": "src/crypto.js",
+      "line": 90,
+      "symbol": "fingerprint: crypto.createHash('sha256').update(raw).digest('hex').slice(0, 16),",
+      "additionalContext": "fingerprint: crypto.createHash('sha256').update(raw).digest('hex').slice(0, 16), [detector=source_js confidence=high]"
+     },
+     {
+      "bom-ref": "crypto/sha-2/sha-256/c1ddac627ddcc8ed/occ/4",
+      "location": "src/ledger.js",
+      "line": 24,
+      "symbol": "return crypto.createHash('sha256').update(material).digest('hex');",
+      "additionalContext": "return crypto.createHash('sha256').update(material).digest('hex'); [detector=source_js confidence=high]"
+     },
+     {
+      "bom-ref": "crypto/sha-2/sha-256/c1ddac627ddcc8ed/occ/5",
+      "location": "src/license.js",
+      "line": 105,
+      "symbol": "return crypto.createHmac('sha256', Buffer.from(lic.sig, 'base64'))",
+      "additionalContext": "return crypto.createHmac('sha256', Buffer.from(lic.sig, 'base64')) [detector=source_js confidence=medium]"
+     },
+     {
+      "bom-ref": "crypto/sha-2/sha-256/c1ddac627ddcc8ed/occ/6",
+      "location": "src/peerStore.js",
+      "line": 129,
+      "symbol": "const actual = crypto.createHash('sha256').update(salt + password).digest('hex');",
+      "additionalContext": "const actual = crypto.createHash('sha256').update(salt + password).digest('hex'); [detector=source_js confidence=high]"
+     },
+     {
+      "bom-ref": "crypto/sha-2/sha-256/c1ddac627ddcc8ed/occ/7",
+      "location": "src/persistence.js",
+      "line": 36,
+      "symbol": "return crypto.createHash('sha256').update(s).digest('hex');",
+      "additionalContext": "return crypto.createHash('sha256').update(s).digest('hex'); [detector=source_js confidence=high]"
+     },
+     {
+      "bom-ref": "crypto/sha-2/sha-256/c1ddac627ddcc8ed/occ/8",
+      "location": "src/server.js",
+      "line": 182,
+      "symbol": "const actual = crypto.createHash('sha256').update(salt + pw).digest('hex');",
+      "additionalContext": "const actual = crypto.createHash('sha256').update(salt + pw).digest('hex'); [detector=source_js confidence=high]"
+     },
+     {
+      "bom-ref": "crypto/sha-2/sha-256/c1ddac627ddcc8ed/occ/9",
+      "location": "src/server.js",
+      "line": 584,
+      "symbol": "const envHash = crypto.createHash('sha256').update(JSON.stringify(envelope)).digest('hex');",
+      "additionalContext": "const envHash = crypto.createHash('sha256').update(JSON.stringify(envelope)).digest('hex'); [detector=source_js confidence=high]"
+     }
+    ]
+   },
+   "ecdat": {
+    "quantumRisk": "grover_weakened",
+    "quantumRiskReason": "SHA-2 has no structural break; the verdict depends on digest length because Grover reduces preimage cost to 2^(n/2) and BHT-style collision search is bounded by the classical 2^(n/2) birthday bound. A 256-bit digest gives 128-bit collision resistance classically and a 128-bit preimage margin under Grover; CNSA 2.0 requires SHA-384 or larger for national security systems, so this is adequate for integrity today but is not the CNSA 2.0 target.",
+    "severity": "medium",
+    "score": 20.08,
+    "recommendation": "no change - retain (symmetric/hash primitive at an adequate level)",
+    "recommendationRationale": "Grover's algorithm gives only a quadratic speed-up, so a 256-bit symmetric key or a 384-bit digest keeps a 128-bit or better post-quantum margin. The quantum exposure in this system is in the asymmetric layer, not here. Risk engine finding: SHA-2 has no structural break; the verdict depends on digest length because Grover reduces preimage cost to 2^(n/2) and BHT-style collision search is bounded by the classical 2^(n/2) birthday bound. A 256-bit digest gives 128-bit collision resistance classically and a 128-bit preimage margin under Grover; CNSA 2.0 requires SHA-384 or larger for national security systems, so this is adequate for integrity today but is not the CNSA 2.0 target. Evidence: 9 occurrence(s) across 8 file(s), first at public/aion-client.js:26. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None; keep the key-establishment layer under review instead. Standard: NIST SP 800-131A Rev.2. Alternatives: None needed.",
+    "dataClass": "internal",
+    "criticality": "medium",
+    "mosca": {
+     "xYears": 5,
+     "yYears": 5,
+     "zYear": 2035,
+     "deadlineYear": 2025,
+     "shortfallYears": 1,
+     "actNow": true,
+     "statement": "X(5) + Y(5) = 10 years of exposure exceeds the 9 years left until Z=2035. Migration should already have started in 2025; the organisation is carrying 1 year(s) of uncovered risk."
+    },
+    "tradeOffs": {
+     "size": "Unchanged.",
+     "performance": "Unchanged.",
+     "maturity": "Current standard.",
+     "interop": "Unchanged.",
+     "migration": "None; keep the key-establishment layer under review instead.",
+     "rule_id": "QSAFE_OK",
+     "standard": "NIST SP 800-131A Rev.2"
+    },
+    "occurrenceCount": 9,
+    "detectors": [
+     "source_js"
+    ],
+    "policyName": "ECDAT baseline policy (NTRO / SIH 2026)",
+    "kbCitation": "FIPS 180-4; Grover 1996, quadratic speed-up for unstructured search; NSA CNSA 2.0 suite (2022, FAQ updated 2024)"
    }
   },
   {
+   "bom-ref": "crypto/ed25519/ed25519-key/24ee7c90c2aced34",
    "type": "cryptographic-asset",
-   "name": "Diffie-Hellman",
+   "name": "Ed25519 (key)",
+   "description": "Ed25519 key discovered by ECDAT static analysis: Ed25519 (EdDSA over edwards25519) rests on ECDLP; a CRQC forges signatures by recovering the private scalar.",
+   "cryptoProperties": {
+    "assetType": "related-crypto-material",
+    "relatedCryptoMaterialProperties": {
+     "type": "key",
+     "size": 256,
+     "format": "SubjectPublicKeyInfo",
+     "secured": false
+    },
+    "algorithmProperties": {
+     "primitive": "signature",
+     "parameterSetIdentifier": "256",
+     "curve": "ed25519",
+     "executionEnvironment": "software-plain-ram",
+     "implementationPlatform": "generic",
+     "certificationLevel": [
+      "none"
+     ],
+     "cryptoFunctions": [
+      "sign",
+      "verify",
+      "keygen"
+     ],
+     "classicalSecurityLevel": 255,
+     "nistQuantumSecurityLevel": 0
+    },
+    "oid": "1.3.101.112"
+   },
+   "properties": [
+    {
+     "name": "ecdat:asset:family",
+     "value": "Ed25519"
+    },
+    {
+     "name": "ecdat:asset:kind",
+     "value": "key"
+    },
+    {
+     "name": "ecdat:asset:key",
+     "value": "Ed25519|256|ed25519|None"
+    },
+    {
+     "name": "ecdat:quantum:risk",
+     "value": "shor_broken"
+    },
+    {
+     "name": "ecdat:quantum:reason",
+     "value": "Ed25519 (EdDSA over edwards25519) rests on ECDLP; a CRQC forges signatures by recovering the private scalar."
+    },
+    {
+     "name": "ecdat:severity",
+     "value": "critical"
+    },
+    {
+     "name": "ecdat:score",
+     "value": "73.0"
+    },
+    {
+     "name": "ecdat:data-class",
+     "value": "secret"
+    },
+    {
+     "name": "ecdat:criticality",
+     "value": "critical"
+    },
+    {
+     "name": "ecdat:policy:rule",
+     "value": "**/*.pem"
+    },
+    {
+     "name": "ecdat:policy:name",
+     "value": "ECDAT baseline policy (NTRO / SIH 2026)"
+    },
+    {
+     "name": "ecdat:kb:citation",
+     "value": "RFC 8032; NIST FIPS 186-5 (digital signature standard, 2023); Shor 1994/1997, polynomial-time factoring and discrete log"
+    },
+    {
+     "name": "ecdat:mosca:x-years",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:mosca:y-years",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:mosca:z-year",
+     "value": "2035"
+    },
+    {
+     "name": "ecdat:mosca:deadline-year",
+     "value": "2025"
+    },
+    {
+     "name": "ecdat:mosca:shortfall-years",
+     "value": "1"
+    },
+    {
+     "name": "ecdat:mosca:act-now",
+     "value": "true"
+    },
+    {
+     "name": "ecdat:mosca:statement",
+     "value": "X(5) + Y(5) = 10 years of exposure exceeds the 9 years left until Z=2035. Migration should already have started in 2025; the organisation is carrying 1 year(s) of uncovered risk."
+    },
+    {
+     "name": "ecdat:recommendation",
+     "value": "ML-DSA-65"
+    },
+    {
+     "name": "ecdat:recommendation:rationale",
+     "value": "Signatures over RSA, DSA, ECDSA or EdDSA are forgeable once Shor's algorithm is available. Signature exposure is not retroactive - a forged signature only matters in the future - so the deadline is the lifetime of the verifying trust anchor (roots, firmware keys, code-signing chains). Risk engine finding: Ed25519 (EdDSA over edwards25519) rests on ECDLP; a CRQC forges signatures by recovering the private scalar. Evidence: 1 occurrence(s) across 1 file(s), first at /Users/arockia/Downloads/aion-protocol-platform/config/grmg-license-public.pem:1. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. Certificate/PKI-level change; plan for dual-algorithm (composite or parallel chain) issuance during the overlap period. New key material, so no automatic patch. Standard: NIST FIPS 204 (ML-DSA), final August 2024. Alternatives: SLH-DSA (FIPS 205) for long-lived roots and firmware, where a conservative hash-based assumption is worth the signature size."
+    },
+    {
+     "name": "ecdat:occurrences:count",
+     "value": "1"
+    },
+    {
+     "name": "ecdat:detectors",
+     "value": "certs"
+    },
+    {
+     "name": "ecdat:trade-off:size",
+     "value": "ML-DSA-65: signature 3309 B (~3.3 KB), public key 1952 B vs ECDSA P-256: signature ~64 B raw / ~72 B DER, public key 33 B compressed - about 50x larger signatures. A 3-certificate chain grows by roughly 15 KB (~5 KB per certificate: +3.2 KB signature and +1.9 KB public key)."
+    },
+    {
+     "name": "ecdat:trade-off:performance",
+     "value": "ML-DSA signing and verification are fast (comparable to or faster than ECDSA); verification is the cheap side, which suits many-verifier deployments."
+    },
+    {
+     "name": "ecdat:trade-off:maturity",
+     "value": "NIST FIPS 204 (ML-DSA), final August 2024. Deterministic and hedged variants both specified."
+    },
+    {
+     "name": "ecdat:trade-off:interop",
+     "value": "Requires X.509 stacks that understand the ML-DSA OIDs; older verifiers must be inventoried before switching a trust anchor."
+    },
+    {
+     "name": "ecdat:trade-off:migration",
+     "value": "Certificate/PKI-level change; plan for dual-algorithm (composite or parallel chain) issuance during the overlap period. New key material, so no automatic patch."
+    },
+    {
+     "name": "ecdat:trade-off:rule-id",
+     "value": "SIG_MLDSA"
+    },
+    {
+     "name": "ecdat:trade-off:standard",
+     "value": "NIST FIPS 204 (ML-DSA), final August 2024"
+    }
+   ],
+   "evidence": {
+    "occurrences": [
+     {
+      "bom-ref": "crypto/ed25519/ed25519-key/24ee7c90c2aced34/occ/1",
+      "location": "/Users/arockia/Downloads/aion-protocol-platform/config/grmg-license-public.pem",
+      "line": 1,
+      "symbol": "-----BEGIN PUBLIC KEY----- Ed25519 (SubjectPublicKeyInfo)",
+      "additionalContext": "-----BEGIN PUBLIC KEY----- Ed25519 (SubjectPublicKeyInfo) [detector=certs confidence=high]"
+     }
+    ]
+   },
+   "ecdat": {
+    "quantumRisk": "shor_broken",
+    "quantumRiskReason": "Ed25519 (EdDSA over edwards25519) rests on ECDLP; a CRQC forges signatures by recovering the private scalar.",
+    "severity": "critical",
+    "score": 73.0,
+    "recommendation": "ML-DSA-65",
+    "recommendationRationale": "Signatures over RSA, DSA, ECDSA or EdDSA are forgeable once Shor's algorithm is available. Signature exposure is not retroactive - a forged signature only matters in the future - so the deadline is the lifetime of the verifying trust anchor (roots, firmware keys, code-signing chains). Risk engine finding: Ed25519 (EdDSA over edwards25519) rests on ECDLP; a CRQC forges signatures by recovering the private scalar. Evidence: 1 occurrence(s) across 1 file(s), first at /Users/arockia/Downloads/aion-protocol-platform/config/grmg-license-public.pem:1. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. Certificate/PKI-level change; plan for dual-algorithm (composite or parallel chain) issuance during the overlap period. New key material, so no automatic patch. Standard: NIST FIPS 204 (ML-DSA), final August 2024. Alternatives: SLH-DSA (FIPS 205) for long-lived roots and firmware, where a conservative hash-based assumption is worth the signature size.",
+    "dataClass": "secret",
+    "criticality": "critical",
+    "mosca": {
+     "xYears": 5,
+     "yYears": 5,
+     "zYear": 2035,
+     "deadlineYear": 2025,
+     "shortfallYears": 1,
+     "actNow": true,
+     "statement": "X(5) + Y(5) = 10 years of exposure exceeds the 9 years left until Z=2035. Migration should already have started in 2025; the organisation is carrying 1 year(s) of uncovered risk."
+    },
+    "tradeOffs": {
+     "size": "ML-DSA-65: signature 3309 B (~3.3 KB), public key 1952 B vs ECDSA P-256: signature ~64 B raw / ~72 B DER, public key 33 B compressed - about 50x larger signatures. A 3-certificate chain grows by roughly 15 KB (~5 KB per certificate: +3.2 KB signature and +1.9 KB public key).",
+     "performance": "ML-DSA signing and verification are fast (comparable to or faster than ECDSA); verification is the cheap side, which suits many-verifier deployments.",
+     "maturity": "NIST FIPS 204 (ML-DSA), final August 2024. Deterministic and hedged variants both specified.",
+     "interop": "Requires X.509 stacks that understand the ML-DSA OIDs; older verifiers must be inventoried before switching a trust anchor.",
+     "migration": "Certificate/PKI-level change; plan for dual-algorithm (composite or parallel chain) issuance during the overlap period. New key material, so no automatic patch.",
+     "rule_id": "SIG_MLDSA",
+     "standard": "NIST FIPS 204 (ML-DSA), final August 2024"
+    },
+    "occurrenceCount": 1,
+    "detectors": [
+     "certs"
+    ],
+    "policyRule": "**/*.pem",
+    "policyName": "ECDAT baseline policy (NTRO / SIH 2026)",
+    "kbCitation": "RFC 8032; NIST FIPS 186-5 (digital signature standard, 2023); Shor 1994/1997, polynomial-time factoring and discrete log"
+   }
+  },
+  {
+   "bom-ref": "crypto/x25519/x25519/2bdf2f002e7372b6",
+   "type": "cryptographic-asset",
+   "name": "X25519",
+   "description": "X25519 algorithm discovered by ECDAT static analysis: X25519 is ECDH over Curve25519: excellent classical security (128-bit) but ECDLP falls to Shor, so it offers no protection against harvest-now-decrypt-later.",
    "cryptoProperties": {
     "assetType": "algorithm",
-    "quantumRisk": "QUANTUM-BROKEN (Shor)",
-    "recommendation": "ML-KEM-768 (hybrid)"
+    "algorithmProperties": {
+     "primitive": "key-agree",
+     "executionEnvironment": "software-plain-ram",
+     "implementationPlatform": "generic",
+     "certificationLevel": [
+      "none"
+     ],
+     "cryptoFunctions": [
+      "keygen",
+      "keyderive"
+     ],
+     "nistQuantumSecurityLevel": 0
+    },
+    "oid": "1.3.101.110"
+   },
+   "properties": [
+    {
+     "name": "ecdat:asset:family",
+     "value": "X25519"
+    },
+    {
+     "name": "ecdat:asset:kind",
+     "value": "algorithm"
+    },
+    {
+     "name": "ecdat:asset:key",
+     "value": "X25519|None|None|None"
+    },
+    {
+     "name": "ecdat:quantum:risk",
+     "value": "shor_broken"
+    },
+    {
+     "name": "ecdat:quantum:reason",
+     "value": "X25519 is ECDH over Curve25519: excellent classical security (128-bit) but ECDLP falls to Shor, so it offers no protection against harvest-now-decrypt-later."
+    },
+    {
+     "name": "ecdat:severity",
+     "value": "critical"
+    },
+    {
+     "name": "ecdat:score",
+     "value": "40.15"
+    },
+    {
+     "name": "ecdat:data-class",
+     "value": "internal"
+    },
+    {
+     "name": "ecdat:criticality",
+     "value": "medium"
+    },
+    {
+     "name": "ecdat:policy:name",
+     "value": "ECDAT baseline policy (NTRO / SIH 2026)"
+    },
+    {
+     "name": "ecdat:kb:citation",
+     "value": "RFC 7748; Shor 1994/1997, polynomial-time factoring and discrete log"
+    },
+    {
+     "name": "ecdat:mosca:x-years",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:mosca:y-years",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:mosca:z-year",
+     "value": "2035"
+    },
+    {
+     "name": "ecdat:mosca:deadline-year",
+     "value": "2025"
+    },
+    {
+     "name": "ecdat:mosca:shortfall-years",
+     "value": "1"
+    },
+    {
+     "name": "ecdat:mosca:act-now",
+     "value": "true"
+    },
+    {
+     "name": "ecdat:mosca:statement",
+     "value": "X(5) + Y(5) = 10 years of exposure exceeds the 9 years left until Z=2035. Migration should already have started in 2025; the organisation is carrying 1 year(s) of uncovered risk."
+    },
+    {
+     "name": "ecdat:recommendation",
+     "value": "hybrid X25519 + ML-KEM-768"
+    },
+    {
+     "name": "ecdat:recommendation:rationale",
+     "value": "Key establishment based on discrete-log or factoring is fully broken by Shor's algorithm, and any transcript captured today can be decrypted retroactively once a cryptographically relevant quantum computer exists (harvest-now-decrypt-later). Deploy the hybrid group X25519MLKEM768 so security holds if either component survives. Risk engine finding: X25519 is ECDH over Curve25519: excellent classical security (128-bit) but ECDLP falls to Shor, so it offers no protection against harvest-now-decrypt-later. Evidence: 8 occurrence(s) across 4 file(s), first at public/aion-client.js:12. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. Library/TLS-config level change. No change to application data formats; MTU and record-size assumptions must be re-checked. New key material is generated, so this is not a source-level substitution and ECDAT emits no patch. Standard: NIST FIPS 203 (ML-KEM), final August 2024. Alternatives: ML-KEM-1024 where NIST category 5 is mandated."
+    },
+    {
+     "name": "ecdat:occurrences:count",
+     "value": "8"
+    },
+    {
+     "name": "ecdat:detectors",
+     "value": "source_js"
+    },
+    {
+     "name": "ecdat:trade-off:size",
+     "value": "ML-KEM-768: encapsulation key 1184 B, ciphertext 1088 B, shared secret 32 B vs X25519: public key 32 B, ciphertext 32 B. In the hybrid group the shares are concatenated: client share 1216 B vs 32 B, server share 1120 B (1088 B ML-KEM ciphertext + 32 B X25519 public key) vs 32 B - roughly +2.2 KB per handshake."
+    },
+    {
+     "name": "ecdat:trade-off:performance",
+     "value": "ML-KEM-768 keygen/encap/decap are lattice operations measured in tens of microseconds - typically faster than X25519 scalar multiplication; the cost is bandwidth, not CPU."
+    },
+    {
+     "name": "ecdat:trade-off:maturity",
+     "value": "NIST FIPS 203 (ML-KEM), final August 2024. The hybrid group X25519MLKEM768 (code point 0x11ec) is already enabled by default in mainstream browsers and TLS stacks."
+    },
+    {
+     "name": "ecdat:trade-off:interop",
+     "value": "Hybrid keeps a classical component, so a peer that fails to negotiate the PQ group still gets X25519 security; pure ML-KEM does not."
+    },
+    {
+     "name": "ecdat:trade-off:migration",
+     "value": "Library/TLS-config level change. No change to application data formats; MTU and record-size assumptions must be re-checked. New key material is generated, so this is not a source-level substitution and ECDAT emits no patch."
+    },
+    {
+     "name": "ecdat:trade-off:rule-id",
+     "value": "KEM_HYBRID"
+    },
+    {
+     "name": "ecdat:trade-off:standard",
+     "value": "NIST FIPS 203 (ML-KEM), final August 2024"
+    }
+   ],
+   "evidence": {
+    "occurrences": [
+     {
+      "bom-ref": "crypto/x25519/x25519/2bdf2f002e7372b6/occ/1",
+      "location": "public/aion-client.js",
+      "line": 12,
+      "symbol": "const kp = await crypto.subtle.generateKey({ name:'X25519' }, true, ['deriveBits']);",
+      "additionalContext": "const kp = await crypto.subtle.generateKey({ name:'X25519' }, true, ['deriveBits']); [detector=source_js confidence=high]"
+     },
+     {
+      "bom-ref": "crypto/x25519/x25519/2bdf2f002e7372b6/occ/2",
+      "location": "public/aion-client.js",
+      "line": 18,
+      "symbol": "return crypto.subtle.importKey('spki', unb64(b64str), { name:'X25519' }, true, []);",
+      "additionalContext": "return crypto.subtle.importKey('spki', unb64(b64str), { name:'X25519' }, true, []); [detector=source_js confidence=medium]"
+     },
+     {
+      "bom-ref": "crypto/x25519/x25519/2bdf2f002e7372b6/occ/3",
+      "location": "public/aion-client.js",
+      "line": 23,
+      "symbol": "const bits = await crypto.subtle.deriveBits({ name:'X25519', public: peerPublic }, myPrivate, 256);",
+      "additionalContext": "const bits = await crypto.subtle.deriveBits({ name:'X25519', public: peerPublic }, myPrivate, 256); [detector=source_js confidence=medium]"
+     },
+     {
+      "bom-ref": "crypto/x25519/x25519/2bdf2f002e7372b6/occ/4",
+      "location": "public/aion-fs.js",
+      "line": 41,
+      "symbol": "const kp = await crypto.subtle.generateKey({ name:'X25519' }, true, ['deriveBits']);",
+      "additionalContext": "const kp = await crypto.subtle.generateKey({ name:'X25519' }, true, ['deriveBits']); [detector=source_js confidence=high]"
+     },
+     {
+      "bom-ref": "crypto/x25519/x25519/2bdf2f002e7372b6/occ/5",
+      "location": "public/aion-fs.js",
+      "line": 59,
+      "symbol": "const peerPub = await crypto.subtle.importKey('spki', unb64(peerPubB64), { name:'X25519' }, true, []);",
+      "additionalContext": "const peerPub = await crypto.subtle.importKey('spki', unb64(peerPubB64), { name:'X25519' }, true, []); [detector=source_js confidence=medium]"
+     },
+     {
+      "bom-ref": "crypto/x25519/x25519/2bdf2f002e7372b6/occ/6",
+      "location": "public/aion-fs.js",
+      "line": 60,
+      "symbol": "return new Uint8Array(await crypto.subtle.deriveBits({ name:'X25519', public: peerPub }, myPriv, 256));",
+      "additionalContext": "return new Uint8Array(await crypto.subtle.deriveBits({ name:'X25519', public: peerPub }, myPriv, 256)); [detector=source_js confidence=medium]"
+     },
+     {
+      "bom-ref": "crypto/x25519/x25519/2bdf2f002e7372b6/occ/7",
+      "location": "src/crypto.js",
+      "line": 30,
+      "symbol": "const { publicKey, privateKey } = crypto.generateKeyPairSync('x25519');",
+      "additionalContext": "const { publicKey, privateKey } = crypto.generateKeyPairSync('x25519'); [detector=source_js confidence=high]"
+     },
+     {
+      "bom-ref": "crypto/x25519/x25519/2bdf2f002e7372b6/occ/8",
+      "location": "test/browser.js",
+      "line": 140,
+      "symbol": "const kp = await crypto.subtle.generateKey({ name: 'X25519' }, true, ['deriveBits']);",
+      "additionalContext": "const kp = await crypto.subtle.generateKey({ name: 'X25519' }, true, ['deriveBits']); [detector=source_js confidence=high]"
+     }
+    ]
+   },
+   "ecdat": {
+    "quantumRisk": "shor_broken",
+    "quantumRiskReason": "X25519 is ECDH over Curve25519: excellent classical security (128-bit) but ECDLP falls to Shor, so it offers no protection against harvest-now-decrypt-later.",
+    "severity": "critical",
+    "score": 40.15,
+    "recommendation": "hybrid X25519 + ML-KEM-768",
+    "recommendationRationale": "Key establishment based on discrete-log or factoring is fully broken by Shor's algorithm, and any transcript captured today can be decrypted retroactively once a cryptographically relevant quantum computer exists (harvest-now-decrypt-later). Deploy the hybrid group X25519MLKEM768 so security holds if either component survives. Risk engine finding: X25519 is ECDH over Curve25519: excellent classical security (128-bit) but ECDLP falls to Shor, so it offers no protection against harvest-now-decrypt-later. Evidence: 8 occurrence(s) across 4 file(s), first at public/aion-client.js:12. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. Library/TLS-config level change. No change to application data formats; MTU and record-size assumptions must be re-checked. New key material is generated, so this is not a source-level substitution and ECDAT emits no patch. Standard: NIST FIPS 203 (ML-KEM), final August 2024. Alternatives: ML-KEM-1024 where NIST category 5 is mandated.",
+    "dataClass": "internal",
+    "criticality": "medium",
+    "mosca": {
+     "xYears": 5,
+     "yYears": 5,
+     "zYear": 2035,
+     "deadlineYear": 2025,
+     "shortfallYears": 1,
+     "actNow": true,
+     "statement": "X(5) + Y(5) = 10 years of exposure exceeds the 9 years left until Z=2035. Migration should already have started in 2025; the organisation is carrying 1 year(s) of uncovered risk."
+    },
+    "tradeOffs": {
+     "size": "ML-KEM-768: encapsulation key 1184 B, ciphertext 1088 B, shared secret 32 B vs X25519: public key 32 B, ciphertext 32 B. In the hybrid group the shares are concatenated: client share 1216 B vs 32 B, server share 1120 B (1088 B ML-KEM ciphertext + 32 B X25519 public key) vs 32 B - roughly +2.2 KB per handshake.",
+     "performance": "ML-KEM-768 keygen/encap/decap are lattice operations measured in tens of microseconds - typically faster than X25519 scalar multiplication; the cost is bandwidth, not CPU.",
+     "maturity": "NIST FIPS 203 (ML-KEM), final August 2024. The hybrid group X25519MLKEM768 (code point 0x11ec) is already enabled by default in mainstream browsers and TLS stacks.",
+     "interop": "Hybrid keeps a classical component, so a peer that fails to negotiate the PQ group still gets X25519 security; pure ML-KEM does not.",
+     "migration": "Library/TLS-config level change. No change to application data formats; MTU and record-size assumptions must be re-checked. New key material is generated, so this is not a source-level substitution and ECDAT emits no patch.",
+     "rule_id": "KEM_HYBRID",
+     "standard": "NIST FIPS 203 (ML-KEM), final August 2024"
+    },
+    "occurrenceCount": 8,
+    "detectors": [
+     "source_js"
+    ],
+    "policyName": "ECDAT baseline policy (NTRO / SIH 2026)",
+    "kbCitation": "RFC 7748; Shor 1994/1997, polynomial-time factoring and discrete log"
+   }
+  },
+  {
+   "bom-ref": "crypto/dh/diffiehellman-key-agreement/ebc962ee7bda2664",
+   "type": "cryptographic-asset",
+   "name": "DiffieHellman (key agreement)",
+   "description": "DH algorithm discovered by ECDAT static analysis: Finite-field Diffie-Hellman rests on the discrete log problem, solved in polynomial time by Shor; small or shared groups are also weak classically. The key size could not be determined from the source, so it is treated at the family level.",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "algorithmProperties": {
+     "primitive": "key-agree",
+     "parameterSetIdentifier": "DiffieHellman (key agreement)",
+     "executionEnvironment": "software-plain-ram",
+     "implementationPlatform": "generic",
+     "certificationLevel": [
+      "none"
+     ],
+     "cryptoFunctions": [
+      "keygen",
+      "keyderive"
+     ],
+     "nistQuantumSecurityLevel": 0
+    },
+    "oid": "1.2.840.113549.1.3.1"
+   },
+   "properties": [
+    {
+     "name": "ecdat:asset:family",
+     "value": "DH"
+    },
+    {
+     "name": "ecdat:asset:kind",
+     "value": "algorithm"
+    },
+    {
+     "name": "ecdat:asset:key",
+     "value": "DH|None|None|None"
+    },
+    {
+     "name": "ecdat:quantum:risk",
+     "value": "shor_broken"
+    },
+    {
+     "name": "ecdat:quantum:reason",
+     "value": "Finite-field Diffie-Hellman rests on the discrete log problem, solved in polynomial time by Shor; small or shared groups are also weak classically. The key size could not be determined from the source, so it is treated at the family level."
+    },
+    {
+     "name": "ecdat:severity",
+     "value": "critical"
+    },
+    {
+     "name": "ecdat:score",
+     "value": "40.15"
+    },
+    {
+     "name": "ecdat:data-class",
+     "value": "internal"
+    },
+    {
+     "name": "ecdat:criticality",
+     "value": "medium"
+    },
+    {
+     "name": "ecdat:policy:name",
+     "value": "ECDAT baseline policy (NTRO / SIH 2026)"
+    },
+    {
+     "name": "ecdat:kb:citation",
+     "value": "Shor 1994/1997, polynomial-time factoring and discrete log; Logjam, Adrian et al. 2015 (finite-field DH downgrade / precomputation)"
+    },
+    {
+     "name": "ecdat:mosca:x-years",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:mosca:y-years",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:mosca:z-year",
+     "value": "2035"
+    },
+    {
+     "name": "ecdat:mosca:deadline-year",
+     "value": "2025"
+    },
+    {
+     "name": "ecdat:mosca:shortfall-years",
+     "value": "1"
+    },
+    {
+     "name": "ecdat:mosca:act-now",
+     "value": "true"
+    },
+    {
+     "name": "ecdat:mosca:statement",
+     "value": "X(5) + Y(5) = 10 years of exposure exceeds the 9 years left until Z=2035. Migration should already have started in 2025; the organisation is carrying 1 year(s) of uncovered risk."
+    },
+    {
+     "name": "ecdat:recommendation",
+     "value": "hybrid X25519 + ML-KEM-768"
+    },
+    {
+     "name": "ecdat:recommendation:rationale",
+     "value": "Key establishment based on discrete-log or factoring is fully broken by Shor's algorithm, and any transcript captured today can be decrypted retroactively once a cryptographically relevant quantum computer exists (harvest-now-decrypt-later). Deploy the hybrid group X25519MLKEM768 so security holds if either component survives. Risk engine finding: Finite-field Diffie-Hellman rests on the discrete log problem, solved in polynomial time by Shor; small or shared groups are also weak classically. The key size could not be determined from the source, so it is treated at the family level. Evidence: 1 occurrence(s) across 1 file(s), first at src/crypto.js:50. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. Library/TLS-config level change. No change to application data formats; MTU and record-size assumptions must be re-checked. New key material is generated, so this is not a source-level substitution and ECDAT emits no patch. Standard: NIST FIPS 203 (ML-KEM), final August 2024. Alternatives: ML-KEM-1024 where NIST category 5 is mandated."
+    },
+    {
+     "name": "ecdat:occurrences:count",
+     "value": "1"
+    },
+    {
+     "name": "ecdat:detectors",
+     "value": "source_js"
+    },
+    {
+     "name": "ecdat:trade-off:size",
+     "value": "ML-KEM-768: encapsulation key 1184 B, ciphertext 1088 B, shared secret 32 B vs X25519: public key 32 B, ciphertext 32 B. In the hybrid group the shares are concatenated: client share 1216 B vs 32 B, server share 1120 B (1088 B ML-KEM ciphertext + 32 B X25519 public key) vs 32 B - roughly +2.2 KB per handshake."
+    },
+    {
+     "name": "ecdat:trade-off:performance",
+     "value": "ML-KEM-768 keygen/encap/decap are lattice operations measured in tens of microseconds - typically faster than X25519 scalar multiplication; the cost is bandwidth, not CPU."
+    },
+    {
+     "name": "ecdat:trade-off:maturity",
+     "value": "NIST FIPS 203 (ML-KEM), final August 2024. The hybrid group X25519MLKEM768 (code point 0x11ec) is already enabled by default in mainstream browsers and TLS stacks."
+    },
+    {
+     "name": "ecdat:trade-off:interop",
+     "value": "Hybrid keeps a classical component, so a peer that fails to negotiate the PQ group still gets X25519 security; pure ML-KEM does not."
+    },
+    {
+     "name": "ecdat:trade-off:migration",
+     "value": "Library/TLS-config level change. No change to application data formats; MTU and record-size assumptions must be re-checked. New key material is generated, so this is not a source-level substitution and ECDAT emits no patch."
+    },
+    {
+     "name": "ecdat:trade-off:rule-id",
+     "value": "KEM_HYBRID"
+    },
+    {
+     "name": "ecdat:trade-off:standard",
+     "value": "NIST FIPS 203 (ML-KEM), final August 2024"
+    }
+   ],
+   "evidence": {
+    "occurrences": [
+     {
+      "bom-ref": "crypto/dh/diffiehellman-key-agreement/ebc962ee7bda2664/occ/1",
+      "location": "src/crypto.js",
+      "line": 50,
+      "symbol": "const ecdh = crypto.diffieHellman({ privateKey: myPrivateKey, publicKey: peerPublicKey });",
+      "additionalContext": "const ecdh = crypto.diffieHellman({ privateKey: myPrivateKey, publicKey: peerPublicKey }); [detector=source_js confidence=medium]"
+     }
+    ]
+   },
+   "ecdat": {
+    "quantumRisk": "shor_broken",
+    "quantumRiskReason": "Finite-field Diffie-Hellman rests on the discrete log problem, solved in polynomial time by Shor; small or shared groups are also weak classically. The key size could not be determined from the source, so it is treated at the family level.",
+    "severity": "critical",
+    "score": 40.15,
+    "recommendation": "hybrid X25519 + ML-KEM-768",
+    "recommendationRationale": "Key establishment based on discrete-log or factoring is fully broken by Shor's algorithm, and any transcript captured today can be decrypted retroactively once a cryptographically relevant quantum computer exists (harvest-now-decrypt-later). Deploy the hybrid group X25519MLKEM768 so security holds if either component survives. Risk engine finding: Finite-field Diffie-Hellman rests on the discrete log problem, solved in polynomial time by Shor; small or shared groups are also weak classically. The key size could not be determined from the source, so it is treated at the family level. Evidence: 1 occurrence(s) across 1 file(s), first at src/crypto.js:50. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. Library/TLS-config level change. No change to application data formats; MTU and record-size assumptions must be re-checked. New key material is generated, so this is not a source-level substitution and ECDAT emits no patch. Standard: NIST FIPS 203 (ML-KEM), final August 2024. Alternatives: ML-KEM-1024 where NIST category 5 is mandated.",
+    "dataClass": "internal",
+    "criticality": "medium",
+    "mosca": {
+     "xYears": 5,
+     "yYears": 5,
+     "zYear": 2035,
+     "deadlineYear": 2025,
+     "shortfallYears": 1,
+     "actNow": true,
+     "statement": "X(5) + Y(5) = 10 years of exposure exceeds the 9 years left until Z=2035. Migration should already have started in 2025; the organisation is carrying 1 year(s) of uncovered risk."
+    },
+    "tradeOffs": {
+     "size": "ML-KEM-768: encapsulation key 1184 B, ciphertext 1088 B, shared secret 32 B vs X25519: public key 32 B, ciphertext 32 B. In the hybrid group the shares are concatenated: client share 1216 B vs 32 B, server share 1120 B (1088 B ML-KEM ciphertext + 32 B X25519 public key) vs 32 B - roughly +2.2 KB per handshake.",
+     "performance": "ML-KEM-768 keygen/encap/decap are lattice operations measured in tens of microseconds - typically faster than X25519 scalar multiplication; the cost is bandwidth, not CPU.",
+     "maturity": "NIST FIPS 203 (ML-KEM), final August 2024. The hybrid group X25519MLKEM768 (code point 0x11ec) is already enabled by default in mainstream browsers and TLS stacks.",
+     "interop": "Hybrid keeps a classical component, so a peer that fails to negotiate the PQ group still gets X25519 security; pure ML-KEM does not.",
+     "migration": "Library/TLS-config level change. No change to application data formats; MTU and record-size assumptions must be re-checked. New key material is generated, so this is not a source-level substitution and ECDAT emits no patch.",
+     "rule_id": "KEM_HYBRID",
+     "standard": "NIST FIPS 203 (ML-KEM), final August 2024"
+    },
+    "occurrenceCount": 1,
+    "detectors": [
+     "source_js"
+    ],
+    "policyName": "ECDAT baseline policy (NTRO / SIH 2026)",
+    "kbCitation": "Shor 1994/1997, polynomial-time factoring and discrete log; Logjam, Adrian et al. 2015 (finite-field DH downgrade / precomputation)"
+   }
+  },
+  {
+   "bom-ref": "crypto/ed25519/ed25519/137cd87bbeb64fdc",
+   "type": "cryptographic-asset",
+   "name": "Ed25519",
+   "description": "Ed25519 algorithm discovered by ECDAT static analysis: Ed25519 (EdDSA over edwards25519) rests on ECDLP; a CRQC forges signatures by recovering the private scalar.",
+   "cryptoProperties": {
+    "assetType": "algorithm",
+    "algorithmProperties": {
+     "primitive": "signature",
+     "executionEnvironment": "software-plain-ram",
+     "implementationPlatform": "generic",
+     "certificationLevel": [
+      "none"
+     ],
+     "cryptoFunctions": [
+      "sign",
+      "verify",
+      "keygen"
+     ],
+     "nistQuantumSecurityLevel": 0
+    },
+    "oid": "1.3.101.112"
+   },
+   "properties": [
+    {
+     "name": "ecdat:asset:family",
+     "value": "Ed25519"
+    },
+    {
+     "name": "ecdat:asset:kind",
+     "value": "algorithm"
+    },
+    {
+     "name": "ecdat:asset:key",
+     "value": "Ed25519|None|None|None"
+    },
+    {
+     "name": "ecdat:quantum:risk",
+     "value": "shor_broken"
+    },
+    {
+     "name": "ecdat:quantum:reason",
+     "value": "Ed25519 (EdDSA over edwards25519) rests on ECDLP; a CRQC forges signatures by recovering the private scalar."
+    },
+    {
+     "name": "ecdat:severity",
+     "value": "critical"
+    },
+    {
+     "name": "ecdat:score",
+     "value": "40.15"
+    },
+    {
+     "name": "ecdat:data-class",
+     "value": "internal"
+    },
+    {
+     "name": "ecdat:criticality",
+     "value": "medium"
+    },
+    {
+     "name": "ecdat:policy:name",
+     "value": "ECDAT baseline policy (NTRO / SIH 2026)"
+    },
+    {
+     "name": "ecdat:kb:citation",
+     "value": "RFC 8032; NIST FIPS 186-5 (digital signature standard, 2023); Shor 1994/1997, polynomial-time factoring and discrete log"
+    },
+    {
+     "name": "ecdat:mosca:x-years",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:mosca:y-years",
+     "value": "5"
+    },
+    {
+     "name": "ecdat:mosca:z-year",
+     "value": "2035"
+    },
+    {
+     "name": "ecdat:mosca:deadline-year",
+     "value": "2025"
+    },
+    {
+     "name": "ecdat:mosca:shortfall-years",
+     "value": "1"
+    },
+    {
+     "name": "ecdat:mosca:act-now",
+     "value": "true"
+    },
+    {
+     "name": "ecdat:mosca:statement",
+     "value": "X(5) + Y(5) = 10 years of exposure exceeds the 9 years left until Z=2035. Migration should already have started in 2025; the organisation is carrying 1 year(s) of uncovered risk."
+    },
+    {
+     "name": "ecdat:recommendation",
+     "value": "ML-DSA-65"
+    },
+    {
+     "name": "ecdat:recommendation:rationale",
+     "value": "Signatures over RSA, DSA, ECDSA or EdDSA are forgeable once Shor's algorithm is available. Signature exposure is not retroactive - a forged signature only matters in the future - so the deadline is the lifetime of the verifying trust anchor (roots, firmware keys, code-signing chains). Risk engine finding: Ed25519 (EdDSA over edwards25519) rests on ECDLP; a CRQC forges signatures by recovering the private scalar. Evidence: 1 occurrence(s) across 1 file(s), first at tools/license-issuer.js:34. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. Certificate/PKI-level change; plan for dual-algorithm (composite or parallel chain) issuance during the overlap period. New key material, so no automatic patch. Standard: NIST FIPS 204 (ML-DSA), final August 2024. Alternatives: SLH-DSA (FIPS 205) for long-lived roots and firmware, where a conservative hash-based assumption is worth the signature size."
+    },
+    {
+     "name": "ecdat:occurrences:count",
+     "value": "1"
+    },
+    {
+     "name": "ecdat:detectors",
+     "value": "source_js"
+    },
+    {
+     "name": "ecdat:trade-off:size",
+     "value": "ML-DSA-65: signature 3309 B (~3.3 KB), public key 1952 B vs ECDSA P-256: signature ~64 B raw / ~72 B DER, public key 33 B compressed - about 50x larger signatures. A 3-certificate chain grows by roughly 15 KB (~5 KB per certificate: +3.2 KB signature and +1.9 KB public key)."
+    },
+    {
+     "name": "ecdat:trade-off:performance",
+     "value": "ML-DSA signing and verification are fast (comparable to or faster than ECDSA); verification is the cheap side, which suits many-verifier deployments."
+    },
+    {
+     "name": "ecdat:trade-off:maturity",
+     "value": "NIST FIPS 204 (ML-DSA), final August 2024. Deterministic and hedged variants both specified."
+    },
+    {
+     "name": "ecdat:trade-off:interop",
+     "value": "Requires X.509 stacks that understand the ML-DSA OIDs; older verifiers must be inventoried before switching a trust anchor."
+    },
+    {
+     "name": "ecdat:trade-off:migration",
+     "value": "Certificate/PKI-level change; plan for dual-algorithm (composite or parallel chain) issuance during the overlap period. New key material, so no automatic patch."
+    },
+    {
+     "name": "ecdat:trade-off:rule-id",
+     "value": "SIG_MLDSA"
+    },
+    {
+     "name": "ecdat:trade-off:standard",
+     "value": "NIST FIPS 204 (ML-DSA), final August 2024"
+    }
+   ],
+   "evidence": {
+    "occurrences": [
+     {
+      "bom-ref": "crypto/ed25519/ed25519/137cd87bbeb64fdc/occ/1",
+      "location": "tools/license-issuer.js",
+      "line": 34,
+      "symbol": "const { publicKey, privateKey } = crypto.generateKeyPairSync('ed25519');",
+      "additionalContext": "const { publicKey, privateKey } = crypto.generateKeyPairSync('ed25519'); [detector=source_js confidence=high]"
+     }
+    ]
+   },
+   "ecdat": {
+    "quantumRisk": "shor_broken",
+    "quantumRiskReason": "Ed25519 (EdDSA over edwards25519) rests on ECDLP; a CRQC forges signatures by recovering the private scalar.",
+    "severity": "critical",
+    "score": 40.15,
+    "recommendation": "ML-DSA-65",
+    "recommendationRationale": "Signatures over RSA, DSA, ECDSA or EdDSA are forgeable once Shor's algorithm is available. Signature exposure is not retroactive - a forged signature only matters in the future - so the deadline is the lifetime of the verifying trust anchor (roots, firmware keys, code-signing chains). Risk engine finding: Ed25519 (EdDSA over edwards25519) rests on ECDLP; a CRQC forges signatures by recovering the private scalar. Evidence: 1 occurrence(s) across 1 file(s), first at tools/license-issuer.js:34. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. Certificate/PKI-level change; plan for dual-algorithm (composite or parallel chain) issuance during the overlap period. New key material, so no automatic patch. Standard: NIST FIPS 204 (ML-DSA), final August 2024. Alternatives: SLH-DSA (FIPS 205) for long-lived roots and firmware, where a conservative hash-based assumption is worth the signature size.",
+    "dataClass": "internal",
+    "criticality": "medium",
+    "mosca": {
+     "xYears": 5,
+     "yYears": 5,
+     "zYear": 2035,
+     "deadlineYear": 2025,
+     "shortfallYears": 1,
+     "actNow": true,
+     "statement": "X(5) + Y(5) = 10 years of exposure exceeds the 9 years left until Z=2035. Migration should already have started in 2025; the organisation is carrying 1 year(s) of uncovered risk."
+    },
+    "tradeOffs": {
+     "size": "ML-DSA-65: signature 3309 B (~3.3 KB), public key 1952 B vs ECDSA P-256: signature ~64 B raw / ~72 B DER, public key 33 B compressed - about 50x larger signatures. A 3-certificate chain grows by roughly 15 KB (~5 KB per certificate: +3.2 KB signature and +1.9 KB public key).",
+     "performance": "ML-DSA signing and verification are fast (comparable to or faster than ECDSA); verification is the cheap side, which suits many-verifier deployments.",
+     "maturity": "NIST FIPS 204 (ML-DSA), final August 2024. Deterministic and hedged variants both specified.",
+     "interop": "Requires X.509 stacks that understand the ML-DSA OIDs; older verifiers must be inventoried before switching a trust anchor.",
+     "migration": "Certificate/PKI-level change; plan for dual-algorithm (composite or parallel chain) issuance during the overlap period. New key material, so no automatic patch.",
+     "rule_id": "SIG_MLDSA",
+     "standard": "NIST FIPS 204 (ML-DSA), final August 2024"
+    },
+    "occurrenceCount": 1,
+    "detectors": [
+     "source_js"
+    ],
+    "policyName": "ECDAT baseline policy (NTRO / SIH 2026)",
+    "kbCitation": "RFC 8032; NIST FIPS 186-5 (digital signature standard, 2023); Shor 1994/1997, polynomial-time factoring and discrete log"
    }
   }
  ]

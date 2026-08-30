@@ -1,0 +1,320 @@
+# =============================================================================
+# ECDAT — Enterprise Cryptographic Discovery & Analysis Tool
+# Default risk / migration policy
+# -----------------------------------------------------------------------------
+# This file drives Mosca's inequality (X + Y > Z), data-class assignment,
+# business criticality weighting, path filtering and the CI gate.
+#
+# It is parsed by app/engine/policy.py, which understands this small, safe
+# subset of YAML (no PyYAML required):
+#
+#   * 2-space indented nested maps        mosca:
+#                                           Z_quantum_threat_year: 2035
+#   * inline (flow) maps                  pii: { X_protection_lifetime: 25 }
+#   * inline (flow) sequences             foo: [a, b, c]
+#   * block sequences                     ignore_paths:
+#                                           - "**/dist/**"
+#   * quoted keys (needed for globs)      "**/payments/**": 1.0
+#   * "#" comments and blank lines
+#
+# The same content may be supplied as JSON (`--policy my-policy.json`); the
+# loader auto-detects the format from the file extension and the first
+# non-comment character.
+#
+# A user policy is DEEP-MERGED onto these defaults, so a site policy only has
+# to state what it changes. Glob rules from the user policy are appended AFTER
+# the defaults, and matching is LAST-MATCH-WINS, so a user rule always beats
+# the built-in rule it overlaps. Set `inherit_defaults: false` at the top level
+# to start from a blank slate instead — that is also the only way to REMOVE a
+# default entry from a list such as `ignore_paths`, since lists are unioned.
+#
+# Glob semantics (fnmatch-like, but path aware):
+#   *            any run of characters except "/"
+#   ?            exactly one character except "/"
+#   [abc] [!abc] character class / negated class
+#   **/          zero or more leading directories   ("**/x/**" matches "x/b.py")
+#   /**          this path or anything beneath it   ("src/**" matches "src")
+#   a pattern with no "/" at all matches that name at ANY depth ("*.pem")
+#
+# These are the ONLY glob semantics in ECDAT. Detectors, the risk engine, the
+# gate and the serializers all match through policy.glob_match / is_ignored;
+# no module uses bare fnmatch, whose patterns are not path aware.
+#
+# Paths are always matched as POSIX paths relative to the scan root. Every
+# detector records Occurrence.file in that form (the TLS probe is the one
+# exception and uses an explicit "tls://host:port" scheme).
+# =============================================================================
+
+version: 1
+name: "ECDAT baseline policy (NTRO / SIH 2026)"
+description: "Conservative harvest-now-decrypt-later posture for Indian critical infrastructure."
+
+# Set to false in a site policy to ignore everything below and start clean.
+inherit_defaults: true
+
+# -----------------------------------------------------------------------------
+# Mosca's inequality:  if  X + Y > Z  you are already late — migrate NOW.
+#   X = how long the data must stay confidential (years)
+#   Y = how long the migration itself takes (years)
+#   Z = the year a cryptographically relevant quantum computer is assumed
+# -----------------------------------------------------------------------------
+mosca:
+  # 2035 is the NIST IR 8547 deprecation horizon for RSA/ECC and the year most
+  # national roadmaps (NSA CNSA 2.0, BSI, ANSSI) treat as the planning wall.
+  # Lower it to 2030 for a paranoid posture, raise it to 2040 for an optimistic one.
+  Z_quantum_threat_year: 2035
+
+  # Fallback confidentiality lifetime (years) for data whose class is unknown.
+  default_X_protection_years: 10
+
+# -----------------------------------------------------------------------------
+# Migration effort: how many years it takes this organisation to rip out and
+# replace a cryptographic primitive end-to-end (design, build, roll-out,
+# certificate re-issue, third-party coordination).
+#
+# This is the ONLY definition of Y. The risk engine must read it from here
+# (Policy.y_default() / Policy.y_for_family()) rather than carrying its own
+# default, or the published number and the scored number will disagree.
+# -----------------------------------------------------------------------------
+migration:
+  default_Y_years: 3
+
+  # Optional per-family overrides; omit to use default_Y_years everywhere.
+  # Hardware/HSM and embedded firmware are slower than a library bump.
+  Y_by_family:
+    RSA: 3
+    ECDSA: 3
+    ECDH: 3
+    DH: 3
+    AES: 1
+    SHA-2: 1
+    TLS: 2
+
+# -----------------------------------------------------------------------------
+# Data classes: X (confidentiality lifetime) in years.
+# These are the numbers that make Mosca bite — a 25-year PII secret encrypted
+# under RSA-2048 today is already a breach in 2035.
+#
+# Every class named in data_class_paths below must be declared here; the loader
+# reports an error for any that is not, instead of silently scoring it as
+# "default".
+# -----------------------------------------------------------------------------
+data_classes:
+  classified:  { X_protection_lifetime: 40 }   # national-security / defence records
+  health:      { X_protection_lifetime: 30 }   # medical records outlive the patient's consent
+  pii:         { X_protection_lifetime: 25 }   # Aadhaar, PAN, biometrics, addresses
+  financial:   { X_protection_lifetime: 15 }   # payments, ledgers, KYC-linked money data
+  credential:  { X_protection_lifetime: 12 }   # long-lived keys, secrets, signing material
+  default:     { X_protection_lifetime: 10 }   # anything unclassified
+  internal:    { X_protection_lifetime: 5 }    # ops/telemetry, low blast radius
+  session_key: { X_protection_lifetime: 1 }    # ephemeral, dies with the connection
+  public:      { X_protection_lifetime: 0 }    # already public — confidentiality is moot
+
+# Which data class a file belongs to. LAST MATCH WINS, so order matters:
+# broad rules first, sharp rules last.
+data_class_paths:
+  "**": default
+
+  # --- ephemeral / low value -------------------------------------------------
+  "**/session/**": session_key
+  "**/sessions/**": session_key
+  "**/cache/**": session_key
+  "**/ephemeral/**": session_key
+  "**/tmp/**": session_key
+
+  # --- already public --------------------------------------------------------
+  "**/public/**": public
+  "**/static/**": public
+  "**/assets/**": public
+  "**/docs/**": public
+  "**/examples/**": public
+
+  # --- internal plumbing -----------------------------------------------------
+  "**/internal/**": internal
+  "**/telemetry/**": internal
+  "**/metrics/**": internal
+
+  # --- money -----------------------------------------------------------------
+  "**/payment/**": financial
+  "**/payments/**": financial
+  "**/billing/**": financial
+  "**/ledger/**": financial
+  "**/txn/**": financial
+  "**/transactions/**": financial
+  "**/upi/**": financial
+  "**/settlement/**": financial
+
+  # --- people ----------------------------------------------------------------
+  "**/user/**": pii
+  "**/users/**": pii
+  "**/customer/**": pii
+  "**/customers/**": pii
+  "**/profile/**": pii
+  "**/kyc/**": pii
+  "**/aadhaar/**": pii
+  "**/pan/**": pii
+  "**/biometric/**": pii
+  "**/subscriber/**": pii
+
+  # --- health ----------------------------------------------------------------
+  "**/health/**": health
+  "**/medical/**": health
+  "**/patient/**": health
+  "**/ehr/**": health
+
+  # --- keys, secrets, credentials -------------------------------------------
+  "**/auth/**": credential
+  "**/identity/**": credential
+  "**/secrets/**": credential
+  "**/vault/**": credential
+  "**/keystore/**": credential
+  "**/keys/**": credential
+  "*.pem": credential
+  "*.key": credential
+  "*.p12": credential
+  "*.pfx": credential
+  "*.jks": credential
+
+  # --- national security -----------------------------------------------------
+  "**/classified/**": classified
+  "**/restricted/**": classified
+  "**/defence/**": classified
+  "**/sigint/**": classified
+
+# -----------------------------------------------------------------------------
+# Business criticality: 0.0 (nobody cares) .. 1.0 (the country notices).
+# Multiplied into the risk score so a broken cipher in the payment path
+# outranks the same cipher in a demo script. LAST MATCH WINS.
+#
+# These are floats, not labels. The risk engine must use the value directly
+# (Policy.criticality_for()) — there is no label-to-weight lookup table.
+# -----------------------------------------------------------------------------
+business_criticality:
+  "**": 0.3
+
+  "**/payment/**": 1.0
+  "**/payments/**": 1.0
+  "**/settlement/**": 1.0
+  "**/upi/**": 1.0
+  "**/billing/**": 0.95
+  "**/ledger/**": 0.95
+
+  "**/auth/**": 0.9
+  "**/login/**": 0.9
+  "**/identity/**": 0.9
+  "**/sso/**": 0.9
+  "**/session/**": 0.85
+
+  "**/crypto/**": 0.85
+  "**/security/**": 0.85
+  "**/kms/**": 0.85
+  "**/pki/**": 0.85
+  "**/tls/**": 0.8
+
+  "**/api/**": 0.7
+  "**/core/**": 0.7
+  "**/server/**": 0.7
+  "**/gateway/**": 0.7
+  "**/db/**": 0.6
+  "**/database/**": 0.6
+
+  "**/scripts/**": 0.2
+  "**/tools/**": 0.2
+  "**/test/**": 0.1
+  "**/tests/**": 0.1
+  "**/testdata/**": 0.1
+  "**/fixtures/**": 0.1
+  "**/mock/**": 0.1
+  "**/mocks/**": 0.1
+  "**/examples/**": 0.1
+  "**/sample/**": 0.1
+  "**/samples/**": 0.1
+  "**/docs/**": 0.05
+
+# -----------------------------------------------------------------------------
+# CI gate. `ecdat scan --gate` exits non-zero when any finding reaches
+# `fail_on`. Every key here is read through app/engine/policy.py
+# (Policy.fail_on / min_report_severity / fail_on_mosca_act_now /
+# fail_on_scan_errors) and the verdict itself comes from
+# Policy.gate_should_fail(), so gate.py never reimplements the comparison.
+#
+# Severity ordering is defined once, in app/engine/models.py: critical is the
+# highest rank. Allowed values: critical | high | medium | low | none
+# -----------------------------------------------------------------------------
+gate:
+  # Fail the build at this severity or worse. "none" reports without ever failing.
+  fail_on: critical
+
+  # Also fail when Mosca says "act now", even if the raw severity is lower.
+  fail_on_mosca_act_now: false
+
+  # Findings below this severity are dropped from the gate decision entirely —
+  # they cannot fail the build even via fail_on_mosca_act_now.
+  min_report_severity: low
+
+  # Fail when the scan itself recorded errors (unreadable files, a failed TLS
+  # probe, a manifest that would not parse). Off by default so a partial scan
+  # still reports rather than blocking the pipeline.
+  fail_on_scan_errors: false
+
+# -----------------------------------------------------------------------------
+# TLS probe targets. The TLS module is the ONLY part of ECDAT that touches the
+# network, and it only does so for the endpoints listed here — an empty list
+# means it returns no artefacts and scans nothing.
+#
+# Entries may be "host:port" strings, bare hostnames (port 443 assumed) or
+# maps: { host: example.in, port: 8443, timeout: 3 }.
+# Artefacts from this probe record their occurrence as "tls://host:port"
+# rather than a repo-relative path.
+# -----------------------------------------------------------------------------
+tls:
+  timeout_seconds: 5
+  endpoints: []
+
+# -----------------------------------------------------------------------------
+# Paths never scanned. Cuts vendored third-party noise out of the CBOM.
+#
+# This is the single exclusion list for the whole tool: detectors call
+# Policy.is_ignored() per candidate directory and file instead of carrying
+# per-language DEFAULT_EXCLUDE_DIRS / DEFAULT_EXCLUDE_GLOBS sets, so Python,
+# JS, Java, Go, certificate and manifest discovery all exclude the same tree.
+# The gate uses the same call, so a path that was never scanned can never fail
+# the build.
+#
+# A pattern also excludes everything beneath it, so "**/node_modules/**"
+# matches the directory itself and lets a walk prune it.
+# -----------------------------------------------------------------------------
+ignore_paths:
+  - "**/.git/**"
+  - "**/.hg/**"
+  - "**/.svn/**"
+  - "**/node_modules/**"
+  - "**/bower_components/**"
+  - "**/vendor/**"
+  - "**/third_party/**"
+  - "**/site-packages/**"
+  - "**/dist-packages/**"
+  - "**/.venv/**"
+  - "**/venv/**"
+  - "**/env/**"
+  - "**/virtualenv/**"
+  - "**/__pycache__/**"
+  - "**/.mypy_cache/**"
+  - "**/.pytest_cache/**"
+  - "**/.ruff_cache/**"
+  - "**/.tox/**"
+  - "**/dist/**"
+  - "**/build/**"
+  - "**/out/**"
+  - "**/target/**"
+  - "**/coverage/**"
+  - "**/.next/**"
+  - "**/.nuxt/**"
+  - "**/.gradle/**"
+  - "**/.idea/**"
+  - "**/.DS_Store"
+  - "*.min.js"
+  - "*.min.css"
+  - "*.map"
+  - "*.lock"
+  - "*-lock.json"

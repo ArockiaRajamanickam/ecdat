@@ -10,6 +10,10 @@ from pydantic import BaseModel
 import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import ecdat
+try:
+    from engine_adapter import scan_to_summary as _v3_scan
+except Exception:
+    _v3_scan = None
 
 if getattr(sys, "frozen", False):          # running inside a PyInstaller bundle
     HERE = os.path.join(sys._MEIPASS, "app")
@@ -75,7 +79,10 @@ def scan_local(req: LocalReq):
     p = os.path.abspath(os.path.expanduser(req.path.strip()))
     if not os.path.isdir(p):
         raise HTTPException(400, f"No folder found at: {p}")
-    res = ecdat.analyze(p, os.path.basename(p.rstrip("/")) or p)
+    label = os.path.basename(p.rstrip("/")) or p
+    if _v3_scan:
+        return JSONResponse(_v3_scan(p, label))
+    res = ecdat.analyze(p, label)
     s = summarise(res); s["cbom"] = ecdat.cbom(res)
     return JSONResponse(s)
 
@@ -83,13 +90,19 @@ def scan_local(req: LocalReq):
 def demos():
     out=[]
     for k,meta in DEMOS.items():
-        res=json.load(open(os.path.join(DATA,f"{k}.json")))
-        s=summarise(res)
+        v3=os.path.join(DATA,f"{k}_v3.json")
+        if os.path.exists(v3):
+            s=json.load(open(v3))
+        else:
+            s=summarise(json.load(open(os.path.join(DATA,f"{k}.json"))))
         out.append({"id":k, **meta, "files":s["files_scanned"], "vulnerable":s["vulnerable"], "total":s["total"]})
     return out
 
 @app.get("/api/scan/{demo}")
 def scan_demo(demo:str):
+    v3=os.path.join(DATA,f"{demo}_v3.json")
+    if os.path.exists(v3):
+        return JSONResponse(json.load(open(v3)))
     p=os.path.join(DATA,f"{demo}.json")
     if not os.path.exists(p): raise HTTPException(404,"unknown demo")
     return JSONResponse(summarise(json.load(open(p))))
@@ -115,8 +128,10 @@ def scan_live(req:ScanReq):
                          capture_output=True,text=True,timeout=90)
         if r.returncode!=0:
             raise HTTPException(400,"Could not clone that repo (private, huge, or not found).")
-        res=ecdat.analyze(tmp, url.split("/")[-1])
-        # attach cbom inline
+        label=url.split("/")[-1]
+        if _v3_scan:
+            return JSONResponse(_v3_scan(tmp, label))
+        res=ecdat.analyze(tmp, label)
         s=summarise(res); s["cbom"]=ecdat.cbom(res)
         return JSONResponse(s)
     except subprocess.TimeoutExpired:
