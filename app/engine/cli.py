@@ -42,7 +42,7 @@ def _summary_line(res):
     for a in res.artefacts:
         counts[a.severity.value] = counts.get(a.severity.value, 0) + 1
     parts = [f"{counts.get(s.value, 0)} {s.value}" for s in Severity if counts.get(s.value)]
-    return f"{res.files_scanned} files · {len(res.artefacts)} assets · " + (", ".join(parts) or "nothing flagged")
+    return f"{res.files_scanned} files, {len(res.artefacts)} assets, " + (", ".join(parts) or "nothing flagged")
 
 
 def cmd_scan(a) -> int:

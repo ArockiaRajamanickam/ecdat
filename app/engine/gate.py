@@ -416,9 +416,11 @@ def _match_waiver(artefact: Any, waiver: dict) -> bool:
 
 
 def _waiver_expired(waiver: dict) -> bool:
+    """A waiver is accepted risk, so it must be bounded: no expiry date or no
+    reason means it never counts. Fail closed, the asset blocks again."""
     expires = waiver.get("expires") or waiver.get("expiry")
-    if not expires:
-        return False
+    if not expires or not str(waiver.get("reason") or "").strip():
+        return True
     text = str(expires).strip()[:10]
     try:
         return _dt.date.fromisoformat(text) < _today()

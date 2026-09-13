@@ -36,3 +36,14 @@ def test_gate_threshold_direction_end_to_end(tmp_path):
     assert evaluate(rd, pol, Severity.CRITICAL)[0] == 1
     assert evaluate(rd, pol, Severity.HIGH)[0] == 1
     assert evaluate(rd, pol, Severity.LOW)[0] == 1
+
+
+def test_waiver_without_expiry_or_reason_fails_closed(tmp_path):
+    """Accepted risk must be bounded: a waiver with no expiry date, or no reason,
+    does not suppress anything. Before this test a dateless waiver lasted forever."""
+    from engine import gate as g
+    assert g._waiver_expired({"expires": "2099-01-01", "reason": "vendor patch due Q1"}) is False
+    assert g._waiver_expired({"reason": "no date given"}) is True
+    assert g._waiver_expired({"expires": "2099-01-01"}) is True
+    assert g._waiver_expired({"expires": "not-a-date", "reason": "typo"}) is True
+    assert g._waiver_expired({"expires": "2000-01-01", "reason": "long gone"}) is True
