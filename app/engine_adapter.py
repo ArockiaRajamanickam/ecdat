@@ -44,6 +44,10 @@ def scan_to_summary(root: str, target: str | None = None) -> dict:
                 "why": a.threat_reason or "", "urgent": bool(a.mosca_act_now) and tier in ("BROKEN_Q", "WEAK"),
                 "snippet": (o.evidence or "")[:140],
                 "severity": a.severity.value, "has_fix": bool(a.fix_patch),
+                # Mosca per asset, from policy.yaml: the last year migration can start
+                "deadline_year": getattr(a, "mosca_deadline_year", None),
+                "x_years": getattr(a, "x_years", None), "y_years": getattr(a, "y_years", None),
+                "data_class": getattr(a, "data_class", None),
             })
     findings.sort(key=lambda f: (_ORDER[f["tier"]], not f["urgent"], f["file"]))
     total = len(findings)

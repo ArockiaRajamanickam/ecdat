@@ -139,13 +139,14 @@ REC_KB: dict[str, dict[str, Any]] = {
                         "conservative hash-based assumption is worth the signature size.",
     },
     "SIG_SLHDSA": {
-        "recommendation": "SLH-DSA-SHA2-128s (ML-DSA-65 where signature size dominates)",
+        "recommendation": "SLH-DSA-SHA2-128s",
         "standard": _FIPS205,
         "rationale": (
             "This key signs artefacts with a very long verification horizon (firmware, "
             "roots of trust, archival records). SLH-DSA rests only on hash-function "
             "security, so it survives even a future break of structured lattices - the "
-            "right conservatism for a trust anchor that cannot be rotated in the field."
+            "right conservatism for a trust anchor that cannot be rotated in the field. "
+            "Use ML-DSA-65 instead where signature size dominates."
         ),
         "trade_offs": {
             "size": "SLH-DSA-SHA2-128s: signature 7856 B (~7.9 KB), public key 32 B. "
@@ -856,8 +857,11 @@ def _is_long_term(artefact: Any) -> bool:
     if any(token in text for token in _LONG_TERM_TOKENS):
         return True
     try:
+        # Only the genuinely long-lived classes (pii 25y, health 30y, classified
+        # 40y) justify SLH-DSA's 7.9 KB signatures. Financial (15y), credential
+        # (12y) and default (10y) get ML-DSA-65, the NIST general-purpose choice.
         x_years = getattr(artefact, "x_years", None)
-        if x_years is not None and float(x_years) >= 10.0:
+        if x_years is not None and float(x_years) >= 20.0:
             return True
     except (TypeError, ValueError):
         pass

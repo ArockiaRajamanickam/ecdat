@@ -253,6 +253,10 @@ class _PolicyView:
     def __init__(self, policy: Any = None) -> None:
         raw = _to_mapping(policy)
         self.raw = raw
+        # Keep the real Policy object (engine.policy.Policy) when we were given one:
+        # it resolves X per data class, Y per family, Z and criticality per path.
+        needed = ("data_class_for", "x_for_class", "y_for_family", "criticality_for", "z_year")
+        self.policy_obj = policy if all(callable(getattr(policy, n, None)) for n in needed) else None
         self.name: str = str(raw.get("name") or DEFAULT_POLICY["name"])
         self.z_year: int = int(_num(raw.get("z_year"), DEFAULT_POLICY["z_year"]))
         self.y_years: int = int(_num(raw.get("y_years"), DEFAULT_POLICY["y_years"]))
@@ -471,6 +475,22 @@ def apply_risk(artefacts: Sequence[Any], policy: Any = None, now_year: Optional[
     return items
 
 
+
+def _label_for_weight(weight: float, fallback: str) -> str:
+    """Map a 0..1 criticality weight from policy.yaml back onto a severity label."""
+    try:
+        w = float(weight)
+    except Exception:
+        return fallback
+    best, dist = fallback, 9.0
+    for label, lw in CRITICALITY_WEIGHTS.items():
+        if label == "info":
+            continue
+        if abs(lw - w) < dist:
+            best, dist = label, abs(lw - w)
+    return best
+
+
 def _risk_one(artefact: Any, view: _PolicyView, year: int) -> None:
     family = getattr(artefact, "family", None) or getattr(artefact, "name", "")
     params = getattr(artefact, "params", None)
@@ -488,9 +508,40 @@ def _risk_one(artefact: Any, view: _PolicyView, year: int) -> None:
 
     x_years = view.x_years_for(data_class, rule)
     y_years = view.y_years
+    z_year = view.z_year
+    policy_rule = (rule or {}).get("glob", "")
+
+    # 2b. A real policy.yaml (engine.policy.Policy) knows X per data class, Y per
+    # algorithm family, Z and business criticality per path. When we were handed
+    # one, it wins over the built-in defaults. Worst occurrence path wins, so a
+    # key that shows up under payments/ and under docs/ is judged by payments/.
+    pol = view.policy_obj
+    if pol is not None:
+        try:
+            best = None
+            for occ in (getattr(artefact, "occurrences", None) or []):
+                f = getattr(occ, "file", "") or ""
+                if not f:
+                    continue
+                dc = pol.data_class_for(f)
+                x = int(pol.x_for_class(dc))
+                cw = float(pol.criticality_for(f))
+                cand = (x, cw, dc, f)
+                if best is None or (cand[0], cand[1]) > (best[0], best[1]):
+                    best = cand
+            if best is not None:
+                x_years, crit_w, data_class, _ = best
+                criticality = _label_for_weight(crit_w, criticality)
+                if view.escalate_key_material and str(getattr(artefact, "kind", "")).lower() in ("key", "certificate"):
+                    criticality = _bump(criticality)
+                policy_rule = f"data_class={data_class}"
+            y_years = int(pol.y_for_family(family))
+            z_year = int(pol.z_year())
+        except Exception:
+            pass
 
     # 3. Mosca
-    detail = mosca_detail(x_years, y_years, view.z_year, year)
+    detail = mosca_detail(x_years, y_years, z_year, year)
 
     # 4 + 5. score and severity
     severity = _severity_for(threat, detail.act_now)
@@ -512,10 +563,10 @@ def _risk_one(artefact: Any, view: _PolicyView, year: int) -> None:
     artefact.criticality = criticality
 
     # Extra provenance for the report / CBOM - harmless if the model ignores it.
-    artefact.z_year = view.z_year
+    artefact.z_year = z_year
     artefact.mosca_deadline_year = detail.deadline_year
     artefact.mosca_statement = detail.statement
-    artefact.policy_rule = (rule or {}).get("glob", "")
+    artefact.policy_rule = policy_rule
     artefact.policy_name = view.name
     artefact.kb_citation = kb.citation(family, params)
     if not getattr(artefact, "name", ""):

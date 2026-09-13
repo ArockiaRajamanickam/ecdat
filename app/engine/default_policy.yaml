@@ -192,6 +192,20 @@ data_class_paths:
 business_criticality:
   "**": 0.3
 
+  # Key material and signing code are the most valuable things in any repo:
+  # one leaked signing key compromises everything it ever signed.
+  "*.pem": 1.0
+  "*.key": 1.0
+  "*.p12": 1.0
+  "*.pfx": 1.0
+  "*.jks": 1.0
+  "**/keys/**": 1.0
+  "**/secrets/**": 1.0
+  "**/keystore/**": 1.0
+  "**/vault/**": 1.0
+  "*signing*": 0.95
+  "*license*": 0.9
+
   "**/payment/**": 1.0
   "**/payments/**": 1.0
   "**/settlement/**": 1.0

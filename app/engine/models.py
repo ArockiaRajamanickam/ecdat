@@ -22,8 +22,11 @@ class Severity(str, Enum):
     NONE = "none"
 
 
-SEVERITY_RANK = {Severity.CRITICAL: 0, Severity.HIGH: 1, Severity.MEDIUM: 2,
-                 Severity.LOW: 3, Severity.NONE: 4}
+# Higher is worse. Every consumer (gate thresholds, report ordering, policy
+# budgets, store weights) compares with ">=" on this table, so this is the one
+# place the direction is defined.
+SEVERITY_RANK = {Severity.CRITICAL: 4, Severity.HIGH: 3, Severity.MEDIUM: 2,
+                 Severity.LOW: 1, Severity.NONE: 0}
 
 
 @dataclass

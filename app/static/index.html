@@ -373,7 +373,10 @@
     margin-right:7px;vertical-align:middle;
   }
   .algo{font-weight:500}
-  .reco{font-family:var(--font-mono);font-size:12.5px}
+  .deadline{font-family:var(--mono,"IBM Plex Mono",monospace);font-size:12.5px;padding:2px 7px;border-radius:4px;background:rgba(217,164,65,.14);color:#e8c06a;white-space:nowrap}
+      .deadline.late{background:rgba(224,134,114,.16);color:#f0a08e}
+      .deadline.none{background:transparent;color:#6b7a99}
+      .reco{font-family:var(--font-mono);font-size:12.5px}
   .reco.none{color:var(--muted);font-family:var(--font-body);font-style:italic}
   .caret{
     color:var(--muted);font-size:10px;display:inline-block;line-height:1;
@@ -675,6 +678,7 @@
                       <th scope="col">Location</th>
                       <th scope="col">Algorithm</th>
                       <th scope="col">Replace with</th>
+                      <th scope="col" title="Last year a migration can start and still finish before the policy's quantum-computer year (Mosca: Z minus X minus Y)">Migrate by</th>
                       <th scope="col" aria-label="Expand"></th>
                     </tr>
                   </thead>
@@ -779,7 +783,7 @@
   };
 
   /* ---------------- state ---------------- */
-  var state = {
+  var state = { nowYear: new Date().getFullYear(),
     modeLocal: false,
     modeUnknown: false,
     demos: [],
@@ -1292,6 +1296,15 @@
         ? '<span class="urgent-mark" title="Urgent under the Mosca inequality" role="img" aria-label="Urgent">!</span>'
         : "";
       var lineTxt = (f.line != null && f.line !== "") ? escapeHtml(f.line) : "?";
+      var deadline = "";
+      if (!noChange && f.deadline_year != null) {
+        var late = state.nowYear && f.deadline_year < state.nowYear;
+        deadline = '<span class="deadline' + (late ? " late" : "") + '" title="X ' + escapeHtml(f.x_years) +
+          'y secrecy + Y ' + escapeHtml(f.y_years) + 'y migration, data class ' + escapeHtml(f.data_class || "default") + '">' +
+          (late ? "overdue " : "") + escapeHtml(f.deadline_year) + "</span>";
+      } else if (noChange) {
+        deadline = '<span class="deadline none">—</span>';
+      }
       var main =
         '<tr class="f-row" data-idx="' + r.i + '" role="button" aria-expanded="' + expanded + '" tabindex="0"' +
         ' aria-label="Finding: ' + escapeHtml(f.tier_label || meta.label) + ", " + escapeHtml(f.file || "") +
@@ -1302,11 +1315,12 @@
           '<span class="line-no">:' + lineTxt + "</span></span></td>" +
         '<td><span class="algo">' + escapeHtml(f.algorithm || "") + "</span></td>" +
         "<td>" + reco + "</td>" +
+        "<td>" + deadline + "</td>" +
         '<td style="text-align:right"><span class="caret" aria-hidden="true">' + (expanded ? "▲" : "▼") + "</span></td>" +
         "</tr>";
       var snip = "";
       if (expanded) {
-        snip = '<tr class="snippet-row"><td colspan="5"><div class="snippet-inner">' +
+        snip = '<tr class="snippet-row"><td colspan="6"><div class="snippet-inner">' +
           (f.why ? '<div class="snippet-why"><strong>Why:</strong> ' + escapeHtml(f.why) + "</div>" : "") +
           (f.snippet ? '<pre class="snippet"><code>' + escapeHtml(f.snippet) + "</code></pre>" : "") +
           "</div></td></tr>";
