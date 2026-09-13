@@ -1,10 +1,10 @@
 {
  "bomFormat": "CycloneDX",
  "specVersion": "1.6",
- "serialNumber": "urn:uuid:3ee8be3d-4456-4d55-a3ee-3ee8be3d4456",
+ "serialNumber": "urn:uuid:8d332fce-4288-497e-a8d3-8d332fce4288",
  "version": 1,
  "metadata": {
-  "timestamp": "2026-09-13T05:41:56Z",
+  "timestamp": "2026-09-13T06:16:59Z",
   "tools": {
    "components": [
     {
@@ -38,11 +38,11 @@
    },
    {
     "name": "ecdat:scan:started",
-    "value": "2026-09-13T05:41:55Z"
+    "value": "2026-09-13T06:16:58Z"
    },
    {
     "name": "ecdat:scan:finished",
-    "value": "2026-09-13T05:41:56Z"
+    "value": "2026-09-13T06:16:59Z"
    },
    {
     "name": "ecdat:scan:files-scanned",
@@ -4251,7 +4251,7 @@
     },
     {
      "name": "ecdat:recommendation:rationale",
-     "value": "XMSS and LMS are stateful hash-based signature schemes. Their post-quantum security is excellent, but each one-time key index may be used exactly once: reusing an index yields practical, immediate signature forgery. That state must survive crashes, backups, restores, VM snapshots and load-balanced replicas, which is why SP 800-208 imposes explicit key-state requirements and forbids cloning private key state. Risk engine finding: LMS/HSS is a stateful hash-based signature scheme approved by NIST SP 800-208, widely used for firmware signing; one-time-key reuse is fatal. Evidence: 4 occurrence(s) across 2 file(s), first at experiments/aion-200.js:469. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. The decision is operational, not cryptographic: can this deployment guarantee that state is never rolled back or duplicated? If not, SLH-DSA (FIPS 205) gives the same hash-based assumption with no state at the cost of a larger signature. Standard: NIST SP 800-208 (stateful hash-based signatures). Alternatives: SLH-DSA-SHA2-128s where statelessness is worth ~7.9 KB signatures."
+     "value": "XMSS and LMS are stateful hash-based signature schemes. Their post-quantum security is excellent, but each one-time key index may be used exactly once: reusing an index yields practical, immediate signature forgery. That state must survive crashes, backups, restores, VM snapshots and load-balanced replicas, which is why SP 800-208 imposes explicit key-state requirements and forbids cloning private key state. Risk engine finding: LMS/HSS is a stateful hash-based signature scheme approved by NIST SP 800-208, widely used for firmware signing; one-time-key reuse is fatal. Evidence: 4 occurrence(s) across 2 file(s), first at experiments/aion-200.js:469. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. The decision is operational, not cryptographic: can this deployment guarantee that state is never rolled back or duplicated? If not, SLH-DSA (FIPS 205) gives the same hash-based assumption with no state at the cost of a larger signature. Standard: NIST SP 800-208 (stateful hash-based signatures). Alternatives: SLH-DSA-SHA2-192s where statelessness is worth ~16 KB signatures."
     },
     {
      "name": "ecdat:occurrences:count",
@@ -4328,7 +4328,7 @@
     "severity": "none",
     "score": 0.0,
     "recommendation": "retain only with audited key-state management (SP 800-208); otherwise migrate to SLH-DSA",
-    "recommendationRationale": "XMSS and LMS are stateful hash-based signature schemes. Their post-quantum security is excellent, but each one-time key index may be used exactly once: reusing an index yields practical, immediate signature forgery. That state must survive crashes, backups, restores, VM snapshots and load-balanced replicas, which is why SP 800-208 imposes explicit key-state requirements and forbids cloning private key state. Risk engine finding: LMS/HSS is a stateful hash-based signature scheme approved by NIST SP 800-208, widely used for firmware signing; one-time-key reuse is fatal. Evidence: 4 occurrence(s) across 2 file(s), first at experiments/aion-200.js:469. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. The decision is operational, not cryptographic: can this deployment guarantee that state is never rolled back or duplicated? If not, SLH-DSA (FIPS 205) gives the same hash-based assumption with no state at the cost of a larger signature. Standard: NIST SP 800-208 (stateful hash-based signatures). Alternatives: SLH-DSA-SHA2-128s where statelessness is worth ~7.9 KB signatures.",
+    "recommendationRationale": "XMSS and LMS are stateful hash-based signature schemes. Their post-quantum security is excellent, but each one-time key index may be used exactly once: reusing an index yields practical, immediate signature forgery. That state must survive crashes, backups, restores, VM snapshots and load-balanced replicas, which is why SP 800-208 imposes explicit key-state requirements and forbids cloning private key state. Risk engine finding: LMS/HSS is a stateful hash-based signature scheme approved by NIST SP 800-208, widely used for firmware signing; one-time-key reuse is fatal. Evidence: 4 occurrence(s) across 2 file(s), first at experiments/aion-200.js:469. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. The decision is operational, not cryptographic: can this deployment guarantee that state is never rolled back or duplicated? If not, SLH-DSA (FIPS 205) gives the same hash-based assumption with no state at the cost of a larger signature. Standard: NIST SP 800-208 (stateful hash-based signatures). Alternatives: SLH-DSA-SHA2-192s where statelessness is worth ~16 KB signatures.",
     "dataClass": "default",
     "criticality": "low",
     "mosca": {

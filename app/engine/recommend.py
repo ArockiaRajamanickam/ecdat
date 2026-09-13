@@ -139,7 +139,7 @@ REC_KB: dict[str, dict[str, Any]] = {
                         "conservative hash-based assumption is worth the signature size.",
     },
     "SIG_SLHDSA": {
-        "recommendation": "SLH-DSA-SHA2-128s",
+        "recommendation": "SLH-DSA-SHA2-192s",
         "standard": _FIPS205,
         "rationale": (
             "This key signs artefacts with a very long verification horizon (firmware, "
@@ -149,8 +149,8 @@ REC_KB: dict[str, dict[str, Any]] = {
             "Use ML-DSA-65 instead where signature size dominates."
         ),
         "trade_offs": {
-            "size": "SLH-DSA-SHA2-128s: signature 7856 B (~7.9 KB), public key 32 B. "
-                    f"The fast variant -128f is 17088 B. Compare {_ML_DSA_65}.",
+            "size": "SLH-DSA-SHA2-192s: signature 16224 B (~16 KB), public key 48 B, NIST category 3 to match ML-DSA-65. "
+                    f"The fast variant -192f is 35664 B. Compare {_ML_DSA_65}.",
             "performance": "The 's' (small) parameter sets sign in the hundreds of "
                            "milliseconds range - acceptable for a release-signing step, "
                            "not for per-transaction signing. Verification is fast.",
@@ -550,7 +550,7 @@ REC_KB: dict[str, dict[str, Any]] = {
                          "SLH-DSA (FIPS 205) gives the same hash-based assumption with no "
                          "state at the cost of a larger signature.",
         },
-        "alternatives": "SLH-DSA-SHA2-128s where statelessness is worth ~7.9 KB signatures.",
+        "alternatives": "SLH-DSA-SHA2-192s where statelessness is worth ~16 KB signatures.",
     },
     "PQC_DRAFT": {
         "recommendation": "treat as provisional - prefer ML-DSA-65 until FIPS 206 is final",
