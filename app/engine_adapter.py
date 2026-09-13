@@ -12,7 +12,7 @@ from engine.pipeline import scan as _scan
 from engine.policy import Policy
 from engine.serializers import cbom as _cbom
 
-_TIER = {"shor_broken": "BROKEN_Q", "legacy_broken": "WEAK", "grover_weakened": "WEAK",
+_TIER = {"shor_broken": "BROKEN_Q", "legacy_broken": "WEAK", "grover_weakened": "SAFE",
          "quantum_safe": "SAFE", "pqc": "PQC", "unknown": "SAFE"}
 _LABEL = {"BROKEN_Q": "Quantum-broken", "WEAK": "Weak today", "SAFE": "Safe", "PQC": "Post-quantum"}
 _ORDER = {"BROKEN_Q": 0, "WEAK": 1, "SAFE": 2, "PQC": 3}

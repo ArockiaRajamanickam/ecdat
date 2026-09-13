@@ -390,7 +390,7 @@ def _severity_for(threat: Threat, act_now: bool) -> Severity:
     if threat is Threat.LEGACY_BROKEN:
         return Severity.HIGH
     if threat is Threat.GROVER_WEAKENED:
-        return Severity.MEDIUM
+        return Severity.LOW  # advisory: Grover halves the margin, it does not break it
     if threat in (Threat.QUANTUM_SAFE, Threat.PQC):
         return Severity.NONE
     return Severity.LOW  # UNKNOWN: worth a look, never silently dropped
@@ -540,12 +540,18 @@ def _risk_one(artefact: Any, view: _PolicyView, year: int) -> None:
         except Exception:
             pass
 
-    # 3. Mosca
+    # 3. Mosca. The inequality only has meaning for assets a quantum computer (Shor)
+    # or a classical attack breaks outright. Grover-weakened, unknown, safe and PQC
+    # assets get no start year and are never "act now"; anything else would put an
+    # SHA-256 hash on the same overdue list as an RSA key.
     detail = mosca_detail(x_years, y_years, z_year, year)
+    mosca_applies = threat in (Threat.SHOR_BROKEN, Threat.LEGACY_BROKEN)
+    act_now = bool(detail.act_now) if mosca_applies else False
+    shortfall = detail.shortfall_years if mosca_applies else 0
 
     # 4 + 5. score and severity
-    severity = _severity_for(threat, detail.act_now)
-    score = score_artefact(threat, criticality, detail.act_now, detail.shortfall_years,
+    severity = _severity_for(threat, act_now)
+    score = score_artefact(threat, criticality, act_now, shortfall,
                            x_years, y_years, view)
     # A quantum-safe or PQC artefact is inventory, not a finding.
     if severity is Severity.NONE:
@@ -558,14 +564,15 @@ def _risk_one(artefact: Any, view: _PolicyView, year: int) -> None:
     artefact.data_class = data_class
     artefact.x_years = x_years
     artefact.y_years = y_years
-    artefact.mosca_act_now = detail.act_now
-    artefact.mosca_shortfall = detail.shortfall_years
+    artefact.mosca_act_now = act_now
+    artefact.mosca_shortfall = shortfall
     artefact.criticality = criticality
 
     # Extra provenance for the report / CBOM - harmless if the model ignores it.
     artefact.z_year = z_year
-    artefact.mosca_deadline_year = detail.deadline_year
-    artefact.mosca_statement = detail.statement
+    artefact.mosca_deadline_year = detail.deadline_year if mosca_applies else None
+    artefact.mosca_statement = detail.statement if mosca_applies else (
+        "Mosca start year not applicable: not Shor-broken or classically broken.")
     artefact.policy_rule = policy_rule
     artefact.policy_name = view.name
     artefact.kb_citation = kb.citation(family, params)

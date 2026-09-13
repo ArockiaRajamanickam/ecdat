@@ -12,12 +12,16 @@ def _corpus(tmp_path):
         from cryptography.hazmat.primitives.asymmetric import rsa
         def k(): return rsa.generate_private_key(public_exponent=65537, key_size=2048)
     '''))
-    (tmp_path / "public").mkdir()
+    (tmp_path / "public").mkdir(); (tmp_path / "services").mkdir(exist_ok=True)
     (tmp_path / "public" / "banner.py").write_text(textwrap.dedent('''
+        from cryptography.hazmat.primitives.asymmetric import rsa
+        def k(): return rsa.generate_private_key(public_exponent=65537, key_size=3072)
+    '''))
+    (tmp_path / "services" / "digest.py").write_text(textwrap.dedent('''
         import hashlib
         def h(b): return hashlib.sha256(b).hexdigest()
     '''))
-    (tmp_path / "services").mkdir()
+    (tmp_path / "services").mkdir(exist_ok=True)
     (tmp_path / "services" / "notes.py").write_text(textwrap.dedent('''
         from cryptography.hazmat.primitives.asymmetric import ec
         def k(): return ec.generate_private_key(ec.SECP256R1())
@@ -30,7 +34,10 @@ def test_x_and_criticality_follow_the_path(tmp_path):
     by = {a.occurrences[0].file: a for a in r.artefacts}
     pay = next(a for f, a in by.items() if f.startswith("payments"))
     pub = next(a for f, a in by.items() if f.startswith("public"))
-    doc = next(a for f, a in by.items() if f.startswith("services"))
+    doc = next(a for f, a in by.items() if f.startswith("services/notes"))
+    sha = next(a for f, a in by.items() if f.startswith("services/digest"))
+    # Grover-weakened assets are advisory: no start year, never act-now
+    assert sha.mosca_deadline_year is None and sha.mosca_act_now is False
     # payments/ is the financial class (X=15) at criticality 1.0; public/ is X=0
     assert pay.x_years == 15 and pay.data_class == "financial"
     assert pay.criticality == "critical"
