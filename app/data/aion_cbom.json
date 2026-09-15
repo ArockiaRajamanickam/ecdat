@@ -1,10 +1,10 @@
 {
  "bomFormat": "CycloneDX",
  "specVersion": "1.6",
- "serialNumber": "urn:uuid:b2063de8-cb16-485f-ab20-b2063de8cb16",
+ "serialNumber": "urn:uuid:1ca785ad-312c-441c-a1ca-1ca785ad312c",
  "version": 1,
  "metadata": {
-  "timestamp": "2026-09-13T06:31:26Z",
+  "timestamp": "2026-09-15T13:12:10Z",
   "tools": {
    "components": [
     {
@@ -38,11 +38,11 @@
    },
    {
     "name": "ecdat:scan:started",
-    "value": "2026-09-13T06:31:25Z"
+    "value": "2026-09-15T13:12:09Z"
    },
    {
     "name": "ecdat:scan:finished",
-    "value": "2026-09-13T06:31:26Z"
+    "value": "2026-09-15T13:12:10Z"
    },
    {
     "name": "ecdat:scan:files-scanned",
@@ -498,7 +498,7 @@
      {
       "bom-ref": "crypto/ed25519/ed25519/bf49bc0eb9994122/occ/4",
       "location": "test/security-live.js",
-      "line": 786,
+      "line": 897,
       "symbol": "const kp = crypto.generateKeyPairSync('ed25519');",
       "additionalContext": "const kp = crypto.generateKeyPairSync('ed25519'); [detector=source_js confidence=high]"
      },
@@ -745,7 +745,7 @@
      {
       "bom-ref": "crypto/x25519/x25519/9fb073cc31cdbeb1/occ/8",
       "location": "public/aion-fs.js",
-      "line": 600,
+      "line": 634,
       "symbol": "return crypto.subtle.importKey('pkcs8', AionFS.unb64(pkcs8B64), { name:'X25519' }, true, ['deriveBits']);",
       "additionalContext": "return crypto.subtle.importKey('pkcs8', AionFS.unb64(pkcs8B64), { name:'X25519' }, true, ['deriveBits']); [detector=source_js confidence=medium]"
      },
@@ -766,21 +766,21 @@
      {
       "bom-ref": "crypto/x25519/x25519/9fb073cc31cdbeb1/occ/11",
       "location": "test/browser.js",
-      "line": 267,
+      "line": 286,
       "symbol": "const kp = await crypto.subtle.generateKey({ name: 'X25519' }, true, ['deriveBits']);",
       "additionalContext": "const kp = await crypto.subtle.generateKey({ name: 'X25519' }, true, ['deriveBits']); [detector=source_js confidence=high]"
      },
      {
       "bom-ref": "crypto/x25519/x25519/9fb073cc31cdbeb1/occ/12",
       "location": "test/browser.js",
-      "line": 738,
+      "line": 757,
       "symbol": "const kp1 = await crypto.subtle.generateKey({ name: 'X25519' }, true, ['deriveBits']);",
       "additionalContext": "const kp1 = await crypto.subtle.generateKey({ name: 'X25519' }, true, ['deriveBits']); [detector=source_js confidence=high]"
      },
      {
       "bom-ref": "crypto/x25519/x25519/9fb073cc31cdbeb1/occ/13",
       "location": "test/browser.js",
-      "line": 739,
+      "line": 758,
       "symbol": "const kp2 = await crypto.subtle.generateKey({ name: 'X25519' }, true, ['deriveBits']);",
       "additionalContext": "const kp2 = await crypto.subtle.generateKey({ name: 'X25519' }, true, ['deriveBits']); [detector=source_js confidence=high]"
      },
@@ -1002,70 +1002,70 @@
      {
       "bom-ref": "crypto/sha-2/sha-256/36ad2ede4fd3a1e8/occ/5",
       "location": "src/peerStore.js",
-      "line": 233,
+      "line": 245,
       "symbol": "const actual = crypto.createHash('sha256').update(salt + password).digest('hex');",
       "additionalContext": "const actual = crypto.createHash('sha256').update(salt + password).digest('hex'); [detector=source_js confidence=high]"
      },
      {
       "bom-ref": "crypto/sha-2/sha-256/36ad2ede4fd3a1e8/occ/6",
       "location": "src/peerStore.js",
-      "line": 356,
+      "line": 389,
       "symbol": "const actual = crypto.createHash('sha256').update(salt + password).digest('hex');",
       "additionalContext": "const actual = crypto.createHash('sha256').update(salt + password).digest('hex'); [detector=source_js confidence=high]"
      },
      {
       "bom-ref": "crypto/sha-2/sha-256/36ad2ede4fd3a1e8/occ/7",
       "location": "src/persistence.js",
-      "line": 51,
+      "line": 55,
       "symbol": "return crypto.createHash('sha256').update(s).digest('hex');",
       "additionalContext": "return crypto.createHash('sha256').update(s).digest('hex'); [detector=source_js confidence=high]"
      },
      {
       "bom-ref": "crypto/sha-2/sha-256/36ad2ede4fd3a1e8/occ/8",
       "location": "src/persistence.js",
-      "line": 60,
+      "line": 64,
       "symbol": "return crypto.createHash('sha384').update(s).digest('hex');",
       "additionalContext": "return crypto.createHash('sha384').update(s).digest('hex'); [detector=source_js confidence=high]"
      },
      {
       "bom-ref": "crypto/sha-2/sha-256/36ad2ede4fd3a1e8/occ/9",
       "location": "src/server.js",
-      "line": 406,
+      "line": 427,
       "symbol": "const actual = crypto.createHash('sha256').update(salt + pw).digest('hex');",
       "additionalContext": "const actual = crypto.createHash('sha256').update(salt + pw).digest('hex'); [detector=source_js confidence=high]"
      },
      {
       "bom-ref": "crypto/sha-2/sha-256/36ad2ede4fd3a1e8/occ/10",
       "location": "src/server.js",
-      "line": 1379,
+      "line": 1437,
       "symbol": "const envHash = crypto.createHash('sha384').update(envelopeStr).digest('hex');",
       "additionalContext": "const envHash = crypto.createHash('sha384').update(envelopeStr).digest('hex'); [detector=source_js confidence=high]"
      },
      {
       "bom-ref": "crypto/sha-2/sha-256/36ad2ede4fd3a1e8/occ/11",
       "location": "test/browser.js",
-      "line": 148,
+      "line": 167,
       "symbol": "const d = await crypto.subtle.digest('SHA-256', bytes);",
       "additionalContext": "const d = await crypto.subtle.digest('SHA-256', bytes); [detector=source_js confidence=high]"
      },
      {
       "bom-ref": "crypto/sha-2/sha-256/36ad2ede4fd3a1e8/occ/12",
       "location": "test/browser.js",
-      "line": 173,
+      "line": 192,
       "symbol": "const recvHash = crypto.createHash('sha256').update(fs.readFileSync(dlPath)).digest('hex');",
       "additionalContext": "const recvHash = crypto.createHash('sha256').update(fs.readFileSync(dlPath)).digest('hex'); [detector=source_js confidence=high]"
      },
      {
       "bom-ref": "crypto/sha-2/sha-256/36ad2ede4fd3a1e8/occ/13",
       "location": "test/regression.js",
-      "line": 631,
+      "line": 644,
       "symbol": "const sha = (buf) => crypto.createHash('sha256').update(buf).digest();",
       "additionalContext": "const sha = (buf) => crypto.createHash('sha256').update(buf).digest(); [detector=source_js confidence=high]"
      },
      {
       "bom-ref": "crypto/sha-2/sha-256/36ad2ede4fd3a1e8/occ/14",
       "location": "test/regression.js",
-      "line": 666,
+      "line": 679,
       "symbol": "const key = await webcrypto.subtle.deriveKey(",
       "additionalContext": "const key = await webcrypto.subtle.deriveKey( [detector=source_js confidence=medium]"
      },
@@ -1851,14 +1851,14 @@
      {
       "bom-ref": "crypto/scrypt/scrypt/7b5ae977ec3600c4/occ/5",
       "location": "src/peerStore.js",
-      "line": 226,
+      "line": 238,
       "symbol": "const dk = crypto.scryptSync(password, Buffer.from(parts[5], 'hex'), SCRYPT_KEYLEN,",
       "additionalContext": "const dk = crypto.scryptSync(password, Buffer.from(parts[5], 'hex'), SCRYPT_KEYLEN, [detector=source_js confidence=high]"
      },
      {
       "bom-ref": "crypto/scrypt/scrypt/7b5ae977ec3600c4/occ/6",
       "location": "src/server.js",
-      "line": 354,
+      "line": 375,
       "symbol": "const dk = crypto.scryptSync(password, salt, 32, { N: 32768, r: 8, p: 1, maxmem: 64 * 1024 * 1024 });",
       "additionalContext": "const dk = crypto.scryptSync(password, salt, 32, { N: 32768, r: 8, p: 1, maxmem: 64 * 1024 * 1024 }); [detector=source_js confidence=high]"
      },
@@ -2251,11 +2251,11 @@
     },
     {
      "name": "ecdat:recommendation:rationale",
-     "value": "Grover's algorithm gives only a quadratic speed-up, so a 256-bit symmetric key or a 384-bit digest keeps a 128-bit or better post-quantum margin. The quantum exposure in this system is in the asymmetric layer, not here. Risk engine finding: AES is a symmetric block cipher; Grover's algorithm halves the effective key strength, so the verdict depends on the key size. A 256-bit key retains ~128-bit effective strength against Grover, which meets CNSA 2.0. Evidence: 14 occurrence(s) across 5 file(s), first at public/aion-client.js:51. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None; keep the key-establishment layer under review instead. Standard: NIST SP 800-131A Rev.2. Alternatives: None needed."
+     "value": "Grover's algorithm gives only a quadratic speed-up, so a 256-bit symmetric key or a 384-bit digest keeps a 128-bit or better post-quantum margin. The quantum exposure in this system is in the asymmetric layer, not here. Risk engine finding: AES is a symmetric block cipher; Grover's algorithm halves the effective key strength, so the verdict depends on the key size. A 256-bit key retains ~128-bit effective strength against Grover, which meets CNSA 2.0. Evidence: 15 occurrence(s) across 6 file(s), first at public/aion-client.js:51. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None; keep the key-establishment layer under review instead. Standard: NIST SP 800-131A Rev.2. Alternatives: None needed."
     },
     {
      "name": "ecdat:occurrences:count",
-     "value": "14"
+     "value": "15"
     },
     {
      "name": "ecdat:detectors",
@@ -2309,49 +2309,49 @@
      {
       "bom-ref": "crypto/aes/aes-256-gcm/d0898907bf05194a/occ/3",
       "location": "public/aion-fs.js",
-      "line": 299,
+      "line": 333,
       "symbol": "wrapKey = await crypto.subtle.deriveKey(",
       "additionalContext": "wrapKey = await crypto.subtle.deriveKey( [detector=source_js confidence=medium]"
      },
      {
       "bom-ref": "crypto/aes/aes-256-gcm/d0898907bf05194a/occ/4",
       "location": "public/aion-fs.js",
-      "line": 365,
+      "line": 399,
       "symbol": "const newKey = await crypto.subtle.deriveKey(",
       "additionalContext": "const newKey = await crypto.subtle.deriveKey( [detector=source_js confidence=medium]"
      },
      {
       "bom-ref": "crypto/aes/aes-256-gcm/d0898907bf05194a/occ/5",
       "location": "public/aion-fs.js",
-      "line": 438,
+      "line": 472,
       "symbol": "const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv, tagLength: 128 }, wrapKey, pt);",
       "additionalContext": "const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv, tagLength: 128 }, wrapKey, pt); [detector=source_js confidence=medium]"
      },
      {
       "bom-ref": "crypto/aes/aes-256-gcm/d0898907bf05194a/occ/6",
       "location": "public/aion-fs.js",
-      "line": 442,
+      "line": 476,
       "symbol": "const pt = await crypto.subtle.decrypt(",
       "additionalContext": "const pt = await crypto.subtle.decrypt( [detector=source_js confidence=medium]"
      },
      {
       "bom-ref": "crypto/aes/aes-256-gcm/d0898907bf05194a/occ/7",
       "location": "public/aion-fs.js",
-      "line": 528,
+      "line": 562,
       "symbol": "return crypto.subtle.deriveKey(",
       "additionalContext": "return crypto.subtle.deriveKey( [detector=source_js confidence=medium]"
      },
      {
       "bom-ref": "crypto/aes/aes-256-gcm/d0898907bf05194a/occ/8",
       "location": "public/aion-fs.js",
-      "line": 538,
+      "line": 572,
       "symbol": "const ct = new Uint8Array(await crypto.subtle.encrypt(",
       "additionalContext": "const ct = new Uint8Array(await crypto.subtle.encrypt( [detector=source_js confidence=medium]"
      },
      {
       "bom-ref": "crypto/aes/aes-256-gcm/d0898907bf05194a/occ/9",
       "location": "public/aion-fs.js",
-      "line": 569,
+      "line": 603,
       "symbol": "pt = await crypto.subtle.decrypt(",
       "additionalContext": "pt = await crypto.subtle.decrypt( [detector=source_js confidence=medium]"
      },
@@ -2364,29 +2364,36 @@
      },
      {
       "bom-ref": "crypto/aes/aes-256-gcm/d0898907bf05194a/occ/11",
+      "location": "test/browser.js",
+      "line": 1249,
+      "symbol": "const k = await crypto.subtle.importKey('raw', key, { name: 'AES-GCM' }, false, ['encrypt']);",
+      "additionalContext": "const k = await crypto.subtle.importKey('raw', key, { name: 'AES-GCM' }, false, ['encrypt']); [detector=source_js confidence=medium]"
+     },
+     {
+      "bom-ref": "crypto/aes/aes-256-gcm/d0898907bf05194a/occ/12",
       "location": "test/pqc.js",
       "line": 33,
       "symbol": "const ct = await subtle.encrypt({ name: 'AES-GCM', iv, additionalData: aad }, key, new TextEncoder().encode(plaintext));",
       "additionalContext": "const ct = await subtle.encrypt({ name: 'AES-GCM', iv, additionalData: aad }, key, new TextEncoder().encode(plaintext)); [detector=source_js confidence=medium]"
      },
      {
-      "bom-ref": "crypto/aes/aes-256-gcm/d0898907bf05194a/occ/12",
+      "bom-ref": "crypto/aes/aes-256-gcm/d0898907bf05194a/occ/13",
       "location": "test/pqc.js",
       "line": 37,
       "symbol": "const pt = await subtle.decrypt({ name: 'AES-GCM', iv: H.unb64(ivB64), additionalData: aad }, key, H.unb64(ctB64));",
       "additionalContext": "const pt = await subtle.decrypt({ name: 'AES-GCM', iv: H.unb64(ivB64), additionalData: aad }, key, H.unb64(ctB64)); [detector=source_js confidence=medium]"
      },
      {
-      "bom-ref": "crypto/aes/aes-256-gcm/d0898907bf05194a/occ/13",
+      "bom-ref": "crypto/aes/aes-256-gcm/d0898907bf05194a/occ/14",
       "location": "test/regression.js",
-      "line": 666,
+      "line": 679,
       "symbol": "const key = await webcrypto.subtle.deriveKey(",
       "additionalContext": "const key = await webcrypto.subtle.deriveKey( [detector=source_js confidence=medium]"
      },
      {
-      "bom-ref": "crypto/aes/aes-256-gcm/d0898907bf05194a/occ/14",
+      "bom-ref": "crypto/aes/aes-256-gcm/d0898907bf05194a/occ/15",
       "location": "test/regression.js",
-      "line": 669,
+      "line": 682,
       "symbol": "const ct = await webcrypto.subtle.encrypt({ name: 'AES-GCM', iv, tagLength: 128 }, key,",
       "additionalContext": "const ct = await webcrypto.subtle.encrypt({ name: 'AES-GCM', iv, tagLength: 128 }, key, [detector=source_js confidence=medium]"
      }
@@ -2398,7 +2405,7 @@
     "severity": "none",
     "score": 0.52,
     "recommendation": "no change - retain (symmetric/hash primitive at an adequate level)",
-    "recommendationRationale": "Grover's algorithm gives only a quadratic speed-up, so a 256-bit symmetric key or a 384-bit digest keeps a 128-bit or better post-quantum margin. The quantum exposure in this system is in the asymmetric layer, not here. Risk engine finding: AES is a symmetric block cipher; Grover's algorithm halves the effective key strength, so the verdict depends on the key size. A 256-bit key retains ~128-bit effective strength against Grover, which meets CNSA 2.0. Evidence: 14 occurrence(s) across 5 file(s), first at public/aion-client.js:51. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None; keep the key-establishment layer under review instead. Standard: NIST SP 800-131A Rev.2. Alternatives: None needed.",
+    "recommendationRationale": "Grover's algorithm gives only a quadratic speed-up, so a 256-bit symmetric key or a 384-bit digest keeps a 128-bit or better post-quantum margin. The quantum exposure in this system is in the asymmetric layer, not here. Risk engine finding: AES is a symmetric block cipher; Grover's algorithm halves the effective key strength, so the verdict depends on the key size. A 256-bit key retains ~128-bit effective strength against Grover, which meets CNSA 2.0. Evidence: 15 occurrence(s) across 6 file(s), first at public/aion-client.js:51. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None; keep the key-establishment layer under review instead. Standard: NIST SP 800-131A Rev.2. Alternatives: None needed.",
     "dataClass": "default",
     "criticality": "none",
     "mosca": {
@@ -2419,7 +2426,7 @@
      "rule_id": "QSAFE_OK",
      "standard": "NIST SP 800-131A Rev.2"
     },
-    "occurrenceCount": 14,
+    "occurrenceCount": 15,
     "detectors": [
      "source_js"
     ],
@@ -2527,7 +2534,7 @@
     },
     {
      "name": "ecdat:recommendation:rationale",
-     "value": "Grover's algorithm gives only a quadratic speed-up, so a 256-bit symmetric key or a 384-bit digest keeps a 128-bit or better post-quantum margin. The quantum exposure in this system is in the asymmetric layer, not here. Risk engine finding: PBKDF2 is quantum-adequate as a construction, but its cost is linear in iterations only; Grover gives an attacker a quadratic speed-up on the password search, so iteration counts must be high and the underlying hash >= SHA-256. Observed iteration count: 600000. Evidence: 8 occurrence(s) across 2 file(s), first at public/aion-fs.js:298. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None; keep the key-establishment layer under review instead. Standard: NIST SP 800-131A Rev.2. Alternatives: None needed."
+     "value": "Grover's algorithm gives only a quadratic speed-up, so a 256-bit symmetric key or a 384-bit digest keeps a 128-bit or better post-quantum margin. The quantum exposure in this system is in the asymmetric layer, not here. Risk engine finding: PBKDF2 is quantum-adequate as a construction, but its cost is linear in iterations only; Grover gives an attacker a quadratic speed-up on the password search, so iteration counts must be high and the underlying hash >= SHA-256. Observed iteration count: 600000. Evidence: 8 occurrence(s) across 2 file(s), first at public/aion-fs.js:332. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None; keep the key-establishment layer under review instead. Standard: NIST SP 800-131A Rev.2. Alternatives: None needed."
     },
     {
      "name": "ecdat:occurrences:count",
@@ -2571,56 +2578,56 @@
      {
       "bom-ref": "crypto/pbkdf2/pbkdf2/800e759f21f4eb77/occ/1",
       "location": "public/aion-fs.js",
-      "line": 298,
+      "line": 332,
       "symbol": "const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(passphrase), 'PBKDF2', false, ['deriveKey']);",
       "additionalContext": "const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(passphrase), 'PBKDF2', false, ['deriveKey']); [detector=source_js confidence=medium]"
      },
      {
       "bom-ref": "crypto/pbkdf2/pbkdf2/800e759f21f4eb77/occ/2",
       "location": "public/aion-fs.js",
-      "line": 299,
+      "line": 333,
       "symbol": "wrapKey = await crypto.subtle.deriveKey(",
       "additionalContext": "wrapKey = await crypto.subtle.deriveKey( [detector=source_js confidence=medium]"
      },
      {
       "bom-ref": "crypto/pbkdf2/pbkdf2/800e759f21f4eb77/occ/3",
       "location": "public/aion-fs.js",
-      "line": 364,
+      "line": 398,
       "symbol": "const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(newPassphrase), 'PBKDF2', false, ['deriveKey']);",
       "additionalContext": "const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(newPassphrase), 'PBKDF2', false, ['deriveKey']); [detector=source_js confidence=medium]"
      },
      {
       "bom-ref": "crypto/pbkdf2/pbkdf2/800e759f21f4eb77/occ/4",
       "location": "public/aion-fs.js",
-      "line": 365,
+      "line": 399,
       "symbol": "const newKey = await crypto.subtle.deriveKey(",
       "additionalContext": "const newKey = await crypto.subtle.deriveKey( [detector=source_js confidence=medium]"
      },
      {
       "bom-ref": "crypto/pbkdf2/pbkdf2/800e759f21f4eb77/occ/5",
       "location": "public/aion-fs.js",
-      "line": 527,
+      "line": 561,
       "symbol": "const base = await crypto.subtle.importKey('raw', enc.encode(passphrase), 'PBKDF2', false, ['deriveKey']);",
       "additionalContext": "const base = await crypto.subtle.importKey('raw', enc.encode(passphrase), 'PBKDF2', false, ['deriveKey']); [detector=source_js confidence=medium]"
      },
      {
       "bom-ref": "crypto/pbkdf2/pbkdf2/800e759f21f4eb77/occ/6",
       "location": "public/aion-fs.js",
-      "line": 528,
+      "line": 562,
       "symbol": "return crypto.subtle.deriveKey(",
       "additionalContext": "return crypto.subtle.deriveKey( [detector=source_js confidence=medium]"
      },
      {
       "bom-ref": "crypto/pbkdf2/pbkdf2/800e759f21f4eb77/occ/7",
       "location": "test/regression.js",
-      "line": 665,
+      "line": 678,
       "symbol": "const base = await webcrypto.subtle.importKey('raw', Buffer.from(pass), 'PBKDF2', false, ['deriveKey']);",
       "additionalContext": "const base = await webcrypto.subtle.importKey('raw', Buffer.from(pass), 'PBKDF2', false, ['deriveKey']); [detector=source_js confidence=medium]"
      },
      {
       "bom-ref": "crypto/pbkdf2/pbkdf2/800e759f21f4eb77/occ/8",
       "location": "test/regression.js",
-      "line": 666,
+      "line": 679,
       "symbol": "const key = await webcrypto.subtle.deriveKey(",
       "additionalContext": "const key = await webcrypto.subtle.deriveKey( [detector=source_js confidence=medium]"
      }
@@ -2632,7 +2639,7 @@
     "severity": "none",
     "score": 0.52,
     "recommendation": "no change - retain (symmetric/hash primitive at an adequate level)",
-    "recommendationRationale": "Grover's algorithm gives only a quadratic speed-up, so a 256-bit symmetric key or a 384-bit digest keeps a 128-bit or better post-quantum margin. The quantum exposure in this system is in the asymmetric layer, not here. Risk engine finding: PBKDF2 is quantum-adequate as a construction, but its cost is linear in iterations only; Grover gives an attacker a quadratic speed-up on the password search, so iteration counts must be high and the underlying hash >= SHA-256. Observed iteration count: 600000. Evidence: 8 occurrence(s) across 2 file(s), first at public/aion-fs.js:298. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None; keep the key-establishment layer under review instead. Standard: NIST SP 800-131A Rev.2. Alternatives: None needed.",
+    "recommendationRationale": "Grover's algorithm gives only a quadratic speed-up, so a 256-bit symmetric key or a 384-bit digest keeps a 128-bit or better post-quantum margin. The quantum exposure in this system is in the asymmetric layer, not here. Risk engine finding: PBKDF2 is quantum-adequate as a construction, but its cost is linear in iterations only; Grover gives an attacker a quadratic speed-up on the password search, so iteration counts must be high and the underlying hash >= SHA-256. Observed iteration count: 600000. Evidence: 8 occurrence(s) across 2 file(s), first at public/aion-fs.js:332. No safe automatic patch: this change alters key material, message format or protocol negotiation, so ECDAT will not generate a diff. None; keep the key-establishment layer under review instead. Standard: NIST SP 800-131A Rev.2. Alternatives: None needed.",
     "dataClass": "default",
     "criticality": "none",
     "mosca": {
@@ -3033,14 +3040,14 @@
      {
       "bom-ref": "crypto/ml-kem/ml-kem/25925d4b90269cce/occ/7",
       "location": "public/aion-fs.js",
-      "line": 237,
+      "line": 271,
       "symbol": "const AionVault = (() => {",
       "additionalContext": "const AionVault = (() => { [detector=source_js confidence=high]"
      },
      {
       "bom-ref": "crypto/ml-kem/ml-kem/25925d4b90269cce/occ/8",
       "location": "public/aion-fs.js",
-      "line": 516,
+      "line": 550,
       "symbol": "const AionBackup = (() => {",
       "additionalContext": "const AionBackup = (() => { [detector=source_js confidence=high]"
      },
@@ -3201,14 +3208,14 @@
      {
       "bom-ref": "crypto/ml-kem/ml-kem/25925d4b90269cce/occ/31",
       "location": "src/server.js",
-      "line": 1549,
+      "line": 1609,
       "symbol": "cryptoSuite: (() => {",
       "additionalContext": "cryptoSuite: (() => { [detector=source_js confidence=high]"
      },
      {
       "bom-ref": "crypto/ml-kem/ml-kem/25925d4b90269cce/occ/32",
       "location": "src/server.js",
-      "line": 1552,
+      "line": 1612,
       "symbol": "kex: /ML-KEM/.test(live) ? 'X25519 + ML-KEM-1024 (hybrid)' : 'X25519',",
       "additionalContext": "kex: /ML-KEM/.test(live) ? 'X25519 + ML-KEM-1024 (hybrid)' : 'X25519', [detector=source_js confidence=high]"
      },
@@ -3222,14 +3229,14 @@
      {
       "bom-ref": "crypto/ml-kem/ml-kem/25925d4b90269cce/occ/34",
       "location": "test/browser.js",
-      "line": 484,
+      "line": 503,
       "symbol": "hasMlkemCt: (encapsulation.mlkemCiphertext || '').length === 2092,",
       "additionalContext": "hasMlkemCt: (encapsulation.mlkemCiphertext || '').length === 2092, [detector=source_js confidence=medium]"
      },
      {
       "bom-ref": "crypto/ml-kem/ml-kem/25925d4b90269cce/occ/35",
       "location": "test/browser.js",
-      "line": 490,
+      "line": 509,
       "symbol": "ok('...carrying a full-size ML-KEM-1024 ciphertext', hybridLive.hasMlkemCt === true);",
       "additionalContext": "ok('...carrying a full-size ML-KEM-1024 ciphertext', hybridLive.hasMlkemCt === true); [detector=source_js confidence=medium]"
      },
@@ -4257,14 +4264,14 @@
      {
       "bom-ref": "crypto/lms/lms/4f646ddd1a0fb825/occ/3",
       "location": "test/regression.js",
-      "line": 787,
+      "line": 800,
       "symbol": "const tP = Date.now(); const poll = vs.verifyLedgerCached(); const pollMs = Date.now() - tP;",
       "additionalContext": "const tP = Date.now(); const poll = vs.verifyLedgerCached(); const pollMs = Date.now() - tP; [detector=source_js confidence=medium]"
      },
      {
       "bom-ref": "crypto/lms/lms/4f646ddd1a0fb825/occ/4",
       "location": "test/regression.js",
-      "line": 792,
+      "line": 805,
       "symbol": "pollMs * 20 < deepMs, `poll=${pollMs}ms deep=${deepMs}ms`);",
       "additionalContext": "pollMs * 20 < deepMs, `poll=${pollMs}ms deep=${deepMs}ms`); [detector=source_js confidence=medium]"
      }
