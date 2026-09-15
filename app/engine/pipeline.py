@@ -13,7 +13,7 @@ from . import recommend as _recommend
 # tree-walking detectors: detect(root, policy) -> (artefacts, files, errors)
 def _tree_detectors():
     mods = []
-    for name in ("source_python", "source_js", "source_java", "source_go"):
+    for name in ("source_python", "source_js", "source_java", "source_go", "source_c"):
         try:
             mods.append(__import__(f"engine.detectors.{name}", fromlist=[name]))
         except Exception:
